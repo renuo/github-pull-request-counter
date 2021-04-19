@@ -17,8 +17,16 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
-    new HtmlWebpackPlugin({ template: 'src/popup.html', filename: 'popup.html' }),
-    new HtmlWebpackPlugin({ template: 'src/options.html', filename: 'options.html' }),
+    new HtmlWebpackPlugin({
+      template: 'src/popup.html',
+      filename: 'popup.html',
+      chunks: ["popup"],
+    }),
+    new HtmlWebpackPlugin({
+      template: 'src/options.html',
+      filename: 'options.html',
+      chunks: ["options"],
+    }),
     new CopyWebpackPlugin({
       patterns: [
         { from: './src/manifest.json' },

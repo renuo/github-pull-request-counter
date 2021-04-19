@@ -1,5 +1,8 @@
 {
   "extends": "@tsconfig/node14/tsconfig.json",
   "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.spec.ts"]
+  "exclude": ["src/**/*.spec.ts"],
+  "compilerOptions": {
+    "lib": ["DOM", "DOM.Iterable", "es2020"],
+  }
 }
