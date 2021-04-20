@@ -1,0 +1,8 @@
+#!/bin/sh
+
+yarn lint
+if [ ! $? -eq 0 ]; then
+  echo -e '\033[31mYou have linting errors, attempting to fix them.\033[0m'
+  yarn fix
+  exit 1
+fi

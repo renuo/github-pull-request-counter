@@ -1,7 +1,7 @@
-import "../css/popup.scss";
+import '../css/popup.scss';
 
-const popup = () => {
-  let healthButton = document.getElementById('health-check');
+export const popup = () => {
+  const healthButton = document.getElementById('health-check');
   if (healthButton) {
     healthButton.addEventListener('click', () => {
       alert('All good');
