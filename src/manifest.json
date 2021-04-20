@@ -11,6 +11,9 @@
     }
   },
   "options_page": "options.html",
+  "permissions": [
+    "alarms"
+  ],
   "background": {
     "service_worker": "background.js"
   },

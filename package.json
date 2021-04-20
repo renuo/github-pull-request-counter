@@ -13,12 +13,16 @@
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "copy-webpack-plugin": "^8.1.1",
     "html-webpack-plugin": "^5.3.1",
+    "sass": "^1.32.11",
+    "sass-loader": "^11.0.1",
     "ts-loader": "^9.0.0",
     "typescript": "^4.2.4",
     "webpack": "^5.34.0",
     "webpack-cli": "^4.6.0"
   },
   "dependencies": {
-    "@types/chrome": "^0.0.134"
+    "@types/chrome": "^0.0.134",
+    "css-loader": "^5.2.4",
+    "style-loader": "^2.0.0"
   }
 }
