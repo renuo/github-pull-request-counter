@@ -1,0 +1,37 @@
+version: "v1.0"
+name: github-pull-request-counter
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+auto_cancel:
+  running:
+    when: "true"
+blocks:
+  - name: cache
+    dependencies: []
+    task:
+      secrets:
+        - name: github-pull-request-counter
+      jobs:
+        - name: cache
+          commands:
+            - checkout
+            - cache restore
+            - nvm install
+            - yarn install --cache-folder ~/.cache/yarn
+            - cache store
+  - name: tests
+    dependencies: ['cache']
+    task:
+      secrets:
+        - name: github-pull-request-counter
+      prologue:
+        commands:
+          - checkout
+          - cache restore
+          - nvm use
+      jobs:
+        - name: tests
+          commands:
+            - bin/check
