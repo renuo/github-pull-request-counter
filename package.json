@@ -7,14 +7,13 @@
   "scripts": {
     "start": "webpack --watch --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
-    "lint": "tslint -c tslint.json '{src,cypress}/**/*.{ts,js}'",
-    "fix": "tslint -c tslint.json '{src,cypress}/**/*.{ts,js}' --fix"
+    "lint": "tslint -c tslint.json 'src/**/*.{ts,js}'",
+    "fix": "tslint -c tslint.json 'src/**/*.{ts,js}' --fix"
   },
   "devDependencies": {
     "@tsconfig/node14": "^1.0.0",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "copy-webpack-plugin": "^8.1.1",
-    "cypress": "^7.1.0",
     "html-webpack-plugin": "^5.3.1",
     "sass": "^1.32.11",
     "sass-loader": "^11.0.1",
