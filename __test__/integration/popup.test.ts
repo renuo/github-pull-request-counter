@@ -1,25 +1,38 @@
-import puppeteer from 'puppeteer-core';
+import puppeteer from 'puppeteer';
 import path from 'path';
 
+let browser: puppeteer.Browser;
+let page: puppeteer.Page;
+
+const setup = async () => {
+  const extensionPath = path.join(__dirname, '../../dist');
+  const extensionID = 'kiddjljoajjpciconkdenlbgecmbmafm';
+  const extensionPopupHtml = 'popup.html';
+  const URL = `chrome-extension://${extensionID}/${extensionPopupHtml}`;
+
+  browser = await puppeteer.launch({
+    headless: false,
+    args: [
+      `--disable-extensions-except=${extensionPath}`,
+      `--load-extension=${extensionPath}`,
+    ]
+  });
+
+  page = await browser.newPage();
+
+  await page.goto(URL, {
+    waitUntil: 'networkidle2'
+  });
+};
+
+const teardown = async () => {
+  await browser.close();
+};
+
 describe('popup.html', () => {
-  let browser: puppeteer.Browser;
-  let page: puppeteer.Page;
+  beforeAll(setup);
 
-  beforeAll(async () => {
-    browser = await puppeteer.launch({
-      executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-      headless: true
-    });
-    page = await browser.newPage();
-    const URL = `file:///${path.resolve(__dirname, '../../dist/popup.html')}`;
-    await page.goto(URL, {
-      waitUntil: 'networkidle2'
-    });
-  });
-
-  afterAll(async () => {
-    await browser.close();
-  });
+  afterAll(teardown);
 
   describe('Health check button', () => {
     const dialogHandler = jest.fn(dialog => dialog.dismiss());
