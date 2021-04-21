@@ -13,8 +13,7 @@ const setup = async () => {
   browser = await puppeteer.launch({
     headless: false,
     args: [
-      `--disable-extensions-except=${extensionPath}`,
-      `--load-extension=${extensionPath}`,
+      `--disable-extensions-except=${extensionPath}`
     ]
   });
 
