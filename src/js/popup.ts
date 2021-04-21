@@ -7,6 +7,12 @@ export const popup = () => {
       alert('All good');
     });
   }
-}
+
+  const testExample = () => {
+    return 5;
+  };
+
+  return { testExample };
+};
 
 popup();

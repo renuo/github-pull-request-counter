@@ -7,6 +7,6 @@ const options = () => {
       alert('All good');
     });
   }
-}
+};
 
 options();
