@@ -41,6 +41,9 @@ This is already done for this project.
 
 ## Issues
 
+## Create a client ID from github
+TODO: write
+
 * When running the tests chromium might ask you: "_Do you want to allow the application Chromium.app to accept incoming network connections?_". You can remove this by running `sudo codesign --force --deep --sign - ./node_modules/puppeteer/.local-chromium/mac-*/chrome-mac/Chromium.app`. This will create a valid certificate. Sudo is necessary. [Source](https://github.com/puppeteer/puppeteer/issues/4752)
 * Chromium can't be run in headless when testing extensions. [Source](https://github.com/puppeteer/puppeteer/issues/659)
 
