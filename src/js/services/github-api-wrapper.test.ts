@@ -63,7 +63,7 @@ describe('githubApiWrapper', () => {
     let openTeamRequestCount = 0;
 
     beforeEach(() => {
-      mockedAxios.get.mockImplementation((url: any) => {
+      mockedAxios.get.mockImplementation((url: string) => {
         if (url.includes('/requested_reviewers')) {
           return Promise.resolve(mockRequestedReviewers(openUserRequestCount, openTeamRequestCount));
         } else {
@@ -138,7 +138,7 @@ describe('githubApiWrapper', () => {
     let openTeamRequestCount = 0;
 
     beforeEach(() => {
-      mockedAxios.get.mockImplementation((url: any) => {
+      mockedAxios.get.mockImplementation((url: string) => {
         if (url.includes('/requested_reviewers')) {
           return Promise.resolve(mockRequestedReviewers(openUserRequestCount, openTeamRequestCount));
         } else {
@@ -212,7 +212,7 @@ describe('githubApiWrapper', () => {
     let assignee: string | undefined;
 
     beforeEach(() => {
-      mockedAxios.get.mockImplementation((url: any) => {
+      mockedAxios.get.mockImplementation((url: string) => {
           return Promise.resolve(mockListOfIssues(pullRequestCount, { assignee }));
       });
     })

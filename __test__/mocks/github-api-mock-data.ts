@@ -9,8 +9,8 @@ export const mockListOfIssues = (count: number, params?: { assignee: string | un
         id: Math.floor(Math.random() * 100),
         assignee: params?.assignee,
         pull_request: {
-          url: `https://api.github.com/repos/renuo/github-pull-request-counter/pulls/${count}`,
-          html_url: `https://github.com/renuo/github-pull-request-counter/pull/${count}`
+          url: `https://api.github.com/repos/renuo/github-pull-request-counter/pulls/${i+1}`,
+          html_url: `https://github.com/renuo/github-pull-request-counter/pull/${i+1}`
         },
       });
     }
@@ -29,7 +29,6 @@ export const mockListOfIssues = (count: number, params?: { assignee: string | un
 };
 
 export const mockRequestedReviewers = (usersCount: number, teamsCount: number) => {
-
   const createRandomID = (): number => Math.floor(Math.random() * 100);
 
   const createReviewers = (count: number) => {
@@ -48,4 +47,12 @@ export const mockRequestedReviewers = (usersCount: number, teamsCount: number) =
       teams: createReviewers(teamsCount)
     }
   };
+}
+
+export const globalMock = (url: string, params?: { pullRequestCount?: number, openUserRequestCount?: number, openTeamRequestCount?: number }) => {
+  if (url.includes('/requested_reviewers')) {
+    return Promise.resolve(mockRequestedReviewers(params?.openUserRequestCount || 0, params?.openTeamRequestCount || 0));
+  } else {
+    return Promise.resolve(mockListOfIssues(params?.pullRequestCount || 0));
+  }
 }
