@@ -7,12 +7,31 @@ let page: puppeteer.Page;
 const env = process.env;
 
 const makeRequest = async (path: string, params?: string) => {
+  console.log(`https://api.github.com${path}?${params}`);
   return await axios.get(`https://api.github.com${path}?${params}`, {
     auth: {
       username: env.USERNAME!,
       password: env.ACCESS_TOKEN!
     }
   });
+}
+
+const makeRequestFullURL = async (path: string, params?: string) => {
+  console.log(`${path}?${params}`);
+  return await axios.get(`${path}?${params}`, {
+    auth: {
+      username: env.USERNAME!,
+      password: env.ACCESS_TOKEN!
+    }
+  });
+}
+
+// https://advancedweb.hu/how-to-use-async-functions-with-array-filter-in-javascript/
+// TODO: Replace any
+const asyncFilter = async (array: [], predicate: (item: any) => Promise<boolean>) => {
+  const results = await Promise.all(array.map(predicate));
+
+  return array.filter((_item, index) => results[index]);
 }
 
 describe('authetification', () => {
@@ -58,20 +77,55 @@ describe('authetification', () => {
   //   console.log(response.data.length)
   // });
 
-  it('only fetch the ones with a review thingy', async () => {
-    let subscribed = (await makeRequest('/issues', 'filter=subscribed')).data;
-    subscribed = subscribed.filter(item => item.pull_request);
-    subscribed = subscribed.filter(item => item.author_association != 'NONE');
+  // it('only fetch the ones with a review thingy', async () => {
+  //   let subscribed = (await makeRequest('/issues', 'filter=subscribed')).data;
 
-    const assigned = (await makeRequest('/issues', 'filter=assigned')).data;
-    const created = (await makeRequest('/issues', 'filter=created')).data;
-    let assigned_and_created = assigned.concat(created);
-    assigned_and_created = assigned_and_created.map(item => item.url)
+  //   subscribed = subscribed.filter(item => item.pull_request);
+  //   subscribed = subscribed.filter(item => item.author_association != 'NONE');
 
-    let reviews = subscribed.filter(item => !assigned_and_created.includes(item.url));
+  //   const assigned = (await makeRequest('/issues', 'filter=assigned')).data;
+  //   const created = (await makeRequest('/issues', 'filter=created')).data;
+  //   let assigned_and_created = assigned.concat(created);
+  //   assigned_and_created = assigned_and_created.map(item => item.url)
 
-    console.log(reviews);
+  //   let reviews = subscribed.filter(item => !assigned_and_created.includes(item.url));
+
+  //   console.log(reviews);
+  // });
+
+  // it('review requested', async () => {
+  //   const q = encodeURIComponent('is:open is:pr review-requested:Janis-Leuenberger archived:false');
+  //   let search = (await makeRequest('/search/issues', `q=${q}`));
+  //   console.log(search);
+  // })
+  it('asignee no reviews requested', async () => {
+    const q = encodeURIComponent('is:pr assignee:Janis-Leuenberger archived:false is:open review:none');
+    let noReviews = (await makeRequest('/search/issues', `q=${q}`)).data;
+
+    const f = await asyncFilter(noReviews.items, async (issue: any) => {
+      let asd = (await makeRequestFullURL(`${issue.pull_request.url}/requested_reviewers`)).data;
+      console.log(asd);
+      return asd.users.length + asd.teams.length > 0;
+    });
+
+    // console.log(noReviews.items)
   });
+  // it('asignee all reviews done or changes requested', async () => {
+  //   const q = encodeURIComponent('is:pr assignee:Janis-Leuenberger archived:false is:open review:approved');
+  //   let approved = (await makeRequest('/search/issues', `q=${q}`)).data;
+  //   const q2 = encodeURIComponent('is:pr assignee:Janis-Leuenberger archived:false is:open review:changes_requested');
+  //   let changes_requested = (await makeRequest('/search/issues', `q=${q2}`)).data;
+  //   let done = approved.items.concat(changes_requested.items);
+  //   console.log(done);
+  // })
+  // it('author with no assignee', async () => {
+  //   const q = encodeURIComponent('is:open is:pr author:Janis-Leuenberger archived:false');
+  //   let pulls = (await makeRequest('/search/issues', `q=${q}`)).data;
+  //   pulls = pulls.items.filter(s => !s.assignee);
+  //   console.log(pulls);
+  // })
+
+
 
   // it('fetch all issues important to me', async () => {
   //   let issues = await makeRequest('/issues', 'filter=subscribed')
