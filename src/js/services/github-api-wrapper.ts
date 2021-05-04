@@ -1,19 +1,5 @@
-// // Without DI
-// import SuperCoolThing from 'SuperCoolThing';
-
-// const myComponent = () => {
-//   const superCoolThing = new SuperCoolThing();
-//   // Do cool things
-// }
-
-// // With DI
-// import SuperCoolThing from 'SuperCoolThing';
-
-// const myComponent = (superCoolThing: SuperCoolThing) => {
-//   // Do cool things
-// }
-
 import axios from 'axios';
+import { Issue } from '../types/types';
 
 const env = process.env;
 
@@ -55,8 +41,10 @@ interface GithubApiWrapperProps {
 
 export interface GithubApiWrapper {
   authenticateUser: () => boolean;
-  reviewerGetReviewRequested: () => any; //TODO: Remove any
-  assigneeGetNoReviewRequested: () => any; //TODO: Remove any
+  getReviewRequested: () => Promise<string[]>;
+  getNoReviewRequested: () => Promise<string[]>;
+  getAllReviewsDone: () => Promise<string[]>;
+  getMissingAssignee: () => Promise<string[]>;
 }
 
 const githubApiWrapper = (props: GithubApiWrapperProps): GithubApiWrapper => {
@@ -66,35 +54,42 @@ const githubApiWrapper = (props: GithubApiWrapperProps): GithubApiWrapper => {
     return true;
   }
 
-  // Naming scheme <User position> Get <Action>
-  const reviewerGetReviewRequested = async () => {
+  const getReviewRequested = async () => {
     const query = encodeURIComponent('is:open is:pr review-requested:Janis-Leuenberger archived:false');
     const issues = await makeRequest('/search/issues', `q=${query}`);
 
     return issuesToHtmlUrl(issues.data.items);
   }
 
-  const assigneeGetNoReviewRequested = async () => {
-    const q = encodeURIComponent('is:pr assignee:Janis-Leuenberger archived:false is:open review:none');
+  const getNoReviewRequested = async () => {
+    return issuesToHtmlUrl(await searchIssues(''));
+  }
+
+  const getAllReviewsDone = async () => {
+    return issuesToHtmlUrl(await searchIssues('-'));
+  }
+
+  const searchIssues = async (reviewModifier: string) => {
+    const q = encodeURIComponent(`is:pr assignee:Janis-Leuenberger archived:false is:open ${reviewModifier}reviews:none`);
     let noReviews = (await makeRequest('/search/issues', `q=${q}`)).data;
 
     const f = await asyncFilter(noReviews.items, async (issue: any) => {
       let asd = (await makeRequestFullURL(`${issue.pull_request.url}/requested_reviewers`)).data;
-      return asd.users.length + asd.teams.length > 0;
+      return asd.users.length + asd.teams.length === 0;
     });
 
-    return issuesToHtmlUrl(f);
+    return f;
   }
 
-  const assigneeGetApprovedOrChangesRequested = () => {
+  const getMissingAssignee = async () => {
+    const q = encodeURIComponent('is:open is:pr author:Janis-Leuenberger archived:false');
+    let pulls = (await makeRequest('/search/issues', `q=${q}`)).data;
+    pulls = pulls.items.filter((s: Issue) => !s.assignee);
 
+    return issuesToHtmlUrl(pulls);
   }
 
-  const authorGetMissingAssignee = () => {
-
-  }
-
-  return { authenticateUser, reviewerGetReviewRequested, assigneeGetNoReviewRequested };
+  return { authenticateUser, getReviewRequested, getNoReviewRequested, getAllReviewsDone, getMissingAssignee };
 }
 
 export default githubApiWrapper

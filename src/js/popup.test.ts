@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { popup } from '../popup';
+import { popup } from './popup';
 
 describe('popup', () => {
   const dom = `

@@ -3,7 +3,7 @@ chrome.runtime.onInstalled.addListener((details) => {
   console.log('SW has been installed!');
 });
 
-chrome.alarms.create('Test', { periodInMinutes: 0.5 });
+chrome.alarms.create('Test', { periodInMinutes: 0.1 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === 'Test') {

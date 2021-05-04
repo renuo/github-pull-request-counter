@@ -98,18 +98,22 @@ describe('authetification', () => {
   //   let search = (await makeRequest('/search/issues', `q=${q}`));
   //   console.log(search);
   // })
-  it('asignee no reviews requested', async () => {
-    const q = encodeURIComponent('is:pr assignee:Janis-Leuenberger archived:false is:open review:none');
-    let noReviews = (await makeRequest('/search/issues', `q=${q}`)).data;
+  // it('asignee no reviews requested', async () => {
+  //   const q = encodeURIComponent('is:pr assignee:Janis-Leuenberger archived:false is:open review:none');
+  //   let noReviews = (await makeRequest('/search/issues', `q=${q}`)).data;
 
-    const f = await asyncFilter(noReviews.items, async (issue: any) => {
-      let asd = (await makeRequestFullURL(`${issue.pull_request.url}/requested_reviewers`)).data;
-      console.log(asd);
-      return asd.users.length + asd.teams.length > 0;
-    });
+  //   const f = await asyncFilter(noReviews.items, async (issue: any) => {
+  //     let asd = (await makeRequestFullURL(`${issue.pull_request.url}/requested_reviewers`)).data;
+  //     console.log(asd);
+  //     return asd.users.length + asd.teams.length > 0;
+  //   });
 
-    // console.log(noReviews.items)
-  });
+  //   // console.log(noReviews.items)
+  // });
+  // it('a', async() => {
+  //   let res = await makeRequest('/repos/renuo/citymessenger/pulls/872/reviews');
+  //   console.log(res.data);
+  // });
   // it('asignee all reviews done or changes requested', async () => {
   //   const q = encodeURIComponent('is:pr assignee:Janis-Leuenberger archived:false is:open review:approved');
   //   let approved = (await makeRequest('/search/issues', `q=${q}`)).data;
