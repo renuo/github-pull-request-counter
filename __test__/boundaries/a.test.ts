@@ -1,10 +1,20 @@
 import puppeteer from 'puppeteer';
 import axios from 'axios';
+import fetch from 'node-fetch';
 
 let browser: puppeteer.Browser;
 let page: puppeteer.Page;
 
 const env = process.env;
+
+const makeFetchRequest = async (path: string, params?: string) => {
+  return await fetch(`https://api.github.com${path}?${params}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Basic ' + Buffer.from(env.USERNAME! + ":" + env.ACCESS_TOKEN!).toString('base64')
+    }
+  });
+}
 
 const makeRequest = async (path: string, params?: string) => {
   console.log(`https://api.github.com${path}?${params}`);
@@ -93,6 +103,11 @@ describe('authetification', () => {
   //   console.log(reviews);
   // });
 
+  // it('anything', async () => {
+  //   const q = encodeURIComponent('is:open is:pr archived:false');
+  //   let search = (await makeRequest('/search/issues', `q=${q}`));
+  //   console.log(search.data);
+  // }
   // it('review requested', async () => {
   //   const q = encodeURIComponent('is:open is:pr review-requested:Janis-Leuenberger archived:false');
   //   let search = (await makeRequest('/search/issues', `q=${q}`));
@@ -111,8 +126,8 @@ describe('authetification', () => {
   //   // console.log(noReviews.items)
   // });
   // it('a', async() => {
-  //   let res = await makeRequest('/repos/renuo/citymessenger/pulls/872/reviews');
-  //   console.log(res.data);
+  //   let res = await makeFetchRequest('/repos/renuo/citymessenger/pulls/925/reviews');
+  //   console.log(await res.json());
   // });
   // it('asignee all reviews done or changes requested', async () => {
   //   const q = encodeURIComponent('is:pr assignee:Janis-Leuenberger archived:false is:open review:approved');
@@ -122,12 +137,12 @@ describe('authetification', () => {
   //   let done = approved.items.concat(changes_requested.items);
   //   console.log(done);
   // })
-  // it('author with no assignee', async () => {
-  //   const q = encodeURIComponent('is:open is:pr author:Janis-Leuenberger archived:false');
-  //   let pulls = (await makeRequest('/search/issues', `q=${q}`)).data;
-  //   pulls = pulls.items.filter(s => !s.assignee);
-  //   console.log(pulls);
-  // })
+  it('author with no assignee', async () => {
+    const q = encodeURIComponent('is:open is:pr author:Janis-Leuenberger archived:false');
+    let pulls = (await makeRequest('/search/issues', `q=${q}`)).data;
+    pulls = pulls.items.filter(s => !s.assignee);
+    console.log(pulls);
+  })
 
 
 

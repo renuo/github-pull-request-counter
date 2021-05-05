@@ -14,8 +14,8 @@ describe('popup', () => {
   });
 
   describe('testExample', () => {
-    it('should return 5', () => {
-      expect(popup().testExample()).toEqual(5);
+    it('should return 5', async () => {
+      expect((await popup()).testExample()).toEqual(5);
     });
   });
 });

@@ -1,13 +1,23 @@
 import githubApiWrapper from './services/github-api-wrapper';
+import StorageSerilizer from './services/storage-serializer';
 // Todo: remove
 // import { chrome } from 'jest-chrome'
 
 const serviceWorker = async() => {
   const github = githubApiWrapper({});
-  console.log(await github.getAllReviewsDone());
-  console.log(await github.getMissingAssignee());
-  console.log(await github.getNoReviewRequested());
-  console.log(await github.getReviewRequested());
+
+  const objectToSerialize = {
+    'noReviewRequested': await github.getNoReviewRequested(),
+    'allReviewsDone': await github.getAllReviewsDone(),
+    'missingAssignee': await github.getMissingAssignee(),
+    'reviewRequested': await github.getReviewRequested()
+  }
+
+  const storageSerilizer = StorageSerilizer();
+  storageSerilizer.storePullRequests(objectToSerialize);
+
+  // console.log(objectToSerialize);
+  // console.log(await storageSerilizer.loadPullRequests(Object.keys(objectToSerialize)));
 };
 
 chrome.runtime.onStartup.addListener(() => {
@@ -16,19 +26,21 @@ chrome.runtime.onStartup.addListener(() => {
 
 export default serviceWorker;
 
+console.log('SW is started');
+serviceWorker();
 // chrome.runtime.onInstalled.addListener((details) => {
   //   // tslint:disable-next-line:no-console
   //   console.log('SW has been installed!');
   // });
 
-chrome.alarms.create('Test', { periodInMinutes: 0.05 });
+// chrome.alarms.create('Test', { periodInMinutes: 0.2 });
 
-chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === 'Test') {
+// chrome.alarms.onAlarm.addListener((alarm) => {
+//   if (alarm.name === 'Test') {
 
-    // tslint:disable-next-line:no-console
-    console.log('SW is working 233');
-    serviceWorker();
-    // chrome.alarms.clear('Test');
-  }
-});
+//     // tslint:disable-next-line:no-console
+//     console.log('SW is working');
+//     serviceWorker();
+//     // chrome.alarms.clear('Test');
+//   }
+// });

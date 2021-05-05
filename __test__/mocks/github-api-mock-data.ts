@@ -7,6 +7,7 @@ export const mockListOfIssues = (count: number, params?: { assignee: string | un
     for (let i = 0; i < count; i++) {
       items.push({
         id: Math.floor(Math.random() * 100),
+        title: 'PR Title',
         assignee: params?.assignee,
         pull_request: {
           url: `https://api.github.com/repos/renuo/github-pull-request-counter/pulls/${i+1}`,
@@ -19,12 +20,8 @@ export const mockListOfIssues = (count: number, params?: { assignee: string | un
   }
 
   return {
-    status: 200,
-    statusText: 'OK',
-    data: {
-      total_count: count,
-      items: createIssues(count)
-    }
+    total_count: count,
+    items: createIssues(count)
   }
 };
 
@@ -40,12 +37,8 @@ export const mockRequestedReviewers = (usersCount: number, teamsCount: number) =
   }
 
   return {
-    status: 200,
-    statusText: 'OK',
-    data: {
-      users: createReviewers(usersCount),
-      teams: createReviewers(teamsCount)
-    }
+    users: createReviewers(usersCount),
+    teams: createReviewers(teamsCount)
   };
 }
 
