@@ -1,12 +1,14 @@
 import githubApiWrapper, { GithubApiWrapper } from './github-api-wrapper';
-import axios from 'axios';
+import fetch from 'node-fetch';
+
+jest.mock('node-fetch');
+// TODO: How to type this? "jest.Mocked<typeof fetch>" should be correct IMO
+const mockedFetch = fetch as any;
+
 import {
   mockListOfIssues,
   mockRequestedReviewers,
 } from '../../../__test__/mocks/github-api-mock-data';
-
-jest.mock('axios');
-const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('githubApiWrapper', () => {
   let github: GithubApiWrapper;
@@ -18,7 +20,9 @@ describe('githubApiWrapper', () => {
   describe('#getReviewRequested', () => {
     let pullRequestCount: number;
     beforeEach(() => {
-      mockedAxios.get.mockResolvedValue(mockListOfIssues(pullRequestCount));
+      mockedFetch.mockResolvedValue(Promise.resolve({
+        json: () => Promise.resolve(mockListOfIssues(pullRequestCount))
+      }));
     })
 
     describe('with no pull requests', () => {
@@ -63,12 +67,14 @@ describe('githubApiWrapper', () => {
     let openTeamRequestCount = 0;
 
     beforeEach(() => {
-      mockedAxios.get.mockImplementation((url: string) => {
-        if (url.includes('/requested_reviewers')) {
-          return Promise.resolve(mockRequestedReviewers(openUserRequestCount, openTeamRequestCount));
-        } else {
-          return Promise.resolve(mockListOfIssues(pullRequestCount));
-        }
+      mockedFetch.mockImplementation((url: string) => {
+        const value = url.includes('/requested_reviewers') ?
+              mockRequestedReviewers(openUserRequestCount, openTeamRequestCount) :
+              mockListOfIssues(pullRequestCount);
+
+        return Promise.resolve({
+          json: () => Promise.resolve(value)
+        })
       });
     })
 
@@ -138,12 +144,14 @@ describe('githubApiWrapper', () => {
     let openTeamRequestCount = 0;
 
     beforeEach(() => {
-      mockedAxios.get.mockImplementation((url: string) => {
-        if (url.includes('/requested_reviewers')) {
-          return Promise.resolve(mockRequestedReviewers(openUserRequestCount, openTeamRequestCount));
-        } else {
-          return Promise.resolve(mockListOfIssues(pullRequestCount));
-        }
+      mockedFetch.mockImplementation((url: string) => {
+        const value = url.includes('/requested_reviewers') ?
+              mockRequestedReviewers(openUserRequestCount, openTeamRequestCount) :
+              mockListOfIssues(pullRequestCount);
+
+        return Promise.resolve({
+          json: () => Promise.resolve(value)
+        })
       });
     })
 
@@ -212,9 +220,9 @@ describe('githubApiWrapper', () => {
     let assignee: string | undefined;
 
     beforeEach(() => {
-      mockedAxios.get.mockImplementation((url: string) => {
-          return Promise.resolve(mockListOfIssues(pullRequestCount, { assignee }));
-      });
+      mockedFetch.mockResolvedValue(Promise.resolve({
+        json: () => Promise.resolve(mockListOfIssues(pullRequestCount, { assignee }))
+      }));
     })
 
     describe('with no pull requests', () => {

@@ -1,24 +1,25 @@
-import axios from 'axios';
 import { Issue } from '../types/types';
+import fetch from 'node-fetch';
 
 const env = process.env;
 
+
 const makeRequest = async (path: string, params?: string) => {
-  return await axios.get(`https://api.github.com${path}?${params}`, {
-    auth: {
-      username: env.USERNAME!,
-      password: env.ACCESS_TOKEN!
+  return await (await fetch(`https://api.github.com${path}?${params}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Basic ' + Buffer.from(env.USERNAME! + ":" + env.ACCESS_TOKEN!).toString('base64')
     }
-  });
+  })).json();
 }
 
 const makeRequestFullURL = async (path: string, params?: string) => {
-  return await axios.get(`${path}?${params}`, {
-    auth: {
-      username: env.USERNAME!,
-      password: env.ACCESS_TOKEN!
+  return await (await fetch(`${path}?${params}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Basic ' + Buffer.from(env.USERNAME! + ":" + env.ACCESS_TOKEN!).toString('base64')
     }
-  });
+  })).json();
 }
 
 // https://advancedweb.hu/how-to-use-async-functions-with-array-filter-in-javascript/
