@@ -8,3 +8,7 @@ export interface Issue {
   }
 }
 
+export interface PullRequestRecord {
+  [key: string]: Issue[]
+}
+
