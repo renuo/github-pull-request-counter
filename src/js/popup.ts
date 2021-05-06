@@ -18,20 +18,6 @@ export const popup = async() => {
   // await doStuff();
 };
 
-const setupHealthButton = () => {
-  const healthButton = document.getElementById('health-check');
-  if (healthButton) {
-    healthButton.addEventListener('click', () => {
-      alert('All good');
-    });
-  }
-};
-
-export const testExample = () => {
-  return 5;
-};
-
-setupHealthButton();
 popup();
 
 // TODO: remove any

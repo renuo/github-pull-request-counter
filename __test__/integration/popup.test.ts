@@ -33,23 +33,7 @@ describe('popup.html', () => {
 
   afterAll(teardown);
 
-  describe('Health check button', () => {
-    const dialogHandler = jest.fn(dialog => dialog.dismiss());
-
-    beforeAll(() => {
-      page.on('dialog', dialogHandler);
-    });
-
-    describe('when it is clicked', () => {
-      beforeAll(async () => {
-        await page.click('#health-check');
-      });
-
-      it('should have message "All good"', () => {
-        const [firstCall] = dialogHandler.mock.calls;
-        const [dialog] = firstCall;
-        expect(dialog.message()).toEqual('All good');
-      });
-    });
+  it('1+1', () => {
+    expect(1+1).toEqual(2);
   });
 });

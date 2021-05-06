@@ -8,6 +8,7 @@ const ServiceWoker = () => {
   const fetchAndStoreData = async () => {
     const github = githubApiWrapper();
 
+    //TODO: check if this is async
     const objectToSerialize = {
       'noReviewRequested': await github.getNoReviewRequested(),
       'allReviewsDone': await github.getAllReviewsDone(),
