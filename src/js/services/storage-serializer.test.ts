@@ -1,5 +1,6 @@
 import StorageSerializer from './storage-serializer';
 import { PullRequestRecord } from '../types/types';
+import { issueFactory, pullRequestRecordFactory } from '../../../__test__/mocks/factories';
 
 global.chrome = {
   storage: {
@@ -9,25 +10,6 @@ global.chrome = {
     }
   }
 } as any;
-
-
-export const issueFactory = (index: number) => ({
-  id: index,
-  title: `PullRequest-${index}-Title`,
-  assignee: undefined,
-  pull_request: {
-    url: `https://api.github.com/repos/renuo/github-pull-request-counter/pulls/${index+1}`,
-    html_url: `https://github.com/renuo/github-pull-request-counter/pull/${index+1}`
-  },
-});
-
-const pullRequestRecordFactory = (count: number) => {
-  const record: PullRequestRecord = {};
-  for (let i = 0; i < count; i++) {
-    record[`PullRequest-${i}`] = [issueFactory(i), issueFactory(i + count)];
-  }
-  return record;
-};
 
 describe('StorageSerialzer', () => {
   const storageSerilizer = StorageSerializer();
