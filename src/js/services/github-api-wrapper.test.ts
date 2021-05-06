@@ -2,7 +2,6 @@ import githubApiWrapper, { GithubApiWrapper } from './github-api-wrapper';
 import fetch from 'node-fetch';
 
 jest.mock('node-fetch');
-// TODO: How to type this? "jest.Mocked<typeof fetch>" should be correct IMO
 const mockedFetch = fetch as any;
 
 global.fetch = mockedFetch;
@@ -17,7 +16,7 @@ describe('githubApiWrapper', () => {
   let github: GithubApiWrapper;
 
   beforeAll(() => {
-    github = githubApiWrapper({});
+    github = githubApiWrapper();
   });
 
   describe('#getReviewRequested', () => {

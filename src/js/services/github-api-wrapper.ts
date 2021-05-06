@@ -44,10 +44,6 @@ const removeUselessDataFromIssues = (issues: Issue[]): Issue[] => (
   }))
 );
 
-interface GithubApiWrapperProps {
-
-}
-
 export interface GithubApiWrapper {
   authenticateUser: () => boolean;
   getReviewRequested: () => Promise<Issue[]>;
@@ -56,7 +52,7 @@ export interface GithubApiWrapper {
   getMissingAssignee: () => Promise<Issue[]>;
 }
 
-const githubApiWrapper = (props: GithubApiWrapperProps): GithubApiWrapper => {
+const githubApiWrapper = (): GithubApiWrapper => {
 
   const authenticateUser = () => {
     // chrome.tabs.create({ url: `https://github.com/login/oauth/authorize?client_id=${env.CLIENT_ID}` });
