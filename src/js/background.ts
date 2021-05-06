@@ -1,14 +1,14 @@
 import githubApiWrapper from './services/github-api-wrapper';
 import StorageSerializer from './services/storage-serializer';
 
-//TODO: put somewhere else
+// TODO: put somewhere else
 const pollingInterval = 1;
 
 const ServiceWoker = () => {
   const fetchAndStoreData = async () => {
     const github = githubApiWrapper();
 
-    //TODO: check if this is async
+    // TODO: check if this is async
     const objectToSerialize = {
       'noReviewRequested': await github.getNoReviewRequested(),
       'allReviewsDone': await github.getAllReviewsDone(),
@@ -35,7 +35,7 @@ const ServiceWoker = () => {
   };
 
   return { fetchAndStoreData, startPolling };
-}
+};
 
 // TODO: Running this code in tests will cause ERR_UNHANDLED_REJECTION.
 /* istanbul ignore next */

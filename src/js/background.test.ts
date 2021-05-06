@@ -26,7 +26,7 @@ global.chrome = {
 } as any;
 
 describe('ServiceWorker', () => {
-  let serviceWorker = ServiceWoker();
+  const serviceWorker = ServiceWoker();
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -53,7 +53,7 @@ describe('ServiceWorker', () => {
 
     it('calls addListener', () => {
       expect(global.chrome.alarms.onAlarm.addListener).toBeCalledTimes(1);
-    })
+    });
   });
 });
 

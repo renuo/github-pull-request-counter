@@ -79,7 +79,7 @@ describe('StorageSerialzer', () => {
 
     describe('with one stored record', () => {
       beforeAll(() => {
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: { [key: string]: any }) => void): void => {
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
           callback({ 'PullRequest-0': [ JSON.stringify([issueFactory(0), issueFactory(1)]) ] });
         });
 
@@ -94,7 +94,7 @@ describe('StorageSerialzer', () => {
 
     describe('with four stored records', () => {
       beforeAll(() => {
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: { [key: string]: any }) => void): void => {
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
           callback({
             'PullRequest-0': [ JSON.stringify([issueFactory(0), issueFactory(4)]) ],
             'PullRequest-1': [ JSON.stringify([issueFactory(1), issueFactory(5)]) ],

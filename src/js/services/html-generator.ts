@@ -4,7 +4,7 @@ const HTMLGenerator = () => {
   const generate = (record: PullRequestRecord): HTMLDivElement => {
     const topLevelDiv = document.createElement('div');
 
-    for (const key in record) {
+    for (const key of Object.keys(record)) {
       const titleP = document.createElement('p');
       titleP.textContent = key;
       topLevelDiv.appendChild(titleP);
@@ -19,9 +19,9 @@ const HTMLGenerator = () => {
     const groupLevelDiv = document.createElement('div');
     groupLevelDiv.classList.add('group-container');
 
-    for (let i = 0; i < issues.length; i++) {
+    for (const issue of issues) {
       const linkContainerDiv = document.createElement('div');
-      linkContainerDiv.appendChild(generateLink(issues[i]));
+      linkContainerDiv.appendChild(generateLink(issue));
       groupLevelDiv.appendChild(linkContainerDiv);
     }
 

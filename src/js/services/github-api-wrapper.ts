@@ -45,7 +45,7 @@ const removeUselessDataFromIssues = (issues: Issue[]): Issue[] => (
 );
 
 export interface GithubApiWrapper {
-  authenticateUser: () => boolean;
+  // authenticateUser: () => boolean;
   getReviewRequested: () => Promise<Issue[]>;
   getNoReviewRequested: () => Promise<Issue[]>;
   getAllReviewsDone: () => Promise<Issue[]>;
@@ -54,10 +54,10 @@ export interface GithubApiWrapper {
 
 const githubApiWrapper = (): GithubApiWrapper => {
 
-  const authenticateUser = () => {
-    // chrome.tabs.create({ url: `https://github.com/login/oauth/authorize?client_id=${env.CLIENT_ID}` });
-    return true;
-  };
+  // const authenticateUser = () => {
+  //   // chrome.tabs.create({ url: `https://github.com/login/oauth/authorize?client_id=${env.CLIENT_ID}` });
+  //   return true;
+  // };
 
   const getReviewRequested = async () => {
     const query = encodeURIComponent('is:open is:pr review-requested:Janis-Leuenberger archived:false');
@@ -94,7 +94,7 @@ const githubApiWrapper = (): GithubApiWrapper => {
     return removeUselessDataFromIssues(pulls);
   };
 
-  return { authenticateUser, getReviewRequested, getNoReviewRequested, getAllReviewsDone, getMissingAssignee };
+  return { getReviewRequested, getNoReviewRequested, getAllReviewsDone, getMissingAssignee };
 };
 
 export default githubApiWrapper;

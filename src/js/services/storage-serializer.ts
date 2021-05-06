@@ -2,7 +2,7 @@ import { PullRequestRecord, Issue } from '../types/types';
 
 const StorageSerializer = () => {
   const storePullRequests = (pullRequests: PullRequestRecord): void => {
-    for (const key in pullRequests) {
+    for (const key of Object.keys(pullRequests)) {
       storePullRequest(key, pullRequests[key]);
     }
   };
@@ -14,8 +14,7 @@ const StorageSerializer = () => {
   const loadPullRequests = async (keys: string[]): Promise<PullRequestRecord> => {
     const record: PullRequestRecord = {};
 
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
+    for (const key of keys) {
       record[key] = await loadPullRequest(key);
     }
 

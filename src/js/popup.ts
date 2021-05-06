@@ -10,14 +10,9 @@ const keys = [
 ];
 
 export const popup = async() => {
-  const doStuff = async() => {
-
-    const data = await StorageSerilizer().loadPullRequests(keys);
-    const html = HTMLGenerator().generate(data);
-    document.getElementById('content')!.appendChild(html);
-  };
-
-  await doStuff();
+  const data = await StorageSerilizer().loadPullRequests(keys);
+  const html = HTMLGenerator().generate(data);
+  document.getElementById('content')!.appendChild(html);
 };
 
 popup();

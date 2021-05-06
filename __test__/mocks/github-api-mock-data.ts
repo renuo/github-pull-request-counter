@@ -42,7 +42,13 @@ export const mockRequestedReviewers = (usersCount: number, teamsCount: number) =
   };
 };
 
-export const globalMock = (url: string, params?: { pullRequestCount?: number, openUserRequestCount?: number, openTeamRequestCount?: number }) => {
+interface GlobalMockParams {
+  pullRequestCount?: number;
+  openUserRequestCount?: number;
+  openTeamRequestCount?: number;
+}
+
+export const globalMock = (url: string, params?: GlobalMockParams) => {
   if (url.includes('/requested_reviewers')) {
     return Promise.resolve({
       json: () => Promise.resolve(mockRequestedReviewers(params?.openUserRequestCount || 0, params?.openTeamRequestCount || 0))
