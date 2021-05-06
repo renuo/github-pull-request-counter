@@ -1,12 +1,22 @@
 @import './colors';
 
-button {
-  background-color: $green;
-  margin-bottom: 10px;
+body { // TODO: remove
+  background-color: transparent;
 }
 
-.group-container {
-  margin-bottom: 20px;
+.popup {
+  // background-color: white; // TODO: remove
+  background-color: transparent;
+
+  .group-container {
+    margin-bottom: 20px;
+    background-color: $gray;
+    padding: 10px;
+
+    .link-container {
+      margin-bottom: 20px;
+    }
+  }
 }
 
 p {

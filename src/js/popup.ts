@@ -12,7 +12,7 @@ const keys = [
 export const popup = async() => {
   const data = await StorageSerilizer().loadPullRequests(keys);
   const html = HTMLGenerator().generate(data);
-  document.getElementById('content')!.appendChild(html);
+  document.getElementById('popup')!.appendChild(html);
 };
 
 popup();
