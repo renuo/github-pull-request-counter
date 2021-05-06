@@ -9,6 +9,8 @@ export const mockListOfIssues = (count: number, params?: { assignee: string | un
         id: Math.floor(Math.random() * 100),
         title: 'PR Title',
         assignee: params?.assignee,
+        number: i,
+        owner: 'renuo/github-pull-request-counter',
         pull_request: {
           url: `https://api.github.com/repos/renuo/github-pull-request-counter/pulls/${i+1}`,
           html_url: `https://github.com/renuo/github-pull-request-counter/pull/${i+1}`

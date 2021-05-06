@@ -20,9 +20,13 @@ const HTMLGenerator = () => {
     groupLevelDiv.classList.add('group-container');
 
     for (const issue of issues) {
-      const linkContainerDiv = document.createElement('div');
-      linkContainerDiv.appendChild(generateLink(issue));
-      groupLevelDiv.appendChild(linkContainerDiv);
+      const pullRequestDiv = document.createElement('div');
+
+      pullRequestDiv.appendChild(generateLink(issue));
+      pullRequestDiv.appendChild(generateSubDescription(issue));
+
+      pullRequestDiv.classList.add('link-container');
+      groupLevelDiv.appendChild(pullRequestDiv);
     }
 
     return groupLevelDiv;
@@ -35,6 +39,12 @@ const HTMLGenerator = () => {
     link.target = '_blank';
     return link;
   };
+
+  const generateSubDescription = (issue: Issue) => {
+    const subDescriptionP = document.createElement('p');
+    subDescriptionP.textContent = `${issue.owner} #${issue.number}`;
+    return subDescriptionP;
+  }
 
   return { generate };
 };

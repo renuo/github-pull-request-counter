@@ -32,11 +32,19 @@ const asyncFilter = async (array: [], predicate: (item: any) => Promise<boolean>
   return array.filter((_item, index) => results[index]);
 };
 
+const readOwnerFromUrl = (url: string): string => {
+  let owner = url.replace('https://api.github.com/repos/', '');
+  owner = owner.replace('/pulls/1', '');
+  return owner;
+}
+
 const removeUselessDataFromIssues = (issues: Issue[]): Issue[] => (
   issues.map(issue => ({
     id: 12,
     assignee: undefined,
     title: issue.title,
+    number: issue.number,
+    owner: readOwnerFromUrl(issue.pull_request.url),
     pull_request: {
       url: issue.pull_request.url,
       html_url: issue.pull_request.html_url,
