@@ -1,24 +1,28 @@
 import { Issue } from '../types/types';
 
-const env = process.env;
+// const env = process.env;
+const env = {
+  USERNAME: 'Janis-Leuenberger',
+  ACCESS_TOKEN: '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'
+};
 
 const makeRequest = async (path: string, params?: string) => {
-  return await (await fetch(`https://api.github.com${path}?${params}`, {
+  return (await fetch(`https://api.github.com${path}?${params}`, {
     method: 'GET',
     headers: {
-      'Authorization': 'Basic ' + btoa(env.USERNAME! + ":" + env.ACCESS_TOKEN!)
+      'Authorization': 'Basic ' + btoa(env.USERNAME! + ':' + env.ACCESS_TOKEN!)
     }
   })).json();
-}
+};
 
 const makeRequestFullURL = async (path: string, params?: string) => {
-  return await (await fetch(`${path}?${params}`, {
+  return (await fetch(`${path}?${params}`, {
     method: 'GET',
     headers: {
-      'Authorization': 'Basic ' + btoa(env.USERNAME! + ":" + env.ACCESS_TOKEN!)
+      'Authorization': 'Basic ' + btoa(env.USERNAME! + ':' + env.ACCESS_TOKEN!)
     }
   })).json();
-}
+};
 
 // https://advancedweb.hu/how-to-use-async-functions-with-array-filter-in-javascript/
 // TODO: Replace any
@@ -26,7 +30,7 @@ const asyncFilter = async (array: [], predicate: (item: any) => Promise<boolean>
   const results = await Promise.all(array.map(predicate));
 
   return array.filter((_item, index) => results[index]);
-}
+};
 
 const removeUselessDataFromIssues = (issues: Issue[]): Issue[] => (
   issues.map(issue => ({
@@ -38,7 +42,7 @@ const removeUselessDataFromIssues = (issues: Issue[]): Issue[] => (
       html_url: issue.pull_request.html_url,
     }
   }))
-)
+);
 
 interface GithubApiWrapperProps {
 
@@ -57,34 +61,34 @@ const githubApiWrapper = (props: GithubApiWrapperProps): GithubApiWrapper => {
   const authenticateUser = () => {
     // chrome.tabs.create({ url: `https://github.com/login/oauth/authorize?client_id=${env.CLIENT_ID}` });
     return true;
-  }
+  };
 
   const getReviewRequested = async () => {
     const query = encodeURIComponent('is:open is:pr review-requested:Janis-Leuenberger archived:false');
     const issues = await makeRequest('/search/issues', `q=${query}`);
 
     return removeUselessDataFromIssues(issues.items);
-  }
+  };
 
   const getNoReviewRequested = async () => {
     return removeUselessDataFromIssues(await searchIssues(''));
-  }
+  };
 
   const getAllReviewsDone = async () => {
     return removeUselessDataFromIssues(await searchIssues('-'));
-  }
+  };
 
   const searchIssues = async (reviewModifier: string) => {
     const q = encodeURIComponent(`is:pr assignee:Janis-Leuenberger archived:false is:open ${reviewModifier}review:none`);
-    let noReviews = (await makeRequest('/search/issues', `q=${q}`));
+    const noReviews = (await makeRequest('/search/issues', `q=${q}`));
 
     const f = await asyncFilter(noReviews.items, async (issue: any) => {
-      let asd = (await makeRequestFullURL(`${issue.pull_request.url}/requested_reviewers`));
+      const asd = (await makeRequestFullURL(`${issue.pull_request.url}/requested_reviewers`));
       return asd.users.length + asd.teams.length === 0;
     });
 
     return f;
-  }
+  };
 
   const getMissingAssignee = async () => {
     const q = encodeURIComponent('is:open is:pr author:Janis-Leuenberger archived:false');
@@ -92,9 +96,9 @@ const githubApiWrapper = (props: GithubApiWrapperProps): GithubApiWrapper => {
     pulls = pulls.items.filter((s: Issue) => !s.assignee);
 
     return removeUselessDataFromIssues(pulls);
-  }
+  };
 
   return { authenticateUser, getReviewRequested, getNoReviewRequested, getAllReviewsDone, getMissingAssignee };
-}
+};
 
-export default githubApiWrapper
+export default githubApiWrapper;

@@ -17,30 +17,30 @@ export const mockListOfIssues = (count: number, params?: { assignee: string | un
     }
 
     return items;
-  }
+  };
 
   return {
     total_count: count,
     items: createIssues(count)
-  }
+  };
 };
 
 export const mockRequestedReviewers = (usersCount: number, teamsCount: number) => {
   const createRandomID = (): number => Math.floor(Math.random() * 100);
 
   const createReviewers = (count: number) => {
-    let reviewer = [];
+    const reviewer = [];
     for (let i = 0; i < count; i++) {
       reviewer.push({ id: createRandomID() });
     }
     return reviewer;
-  }
+  };
 
   return {
     users: createReviewers(usersCount),
     teams: createReviewers(teamsCount)
   };
-}
+};
 
 export const globalMock = (url: string, params?: { pullRequestCount?: number, openUserRequestCount?: number, openTeamRequestCount?: number }) => {
   if (url.includes('/requested_reviewers')) {
@@ -48,4 +48,4 @@ export const globalMock = (url: string, params?: { pullRequestCount?: number, op
   } else {
     return Promise.resolve(mockListOfIssues(params?.pullRequestCount || 0));
   }
-}
+};

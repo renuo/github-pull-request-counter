@@ -26,12 +26,12 @@ describe('githubApiWrapper', () => {
       mockedFetch.mockResolvedValue(Promise.resolve({
         json: () => Promise.resolve(mockListOfIssues(pullRequestCount))
       }));
-    })
+    });
 
     describe('with no pull requests', () => {
       beforeAll(() => {
         pullRequestCount = 0;
-      })
+      });
 
       it('doesn\'t contain any links', async () => {
         const result = await github.getReviewRequested();
@@ -42,7 +42,7 @@ describe('githubApiWrapper', () => {
     describe('with a single pull request', () => {
       beforeAll(() => {
         pullRequestCount = 1;
-      })
+      });
 
       it('has the correct link', async () => {
         const result = await github.getReviewRequested();
@@ -54,7 +54,7 @@ describe('githubApiWrapper', () => {
     describe('with three pull requests', () => {
       beforeAll(() => {
         pullRequestCount = 3;
-      })
+      });
 
       it('has the correct links', async () => {
         const result = await github.getReviewRequested();
@@ -77,14 +77,14 @@ describe('githubApiWrapper', () => {
 
         return Promise.resolve({
           json: () => Promise.resolve(value)
-        })
+        });
       });
-    })
+    });
 
     describe('with no pull requests', () => {
       beforeAll(() => {
         pullRequestCount = 0;
-      })
+      });
 
       it('doesn\'t contain any links', async () => {
         const result = await github.getNoReviewRequested();
@@ -95,7 +95,7 @@ describe('githubApiWrapper', () => {
     describe('with a single pull request', () => {
       beforeAll(() => {
         pullRequestCount = 1;
-      })
+      });
 
       it('has the correct link', async () => {
         const result = await github.getNoReviewRequested();
@@ -107,7 +107,7 @@ describe('githubApiWrapper', () => {
     describe('with three pull requests', () => {
       beforeAll(() => {
         pullRequestCount = 3;
-      })
+      });
 
       it('has the correct links', async () => {
         const result = await github.getNoReviewRequested();
@@ -125,7 +125,7 @@ describe('githubApiWrapper', () => {
           const result = await github.getNoReviewRequested();
           expect(result.length).toEqual(0);
         });
-      })
+      });
 
       describe('with a requested review from a team', () => {
         beforeAll(() => {
@@ -137,7 +137,7 @@ describe('githubApiWrapper', () => {
           const result = await github.getNoReviewRequested();
           expect(result.length).toEqual(0);
         });
-      })
+      });
     });
   });
 
@@ -154,14 +154,14 @@ describe('githubApiWrapper', () => {
 
         return Promise.resolve({
           json: () => Promise.resolve(value)
-        })
+        });
       });
-    })
+    });
 
     describe('with no pull requests', () => {
       beforeAll(() => {
         pullRequestCount = 0;
-      })
+      });
 
       it('doesn\'t contain any links', async () => {
         const result = await github.getAllReviewsDone();
@@ -172,7 +172,7 @@ describe('githubApiWrapper', () => {
     describe('with a single pull request', () => {
       beforeAll(() => {
         pullRequestCount = 1;
-      })
+      });
 
       it('has the correct link', async () => {
         const result = await github.getAllReviewsDone();
@@ -184,7 +184,7 @@ describe('githubApiWrapper', () => {
     describe('with three pull requests', () => {
       beforeAll(() => {
         pullRequestCount = 3;
-      })
+      });
 
       it('has the correct links', async () => {
         const result = await github.getAllReviewsDone();
@@ -202,7 +202,7 @@ describe('githubApiWrapper', () => {
           const result = await github.getAllReviewsDone();
           expect(result.length).toEqual(0);
         });
-      })
+      });
 
       describe('with a requested review from a team', () => {
         beforeAll(() => {
@@ -214,7 +214,7 @@ describe('githubApiWrapper', () => {
           const result = await github.getAllReviewsDone();
           expect(result.length).toEqual(0);
         });
-      })
+      });
     });
   });
 
@@ -226,13 +226,13 @@ describe('githubApiWrapper', () => {
       mockedFetch.mockResolvedValue(Promise.resolve({
         json: () => Promise.resolve(mockListOfIssues(pullRequestCount, { assignee }))
       }));
-    })
+    });
 
     describe('with no pull requests', () => {
       beforeAll(() => {
         pullRequestCount = 0;
         assignee = undefined;
-      })
+      });
 
       it('doesn\'t contain any links', async () => {
         const result = await github.getMissingAssignee();
@@ -255,7 +255,7 @@ describe('githubApiWrapper', () => {
       beforeAll(() => {
         pullRequestCount = 1;
         assignee = undefined;
-      })
+      });
 
       it('has the correct link', async () => {
         const result = await github.getMissingAssignee();
@@ -279,7 +279,7 @@ describe('githubApiWrapper', () => {
       beforeAll(() => {
         pullRequestCount = 3;
         assignee = undefined;
-      })
+      });
 
       it('has the correct links', async () => {
         const result = await github.getMissingAssignee();

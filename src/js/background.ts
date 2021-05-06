@@ -1,7 +1,5 @@
 import githubApiWrapper from './services/github-api-wrapper';
-import StorageSerilizer from './services/storage-serializer';
-// Todo: remove
-// import { chrome } from 'jest-chrome'
+import StorageSerializer from './services/storage-serializer';
 
 const serviceWorker = async() => {
   const github = githubApiWrapper({});
@@ -13,7 +11,7 @@ const serviceWorker = async() => {
     'reviewRequested': await github.getReviewRequested()
   }
 
-  const storageSerilizer = StorageSerilizer();
+  const storageSerilizer = StorageSerializer();
   storageSerilizer.storePullRequests(objectToSerialize);
 
   // console.log(objectToSerialize);

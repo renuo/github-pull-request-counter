@@ -11,7 +11,7 @@ global.chrome = {
 } as any;
 
 
-export const issueFactory = (index: number) => ( {
+export const issueFactory = (index: number) => ({
   id: index,
   title: `PullRequest-${index}-Title`,
   assignee: undefined,
@@ -22,15 +22,15 @@ export const issueFactory = (index: number) => ( {
 });
 
 const pullRequestRecordFactory = (count: number) => {
-  let record: PullRequestRecord = {};
+  const record: PullRequestRecord = {};
   for (let i = 0; i < count; i++) {
     record[`PullRequest-${i}`] = [issueFactory(i), issueFactory(i + count)];
   }
   return record;
-}
+};
 
 describe('StorageSerialzer', () => {
-  let storageSerilizer = StorageSerializer();
+  const storageSerilizer = StorageSerializer();
   const setMock = global.chrome.storage.local.set;
   let pullRequests: PullRequestRecord;
 
@@ -41,8 +41,8 @@ describe('StorageSerialzer', () => {
   describe('#storePullRequests', () => {
 
     beforeEach(() => {
-      storageSerilizer.storePullRequests(pullRequests)
-    })
+      storageSerilizer.storePullRequests(pullRequests);
+    });
 
     describe('with an empty record', () => {
       beforeAll(() => {
@@ -51,8 +51,8 @@ describe('StorageSerialzer', () => {
 
       it('doesn\'t store anything', () => {
         expect(setMock).toBeCalledTimes(0);
-      })
-    })
+      });
+    });
 
     describe('with one record entry', () => {
       beforeAll(() => {
@@ -61,7 +61,7 @@ describe('StorageSerialzer', () => {
 
       it('calls set with the right arguments', () => {
         expect(setMock).toHaveBeenNthCalledWith(1, { 'PullRequest-0': JSON.stringify([issueFactory(0), issueFactory(1)]) });
-      })
+      });
     });
 
     describe('with five record entries', () => {
@@ -71,19 +71,19 @@ describe('StorageSerialzer', () => {
 
       it('calls set five times', () => {
         expect(setMock).toBeCalledTimes(5);
-      })
-    })
-  })
+      });
+    });
+  });
 
   describe('#loadPullRequests', () => {
-    let keys: string[]
+    let keys: string[];
     let result: PullRequestRecord;
     const getMock = global.chrome.storage.local.get;
 
     beforeEach(async () => {
       keys = Object.keys(pullRequests);
-      result = await storageSerilizer.loadPullRequests(keys)
-    })
+      result = await storageSerilizer.loadPullRequests(keys);
+    });
 
     describe('with no keys', () => {
       beforeAll(() => {
@@ -92,13 +92,13 @@ describe('StorageSerialzer', () => {
 
       it('doesn\'t load anything', () => {
         expect(getMock).toBeCalledTimes(0);
-      })
-    })
+      });
+    });
 
     describe('with one stored record', () => {
       beforeAll(() => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: { [key: string]: any }) => void): void => {
-          callback({'PullRequest-0': [ JSON.stringify([issueFactory(0), issueFactory(1)]) ]});
+          callback({ 'PullRequest-0': [ JSON.stringify([issueFactory(0), issueFactory(1)]) ] });
         });
 
         pullRequests = pullRequestRecordFactory(1);
@@ -107,7 +107,7 @@ describe('StorageSerialzer', () => {
       it('loads the correct data', () => {
         expect(global.chrome.storage.local.get).toBeCalledTimes(1);
         expect(result).toEqual(pullRequests);
-      })
+      });
     });
 
     describe('with four stored records', () => {
@@ -127,7 +127,7 @@ describe('StorageSerialzer', () => {
       it('loads the correct data', () => {
         expect(global.chrome.storage.local.get).toBeCalledTimes(4);
         expect(result).toEqual(pullRequests);
-      })
+      });
     });
-  })
+  });
 });

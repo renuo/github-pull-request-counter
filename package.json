@@ -8,7 +8,7 @@
     "start": "webpack --watch --config webpack.dev.js",
     "build": "webpack --config webpack.dev.js",
     "build-production": "webpack --config webpack.prod.js",
-    "test": "jest",
+    "test": "yarn build; jest",
     "lint": "tslint -c tslint.json 'src/**/*.ts' '__test__/**/*.ts'",
     "fix": "tslint -c tslint.json 'src/**/*.ts' '__test__/**/*.ts' --fix"
   },
@@ -27,7 +27,6 @@
     "html-webpack-plugin": "^5.3.1",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^26.6.3",
-    "jest-chrome": "^0.7.1",
     "jest-puppeteer": "^5.0.1",
     "jest-webextension-mock": "^3.7.9",
     "node-fetch": "^2.6.1",
@@ -45,7 +44,5 @@
     "webpack": "^5.34.0",
     "webpack-cli": "^4.6.0"
   },
-  "dependencies": {
-    "axios": "^0.21.1"
-  }
+  "dependencies": {}
 }

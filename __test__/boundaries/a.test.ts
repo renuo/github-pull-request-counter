@@ -8,33 +8,33 @@ let page: puppeteer.Page;
 const env = process.env;
 
 const makeFetchRequest = async (path: string, params?: string) => {
-  return await fetch(`https://api.github.com${path}?${params}`, {
+  return fetch(`https://api.github.com${path}?${params}`, {
     method: 'GET',
     headers: {
-      'Authorization': 'Basic ' + Buffer.from(env.USERNAME! + ":" + env.ACCESS_TOKEN!).toString('base64')
+      'Authorization': 'Basic ' + Buffer.from(env.USERNAME! + ':' + env.ACCESS_TOKEN!).toString('base64')
     }
   });
-}
+};
 
 const makeRequest = async (path: string, params?: string) => {
   console.log(`https://api.github.com${path}?${params}`);
-  return await axios.get(`https://api.github.com${path}?${params}`, {
+  return axios.get(`https://api.github.com${path}?${params}`, {
     auth: {
       username: env.USERNAME!,
       password: env.ACCESS_TOKEN!
     }
   });
-}
+};
 
 const makeRequestFullURL = async (path: string, params?: string) => {
   console.log(`${path}?${params}`);
-  return await axios.get(`${path}?${params}`, {
+  return axios.get(`${path}?${params}`, {
     auth: {
       username: env.USERNAME!,
       password: env.ACCESS_TOKEN!
     }
   });
-}
+};
 
 // https://advancedweb.hu/how-to-use-async-functions-with-array-filter-in-javascript/
 // TODO: Replace any
@@ -42,9 +42,12 @@ const asyncFilter = async (array: [], predicate: (item: any) => Promise<boolean>
   const results = await Promise.all(array.map(predicate));
 
   return array.filter((_item, index) => results[index]);
-}
+};
 
 describe('authetification', () => {
+  it('temp', () => {
+    expect(1).toEqual(1);
+  });
   // it('get user information', async () => {
   //   const response = await makeRequest('/user')
   //   expect(response.data.login).toEqual(env.USERNAME);
@@ -137,12 +140,12 @@ describe('authetification', () => {
   //   let done = approved.items.concat(changes_requested.items);
   //   console.log(done);
   // })
-  it('author with no assignee', async () => {
-    const q = encodeURIComponent('is:open is:pr author:Janis-Leuenberger archived:false');
-    let pulls = (await makeRequest('/search/issues', `q=${q}`)).data;
-    pulls = pulls.items.filter(s => !s.assignee);
-    console.log(pulls);
-  })
+  // it('author with no assignee', async () => {
+  //   const q = encodeURIComponent('is:open is:pr author:Janis-Leuenberger archived:false');
+  //   let pulls = (await makeRequest('/search/issues', `q=${q}`)).data;
+  //   pulls = pulls.items.filter(s => !s.assignee);
+  //   console.log(pulls);
+  // })
 
 
 
