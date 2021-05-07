@@ -22,7 +22,7 @@ describe('HTMLGenerator', () => {
         record = {
           reviewRequested: []
         };
-      })
+      });
 
       it('outputs the backup element', () => {
         expect(result.outerHTML).toContain('Nothing to do');

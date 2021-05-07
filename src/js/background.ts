@@ -1,5 +1,6 @@
 import githubApiWrapper from './services/github-api-wrapper';
 import StorageSerializer from './services/storage-serializer';
+import BadgeSetter from './services/badge-setter';
 
 // TODO: put somewhere else
 const pollingInterval = 1;
@@ -10,11 +11,13 @@ const ServiceWoker = () => {
 
     // TODO: check if this is async
     const objectToSerialize = {
-      'noReviewRequested': await github.getNoReviewRequested(),
-      'allReviewsDone': await github.getAllReviewsDone(),
-      'missingAssignee': await github.getMissingAssignee(),
-      'reviewRequested': await github.getReviewRequested()
+      noReviewRequested: await github.getNoReviewRequested(),
+      allReviewsDone: await github.getAllReviewsDone(),
+      missingAssignee: await github.getMissingAssignee(),
+      reviewRequested: await github.getReviewRequested()
     };
+
+    BadgeSetter().update(objectToSerialize);
 
     const storageSerilizer = StorageSerializer();
     storageSerilizer.storePullRequests(objectToSerialize);
@@ -24,7 +27,6 @@ const ServiceWoker = () => {
     await fetchAndStoreData();
 
     chrome.alarms.create('polling', { periodInMinutes: pollingInterval });
-
 
     // TODO: I cound't get any tests to run this code properly. I tried using a spy on fetchAndStoreData and making the code synchronous.
     /* istanbul ignore next */

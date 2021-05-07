@@ -22,6 +22,10 @@ global.chrome = {
       get: jest.fn(),
       set: jest.fn()
     }
+  },
+  action: {
+    setBadgeText: jest.fn(),
+    setBadgeBackgroundColor: jest.fn(),
   }
 } as any;
 
@@ -39,6 +43,14 @@ describe('ServiceWorker', () => {
 
     it('calls set four times', () => {
       expect(global.chrome.storage.local.set).toBeCalledTimes(4);
+    });
+
+    it('calls setBadgeText with the correct arguments', () => {
+      expect(global.chrome.action.setBadgeText).toHaveBeenNthCalledWith(1, { text: '8' });
+    });
+
+    it('calls setBadgeBackgroundColor with the correct arguments', () => {
+      expect(global.chrome.action.setBadgeBackgroundColor).toHaveBeenNthCalledWith(1, { color: '#d9534f' });
     });
   });
 
