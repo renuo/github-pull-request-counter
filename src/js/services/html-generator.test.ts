@@ -3,7 +3,7 @@
  */
 
 import HTMLGenerator from './html-generator';
-import { PullRequestRecord } from '../types/types';
+import { PullRequestRecord } from '../static/types';
 import { pullRequestRecordFactory } from '../../../__test__/mocks/factories';
 
 describe('HTMLGenerator', () => {

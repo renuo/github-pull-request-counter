@@ -1,4 +1,4 @@
-import { Issue } from '../types/types';
+import { Issue } from '../static/types';
 
 // const env = process.env;
 const env = {
@@ -34,9 +34,9 @@ const asyncFilter = async (array: [], predicate: (item: any) => Promise<boolean>
 
 const readOwnerFromUrl = (url: string): string => {
   let owner = url.replace('https://api.github.com/repos/', '');
-  owner = owner.replace('/pulls/1', '');
+  owner = owner.split('/pulls/')[0];
   return owner;
-}
+};
 
 const removeUselessDataFromIssues = (issues: Issue[]): Issue[] => (
   issues.map(issue => ({

@@ -1,4 +1,4 @@
-import { Issue } from '../../src/js/types/types';
+import { Issue } from '../../src/js/static/types';
 
 export const mockListOfIssues = (count: number, params?: { assignee: string | undefined }) => {
   const createIssues = (count: number): Issue[] => {

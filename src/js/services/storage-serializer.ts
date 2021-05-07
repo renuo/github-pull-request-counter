@@ -1,4 +1,4 @@
-import { PullRequestRecord, Issue } from '../types/types';
+import { PullRequestRecord, Issue } from '../static/types';
 
 const StorageSerializer = () => {
   const storePullRequests = (pullRequests: PullRequestRecord): void => {

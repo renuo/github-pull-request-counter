@@ -1,5 +1,5 @@
 import StorageSerializer from './storage-serializer';
-import { PullRequestRecord } from '../types/types';
+import { PullRequestRecord } from '../static/types';
 import { issueFactory, pullRequestRecordFactory } from '../../../__test__/mocks/factories';
 
 global.chrome = {
