@@ -1,2 +1,41 @@
-<p>Options</p>
-<button id="health-check">Health check</button>
+<div class="options">
+  <p class="title">Options</p>
+  <div class="group-container">
+    <div class="header">
+      <h1>GitHub Pull Request Counter </h1>
+      <p>developed by <a href="https://www.renuo.ch/" target="_blank">Renuo</a></p>
+    </div>
+    <div class="heading-1">
+      <h2>Counter</h2>
+      <p>Customize which required actions increase the counter.</p>
+    </div>
+
+    <div>
+      <input type="checkbox" id="reviewRequested" name="reviewRequested">
+      <label for="reviewRequested">I must review</label>
+    </div>
+    <div>
+      <input type="checkbox" id="noReviewRequested" name="noReviewRequested">
+      <label for="noReviewRequested">Someone must review</label>
+    </div>
+    <div>
+      <input type="checkbox" id="allReviewsDone" name="allReviewsDone">
+      <label for="allReviewsDone">All reviews done</label>
+    </div>
+    <div>
+      <input type="checkbox" id="missingAssignee" name="missingAssignee">
+      <label for="missingAssignee">Missing Assignee</label>
+    </div>
+
+    <div class="heading-1">
+      <h2>Scope</h2>
+      <p>Enter a comma seperated list of GitHub account names from which the extension should fetch.</p>
+    </div>
+    <input type="text" id="accountNames" class="account-names" placeholder="GitHubUser1, GitHubUser3, GitHubUser3, GitHubUser4"></input>
+
+    <div class="heading-1">
+      <a href="https://github.com/settings/connections/applications/8fc6af57f4e676d5f43b" >Open permissions settions</a>
+      <p>Open the OAuth settings for this extension.</p>
+    </div>
+  </div>
+</div>

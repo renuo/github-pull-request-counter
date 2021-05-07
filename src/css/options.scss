@@ -1,5 +1,43 @@
 @import './colors';
+@import './shared';
 
-button {
-  background-color: $red;
+.options {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5%;
+  width: 35%;
+
+  .title {
+    margin-bottom: 1px;
+  }
+
+  .header {
+    margin-left: 0;
+
+    h1 {
+      font-size: 24px;
+      margin-top: 5px;
+    }
+  }
+
+  .heading-1 {
+    h2 {
+      margin-bottom: 0;
+      margin-top: 20px;
+    }
+
+    a {
+      margin-top: 15px;
+    }
+
+    p {
+      font-style: italic;
+      margin-top: 0;
+    }
+  }
+
+  .account-names {
+    width: 45%;
+  }
 }
+
