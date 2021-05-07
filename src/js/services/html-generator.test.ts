@@ -18,9 +18,16 @@ describe('HTMLGenerator', () => {
     });
 
     describe('with an empty record', () => {
+      beforeAll(() => {
+        record = {
+          reviewRequested: []
+        };
+      })
+
       it('outputs the backup element', () => {
-        // TODO
-        // expect('todo').toEqual('implement');
+        expect(result.outerHTML).toContain('Nothing to do');
+        expect(result.outerHTML).toContain('Seems like you are a good coworker :)');
+        expect(result.outerHTML).toContain('In the meantime you could recommend the extention to your friends or rate it in the Store.');
       });
     });
 
@@ -30,7 +37,7 @@ describe('HTMLGenerator', () => {
       });
 
       it('has the correct <p> as its first child', () => {
-        expect((result.childNodes[0] as HTMLParagraphElement).innerHTML).toEqual('PullRequest-0');
+        expect((result.childNodes[0] as HTMLParagraphElement).innerHTML).toEqual('Unknown');
       });
 
       it('has the correct <div> as its second child', () => {
