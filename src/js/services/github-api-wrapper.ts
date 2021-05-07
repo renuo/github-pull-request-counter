@@ -3,7 +3,8 @@ import { Issue } from '../static/types';
 // const env = process.env;
 const env = {
   USERNAME: 'Janis-Leuenberger',
-  ACCESS_TOKEN: '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'
+  ACCESS_TOKEN: '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',
+  // CLIENT_ID: ACCESS_TOKEN='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'
 };
 
 const makeRequest = async (path: string, params?: string) => {
@@ -45,6 +46,9 @@ const removeUselessDataFromIssues = (issues: Issue[]): Issue[] => (
     title: issue.title,
     number: issue.number,
     owner: readOwnerFromUrl(issue.pull_request.url),
+    user: {
+      login: issue.user.login,
+    },
     pull_request: {
       url: issue.pull_request.url,
       html_url: issue.pull_request.html_url,
@@ -53,7 +57,7 @@ const removeUselessDataFromIssues = (issues: Issue[]): Issue[] => (
 );
 
 export interface GithubApiWrapper {
-  // authenticateUser: () => boolean;
+  // authenticateUser: () => void;
   getReviewRequested: () => Promise<Issue[]>;
   getNoReviewRequested: () => Promise<Issue[]>;
   getAllReviewsDone: () => Promise<Issue[]>;
@@ -63,8 +67,7 @@ export interface GithubApiWrapper {
 const githubApiWrapper = (): GithubApiWrapper => {
 
   // const authenticateUser = () => {
-  //   // chrome.tabs.create({ url: `https://github.com/login/oauth/authorize?client_id=${env.CLIENT_ID}` });
-  //   return true;
+  //   chrome.tabs.create({ url: `https://github.com/login/oauth/authorize?client_id=${env.CLIENT_ID}` });
   // };
 
   const getReviewRequested = async () => {
