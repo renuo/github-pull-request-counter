@@ -1,24 +1,72 @@
 @import './colors';
 
-body { // TODO: remove
-  background-color: transparent;
+body {
+  background-color: $background-gray;
+  margin: 15px;
 }
 
-.popup {
-  // background-color: white; // TODO: remove
-  background-color: transparent;
 
-  .group-container {
-    margin-bottom: 20px;
-    background-color: $gray;
-    padding: 10px;
+.header {
+  margin-bottom: 20px;
+  margin-left: 10px;
 
-    .link-container {
-      margin-bottom: 20px;
+  h1 {
+    font-size: 19px;
+    margin-bottom: 0;
+  }
+
+  p {
+    margin-top: 0;
+
+    a {
+      display: inline;
     }
   }
 }
 
-p {
-  margin: 0;
+a {
+  color: $link-blue;
+  display: inline-block;
+  font-size: 15px;
+  font-weight: bold;
+  max-width: 490px;
+  overflow: hidden;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.popup {
+  max-width: 500px;
+  min-width: 300px;
+
+  .title {
+    font-weight: bold;
+    margin-left: 10px;
+  }
+
+  p {
+    margin-bottom: 1px;
+    margin-top: 0;
+  }
+
+  .group-container {
+    background-color: $pure-white;
+    border-radius: 10px;
+    box-shadow: 3px 3px 10px $box-shadow-gray;
+    margin-bottom: 20px;
+    padding: 10px;
+
+    .link-container {
+      margin-bottom: 10px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
 }
