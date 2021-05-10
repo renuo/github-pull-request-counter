@@ -9,21 +9,22 @@ const env = {
 };
 
 const makeRequest = async (path: string, params?: string) => {
-  return (await fetch(`https://api.github.com${path}?${params}`, {
-    method: 'GET',
-    headers: {
-      'Authorization': 'Basic ' + btoa(env.USERNAME! + ':' + env.ACCESS_TOKEN!)
-    }
-  })).json();
+  return makeRequestFullURL(`https://api.github.com${path}`, params);
 };
 
 const makeRequestFullURL = async (path: string, params?: string) => {
-  return (await fetch(`${path}?${params}`, {
+  const response = await fetch(`${path}?${params}`, {
     method: 'GET',
     headers: {
       'Authorization': 'Basic ' + btoa(env.USERNAME! + ':' + env.ACCESS_TOKEN!)
     }
-  })).json();
+  });
+
+  if (response.status === 403) {
+    throw new Error('Too many requests');
+  } else {
+    return response.json();
+  }
 };
 
 // https://advancedweb.hu/how-to-use-async-functions-with-array-filter-in-javascript/
