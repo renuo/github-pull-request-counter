@@ -1,6 +1,7 @@
 import githubApiWrapper from './services/github-api-wrapper';
 import StorageSerializer from './services/storage-serializer';
 import BadgeSetter from './services/badge-setter';
+import SettingsSerializer from './services/settings-serializer';
 
 // TODO: put somewhere else
 const pollingInterval = 1;
@@ -9,7 +10,7 @@ const ServiceWoker = () => {
   const fetchAndStoreData = async () => {
     const github = githubApiWrapper();
 
-    // TODO: check if this is async
+    // TODO: make this async
     const objectToSerialize = {
       noReviewRequested: await github.getNoReviewRequested(),
       allReviewsDone: await github.getAllReviewsDone(),
@@ -17,7 +18,8 @@ const ServiceWoker = () => {
       reviewRequested: await github.getReviewRequested()
     };
 
-    BadgeSetter().update(objectToSerialize);
+    const counter = await SettingsSerializer().loadCounter();
+    BadgeSetter().update(objectToSerialize, counter);
 
     const storageSerilizer = StorageSerializer();
     storageSerilizer.storePullRequests(objectToSerialize);

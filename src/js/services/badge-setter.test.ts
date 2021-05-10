@@ -14,7 +14,7 @@ describe('BadgeSetter', () => {
     let record: PullRequestRecord;
 
     beforeEach(() => {
-      BadgeSetter().update(record);
+      BadgeSetter().update(record, {});
     });
 
     describe('with an empty record', () => {

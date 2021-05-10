@@ -17,3 +17,7 @@ export interface PullRequestRecord {
   [key: string]: Issue[];
 }
 
+export interface Counter {
+  [key: string]: boolean;
+}
+

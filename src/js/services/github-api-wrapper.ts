@@ -1,4 +1,5 @@
 import { Issue } from '../static/types';
+import SettingsSerializer from './settings-serializer';
 
 // const env = process.env;
 const env = {
@@ -33,14 +34,9 @@ const asyncFilter = async (array: [], predicate: (item: any) => Promise<boolean>
   return array.filter((_item, index) => results[index]);
 };
 
-const readOwnerFromUrl = (url: string): string => {
-  let owner = url.replace('https://api.github.com/repos/', '');
-  owner = owner.split('/pulls/')[0];
-  return owner;
-};
-
-const removeUselessDataFromIssues = (issues: Issue[]): Issue[] => (
-  issues.map(issue => ({
+const removeUselessDataFromIssues = async (issues: Issue[]): Promise<Issue[]> => {
+  issues = await filterByScope(issues);
+  return issues.map(issue => ({
     id: 12,
     assignee: undefined,
     title: issue.title,
@@ -53,8 +49,22 @@ const removeUselessDataFromIssues = (issues: Issue[]): Issue[] => (
       url: issue.pull_request.url,
       html_url: issue.pull_request.html_url,
     }
-  }))
-);
+  }));
+ };
+
+const filterByScope = async (issues: Issue[]): Promise<Issue[]> => {
+  const scope = await SettingsSerializer().loadScope();
+  if (scope === '') return issues;
+
+  const scopeArr = (scope).replace(' ', '').toLowerCase().split(',');
+  return issues.filter(issue => scopeArr.includes(readOwnerFromUrl(issue.pull_request.url).split('/')[0].toLowerCase()));
+};
+
+const readOwnerFromUrl = (url: string): string => {
+  let owner = url.replace('https://api.github.com/repos/', '');
+  owner = owner.split('/pulls/')[0];
+  return owner;
+};
 
 export interface GithubApiWrapper {
   // authenticateUser: () => void;

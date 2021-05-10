@@ -1,9 +1,4 @@
-interface Counter {
-  reviewRequested: boolean;
-  noReviewRequested: boolean;
-  allReviewsDone: boolean;
-  missingAssignee: boolean;
-}
+import { Counter } from '../static/types';
 
 const SettingsSerializer = () => {
   const storeCounter = (counter: Counter): void => {
