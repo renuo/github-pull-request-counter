@@ -1,4 +1,4 @@
-import githubApiWrapper, { GithubApiWrapper } from './github-api-wrapper';
+import GithubApiWrapper from './github-api-wrapper';
 import { mockListOfIssues, mockRequestedReviewers } from '../../../__test__/mocks/github-api-mock-data';
 import fetch from 'node-fetch';
 
@@ -16,13 +16,9 @@ global.chrome = {
 } as any;
 
 
-describe('githubApiWrapper', () => {
-  let github: GithubApiWrapper;
+describe('GithubApiWrapper', () => {
+  const github = GithubApiWrapper();
   let scope = '';
-
-  beforeAll(() => {
-    github = githubApiWrapper();
-  });
 
   beforeEach(() => {
     global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({ 'scope': scope }));

@@ -6,9 +6,6 @@ export const issueFactory = (index: number) => ({
   assignee: undefined,
   number: index,
   owner: 'renuo/github-pull-request-counter',
-  user: {
-    login: 'A User',
-  },
   pull_request: {
     url: `https://api.github.com/repos/renuo/github-pull-request-counter/pulls/${index+1}`,
     html_url: `https://github.com/renuo/github-pull-request-counter/pull/${index+1}`

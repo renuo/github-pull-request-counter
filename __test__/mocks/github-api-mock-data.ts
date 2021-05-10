@@ -11,9 +11,6 @@ export const mockListOfIssues = (count: number, params?: { assignee: string | un
         assignee: params?.assignee,
         number: i,
         owner: 'renuo/github-pull-request-counter',
-        user: {
-          login: 'A User',
-        },
         pull_request: {
           url: `https://api.github.com/repos/renuo/github-pull-request-counter/pulls/${i+1}`,
           html_url: `https://github.com/renuo/github-pull-request-counter/pull/${i+1}`

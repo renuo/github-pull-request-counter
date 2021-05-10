@@ -1,4 +1,4 @@
-import githubApiWrapper from './services/github-api-wrapper';
+import GithubApiWrapper from './services/github-api-wrapper';
 import StorageSerializer from './services/storage-serializer';
 import BadgeSetter from './services/badge-setter';
 import SettingsSerializer from './services/settings-serializer';
@@ -8,7 +8,7 @@ const pollingInterval = 1;
 
 const ServiceWoker = () => {
   const fetchAndStoreData = async () => {
-    const github = githubApiWrapper();
+    const github = GithubApiWrapper();
 
     // TODO: make this async
     const objectToSerialize = {
