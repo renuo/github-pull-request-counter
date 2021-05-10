@@ -11,30 +11,34 @@
     </div>
 
     <div>
-      <input type="checkbox" id="reviewRequested" name="reviewRequested">
-      <label for="reviewRequested">I must review</label>
+      <input type="checkbox" id="review-requested" name="review-requested">
+      <label for="review-requested">I must review</label>
     </div>
     <div>
-      <input type="checkbox" id="noReviewRequested" name="noReviewRequested">
-      <label for="noReviewRequested">Someone must review</label>
+      <input type="checkbox" id="no-review-requested" name="no-review-requested">
+      <label for="no-review-requested">Someone must review</label>
     </div>
     <div>
-      <input type="checkbox" id="allReviewsDone" name="allReviewsDone">
-      <label for="allReviewsDone">All reviews done</label>
+      <input type="checkbox" id="all-reviews-done" name="all-reviews-done">
+      <label for="all-reviews-done">All reviews done</label>
     </div>
     <div>
-      <input type="checkbox" id="missingAssignee" name="missingAssignee">
-      <label for="missingAssignee">Missing Assignee</label>
+      <input type="checkbox" id="missing-assignee" name="missing-assignee">
+      <label for="missing-assignee">Missing Assignee</label>
     </div>
 
     <div class="heading-1">
       <h2>Scope</h2>
-      <p>Enter a comma seperated list of GitHub account names from which the extension should fetch.</p>
+      <p>Enter a comma seperated list of GitHub account names from which the extension should fetch. (case insensitive)</p>
     </div>
-    <input type="text" id="accountNames" class="account-names" placeholder="GitHubUser1, GitHubUser3, GitHubUser3, GitHubUser4"></input>
+    <input type="text" id="account-names" class="account-names" placeholder="GitHubUser1, GitHubUser3, GitHubUser3, GitHubUser4"></input>
+
+    <div class="">
+      <button id="options-save" class="blue-button">Save</button>
+    </div>
 
     <div class="heading-1">
-      <a href="https://github.com/settings/connections/applications/8fc6af57f4e676d5f43b" >Open permissions settions</a>
+      <a href="https://github.com/settings/connections/applications/8fc6af57f4e676d5f43b" >Open permissions settings</a>
       <p>Open the OAuth settings for this extension.</p>
     </div>
   </div>

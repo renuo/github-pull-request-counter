@@ -41,3 +41,21 @@
   }
 }
 
+.blue-button {
+  background-color: $pure-white;
+  border-color: $link-blue;
+  border-radius: 3px;
+  color: $link-blue;
+  margin-top: 10px;
+  padding: 5px 10px;
+
+  &:hover {
+    background-color: $background-gray;
+  }
+
+  &:active {
+    background-color: $link-blue;
+    color: $pure-white;
+  }
+}
+
