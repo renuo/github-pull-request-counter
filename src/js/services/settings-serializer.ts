@@ -6,7 +6,16 @@ const SettingsSerializer = () => {
   };
 
   const loadCounter = async (): Promise<Counter> => {
-    return (JSON.parse(await load('counter')));
+    try {
+      return (JSON.parse(await load('counter')));
+    } catch {
+      return {
+        reviewRequested: true,
+        noReviewRequested: true,
+        allReviewsDone: true,
+        missingAssignee: true
+      };
+    }
   };
 
   const storeScope = (list: string): void => {
@@ -14,11 +23,16 @@ const SettingsSerializer = () => {
   };
 
   const loadScope = async (): Promise<string> => {
-    return (load('scope'));
+    const scope = await load('scope');
+    if (scope === undefined) {
+      return '';
+    } else {
+      return scope;
+    }
   };
 
   const store = (key: string, value: string): void => {
-    chrome.storage.sync.set({ key: value });
+    chrome.storage.local.set({ [key]: value });
   };
 
   const load = async (key: string): Promise<string> => {
