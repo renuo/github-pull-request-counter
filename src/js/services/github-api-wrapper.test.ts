@@ -1,4 +1,5 @@
 import githubApiWrapper, { GithubApiWrapper } from './github-api-wrapper';
+import { mockListOfIssues, mockRequestedReviewers } from '../../../__test__/mocks/github-api-mock-data';
 import fetch from 'node-fetch';
 
 jest.mock('node-fetch');
@@ -6,17 +7,25 @@ const mockedFetch = fetch as any;
 
 global.fetch = mockedFetch;
 global.btoa = (data: string) => Buffer.from(data).toString('base64');
+global.chrome = {
+  storage: {
+    local: {
+      get: jest.fn(),
+    }
+  }
+} as any;
 
-import {
-  mockListOfIssues,
-  mockRequestedReviewers,
-} from '../../../__test__/mocks/github-api-mock-data';
 
 describe('githubApiWrapper', () => {
   let github: GithubApiWrapper;
+  let scope = '';
 
   beforeAll(() => {
     github = githubApiWrapper();
+  });
+
+  beforeEach(() => {
+    global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({ 'scope': scope }));
   });
 
   describe('#getReviewRequested', () => {
@@ -28,9 +37,7 @@ describe('githubApiWrapper', () => {
     });
 
     describe('with no pull requests', () => {
-      beforeAll(() => {
-        pullRequestCount = 0;
-      });
+      beforeAll(() => pullRequestCount = 0);
 
       it('doesn\'t contain any links', async () => {
         const result = await github.getReviewRequested();
@@ -39,9 +46,7 @@ describe('githubApiWrapper', () => {
     });
 
     describe('with a single pull request', () => {
-      beforeAll(() => {
-        pullRequestCount = 1;
-      });
+      beforeAll(() => pullRequestCount = 1);
 
       it('has the correct link', async () => {
         const result = await github.getReviewRequested();
@@ -51,9 +56,7 @@ describe('githubApiWrapper', () => {
     });
 
     describe('with three pull requests', () => {
-      beforeAll(() => {
-        pullRequestCount = 3;
-      });
+      beforeAll(() => pullRequestCount = 3);
 
       it('has the correct links', async () => {
         const result = await github.getReviewRequested();
@@ -81,9 +84,7 @@ describe('githubApiWrapper', () => {
     });
 
     describe('with no pull requests', () => {
-      beforeAll(() => {
-        pullRequestCount = 0;
-      });
+      beforeAll(() => pullRequestCount = 0);
 
       it('doesn\'t contain any links', async () => {
         const result = await github.getNoReviewRequested();
@@ -92,9 +93,7 @@ describe('githubApiWrapper', () => {
     });
 
     describe('with a single pull request', () => {
-      beforeAll(() => {
-        pullRequestCount = 1;
-      });
+      beforeAll(() => pullRequestCount = 1);
 
       it('has the correct link', async () => {
         const result = await github.getNoReviewRequested();
@@ -104,9 +103,7 @@ describe('githubApiWrapper', () => {
     });
 
     describe('with three pull requests', () => {
-      beforeAll(() => {
-        pullRequestCount = 3;
-      });
+      beforeAll(() => pullRequestCount = 3);
 
       it('has the correct links', async () => {
         const result = await github.getNoReviewRequested();
@@ -115,10 +112,9 @@ describe('githubApiWrapper', () => {
       });
 
       describe('with a requested review from a user', () => {
-        beforeAll(() => {
-          openUserRequestCount = 1;
-          openTeamRequestCount = 0;
-        });
+
+        beforeAll(() => openUserRequestCount = 1);
+        afterAll(() => openUserRequestCount = 0);
 
         it('doesn\'t contain any links', async () => {
           const result = await github.getNoReviewRequested();
@@ -127,14 +123,33 @@ describe('githubApiWrapper', () => {
       });
 
       describe('with a requested review from a team', () => {
-        beforeAll(() => {
-          openUserRequestCount = 0;
-          openTeamRequestCount = 1;
-        });
+        beforeAll(() => openTeamRequestCount = 1);
+        afterAll(() => openTeamRequestCount = 0);
 
         it('doesn\'t contain any links', async () => {
           const result = await github.getNoReviewRequested();
           expect(result.length).toEqual(0);
+        });
+      });
+
+      describe('with matching scope', () => {
+        beforeAll(() => { scope = 'renuo'; });
+        afterAll(() => { scope = ''; });
+
+        it('contains three links', async () => {
+          expect((await github.getNoReviewRequested()).length).toEqual(3);
+        });
+      });
+
+      describe('with a not matching scope', () => {
+        beforeAll(() => scope = 'notMatchingScope');
+
+        afterAll(() => {
+          scope = '';
+        });
+
+        it('doesn\'t contain any links', async () => {
+          expect((await github.getNoReviewRequested()).length).toEqual(0);
         });
       });
     });
@@ -158,9 +173,7 @@ describe('githubApiWrapper', () => {
     });
 
     describe('with no pull requests', () => {
-      beforeAll(() => {
-        pullRequestCount = 0;
-      });
+      beforeAll(() => pullRequestCount = 0);
 
       it('doesn\'t contain any links', async () => {
         const result = await github.getAllReviewsDone();
@@ -169,9 +182,7 @@ describe('githubApiWrapper', () => {
     });
 
     describe('with a single pull request', () => {
-      beforeAll(() => {
-        pullRequestCount = 1;
-      });
+      beforeAll(() => pullRequestCount = 1);
 
       it('has the correct link', async () => {
         const result = await github.getAllReviewsDone();
@@ -181,9 +192,7 @@ describe('githubApiWrapper', () => {
     });
 
     describe('with three pull requests', () => {
-      beforeAll(() => {
-        pullRequestCount = 3;
-      });
+      beforeAll(() => pullRequestCount = 3);
 
       it('has the correct links', async () => {
         const result = await github.getAllReviewsDone();
@@ -192,10 +201,8 @@ describe('githubApiWrapper', () => {
       });
 
       describe('with a requested review from a user', () => {
-        beforeAll(() => {
-          openUserRequestCount = 1;
-          openTeamRequestCount = 0;
-        });
+        beforeAll(() => openUserRequestCount = 1);
+        afterAll(() => openUserRequestCount = 0);
 
         it('doesn\'t contain any links', async () => {
           const result = await github.getAllReviewsDone();
@@ -204,10 +211,8 @@ describe('githubApiWrapper', () => {
       });
 
       describe('with a requested review from a team', () => {
-        beforeAll(() => {
-          openUserRequestCount = 0;
-          openTeamRequestCount = 1;
-        });
+        beforeAll(() => openTeamRequestCount = 1);
+        afterAll(() => openTeamRequestCount = 0);
 
         it('doesn\'t contain any links', async () => {
           const result = await github.getAllReviewsDone();
@@ -218,7 +223,7 @@ describe('githubApiWrapper', () => {
   });
 
   describe('#getMissingAssignee', () => {
-    let pullRequestCount: number;
+    let pullRequestCount: number = 0;
     let assignee: string | undefined;
 
     beforeEach(() => {
@@ -228,20 +233,14 @@ describe('githubApiWrapper', () => {
     });
 
     describe('with no pull requests', () => {
-      beforeAll(() => {
-        pullRequestCount = 0;
-        assignee = undefined;
-      });
-
       it('doesn\'t contain any links', async () => {
         const result = await github.getMissingAssignee();
         expect(result.length).toEqual(0);
       });
 
       describe('with an assignee', () => {
-        beforeAll(() => {
-          assignee = 'Karl';
-        });
+        beforeAll(() => assignee = 'Karl');
+        afterAll(() => assignee = undefined);
 
         it('doesn\'t contain any links', async () => {
           const result = await github.getMissingAssignee();
@@ -251,10 +250,7 @@ describe('githubApiWrapper', () => {
     });
 
     describe('with a single pull request', () => {
-      beforeAll(() => {
-        pullRequestCount = 1;
-        assignee = undefined;
-      });
+      beforeAll(() => pullRequestCount = 1);
 
       it('has the correct link', async () => {
         const result = await github.getMissingAssignee();
@@ -263,9 +259,8 @@ describe('githubApiWrapper', () => {
       });
 
       describe('with an assignee', () => {
-        beforeAll(() => {
-          assignee = 'Karl';
-        });
+        beforeAll(() => assignee = 'Karl');
+        afterAll(() => assignee = undefined);
 
         it('doesn\'t contain any links', async () => {
           const result = await github.getMissingAssignee();
@@ -275,10 +270,7 @@ describe('githubApiWrapper', () => {
     });
 
     describe('with three pull requests', () => {
-      beforeAll(() => {
-        pullRequestCount = 3;
-        assignee = undefined;
-      });
+      beforeAll(() => pullRequestCount = 3);
 
       it('has the correct links', async () => {
         const result = await github.getMissingAssignee();
@@ -287,15 +279,26 @@ describe('githubApiWrapper', () => {
       });
 
       describe('with an assignee', () => {
-        beforeAll(() => {
-          assignee = 'Karl';
-        });
+        beforeAll(() => assignee = 'Karl');
+        afterAll(() => assignee = undefined);
 
         it('doesn\'t contain any links', async () => {
           const result = await github.getMissingAssignee();
           expect(result.length).toEqual(0);
         });
       });
+    });
+  });
+
+  describe('Too many requests', () => {
+    beforeEach(() => {
+      mockedFetch.mockResolvedValue(Promise.resolve({
+        status: 403
+      }));
+    });
+
+    it('throws', async () =>  {
+      await expect(github.getMissingAssignee()).rejects.toThrow('Too many requests');
     });
   });
 });

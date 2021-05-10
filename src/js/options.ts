@@ -31,7 +31,7 @@ const Options = () => {
       storeScopeFromDOM();
       ServiceWoker().fetchAndStoreData();
     });
-  }
+  };
 
   const storeCounterFromDOM = () => {
     const counter: Counter = {
