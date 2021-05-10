@@ -1,13 +1,6 @@
 import { Issue } from '../static/types';
 import SettingsSerializer from './settings-serializer';
 
-// const env = process.env;
-const env = {
-  USERNAME: 'Janis-Leuenberger',
-  ACCESS_TOKEN: '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',
-  // CLIENT_ID: ACCESS_TOKEN='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'
-};
-
 const makeRequest = async (path: string, params?: string) => {
   return makeRequestFullURL(`https://api.github.com${path}`, params);
 };
@@ -16,7 +9,7 @@ const makeRequestFullURL = async (path: string, params?: string) => {
   const response = await fetch(`${path}?${params}`, {
     method: 'GET',
     headers: {
-      'Authorization': 'Basic ' + btoa(env.USERNAME! + ':' + env.ACCESS_TOKEN!)
+      'Authorization': 'Basic ' + btoa(process.env.USERNAME! + ':' + process.env.ACCESS_TOKEN!)
     }
   });
 
@@ -28,11 +21,10 @@ const makeRequestFullURL = async (path: string, params?: string) => {
 };
 
 // https://advancedweb.hu/how-to-use-async-functions-with-array-filter-in-javascript/
-// TODO: Replace any
-const asyncFilter = async (array: [], predicate: (item: any) => Promise<boolean>) => {
-  const results = await Promise.all(array.map(predicate));
+const asyncFilter = async (issues: Issue[], predicate: (issue: Issue) => Promise<boolean>) => {
+  const results = await Promise.all(issues.map(predicate));
 
-  return array.filter((_item, index) => results[index]);
+  return issues.filter((_item, index) => results[index]);
 };
 
 const removeUselessDataFromIssues = async (issues: Issue[]): Promise<Issue[]> => {
@@ -100,7 +92,7 @@ const githubApiWrapper = (): GithubApiWrapper => {
     const q = encodeURIComponent(`is:pr assignee:Janis-Leuenberger archived:false is:open ${reviewModifier}review:none`);
     const noReviews = (await makeRequest('/search/issues', `q=${q}`));
 
-    const f = await asyncFilter(noReviews.items, async (issue: any) => {
+    const f = await asyncFilter(noReviews.items, async (issue: Issue) => {
       const asd = (await makeRequestFullURL(`${issue.pull_request.url}/requested_reviewers`));
       return asd.users.length + asd.teams.length === 0;
     });
