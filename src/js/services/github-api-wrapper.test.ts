@@ -16,12 +16,14 @@ global.chrome = {
 } as any;
 
 
-describe('GithubApiWrapper', async () => {
-  const github = await GithubApiWrapper();
+describe('GithubApiWrapper', () => {
   let scope = '';
 
-  beforeEach(() => {
-    global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({ 'scope': scope }));
+  beforeEach(async () => {
+    global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+      'scope': scope ,
+      'accessToken': 'secret'
+    }));
   });
 
   describe('#getReviewRequested', () => {
@@ -36,7 +38,7 @@ describe('GithubApiWrapper', async () => {
       beforeAll(() => pullRequestCount = 0);
 
       it('doesn\'t contain any links', async () => {
-        const result = await github.getReviewRequested();
+        const result = await (await GithubApiWrapper()).getReviewRequested();
         expect(result.length).toEqual(0);
       });
     });
@@ -45,7 +47,7 @@ describe('GithubApiWrapper', async () => {
       beforeAll(() => pullRequestCount = 1);
 
       it('has the correct link', async () => {
-        const result = await github.getReviewRequested();
+        const result = await (await GithubApiWrapper()).getReviewRequested();
         expect(result.length).toEqual(1);
         expect(result[0].pull_request.html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
       });
@@ -55,7 +57,7 @@ describe('GithubApiWrapper', async () => {
       beforeAll(() => pullRequestCount = 3);
 
       it('has the correct links', async () => {
-        const result = await github.getReviewRequested();
+        const result = await (await GithubApiWrapper()).getReviewRequested();
         expect(result.length).toEqual(3);
         expect(result[2].pull_request.html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
       });
@@ -83,7 +85,7 @@ describe('GithubApiWrapper', async () => {
       beforeAll(() => pullRequestCount = 0);
 
       it('doesn\'t contain any links', async () => {
-        const result = await github.getNoReviewRequested();
+        const result = await (await GithubApiWrapper()).getNoReviewRequested();
         expect(result.length).toEqual(0);
       });
     });
@@ -92,7 +94,7 @@ describe('GithubApiWrapper', async () => {
       beforeAll(() => pullRequestCount = 1);
 
       it('has the correct link', async () => {
-        const result = await github.getNoReviewRequested();
+        const result = await (await GithubApiWrapper()).getNoReviewRequested();
         expect(result.length).toEqual(1);
         expect(result[0].pull_request.html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
       });
@@ -102,7 +104,7 @@ describe('GithubApiWrapper', async () => {
       beforeAll(() => pullRequestCount = 3);
 
       it('has the correct links', async () => {
-        const result = await github.getNoReviewRequested();
+        const result = await (await GithubApiWrapper()).getNoReviewRequested();
         expect(result.length).toEqual(3);
         expect(result[2].pull_request.html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
       });
@@ -113,7 +115,7 @@ describe('GithubApiWrapper', async () => {
         afterAll(() => openUserRequestCount = 0);
 
         it('doesn\'t contain any links', async () => {
-          const result = await github.getNoReviewRequested();
+          const result = await (await GithubApiWrapper()).getNoReviewRequested();
           expect(result.length).toEqual(0);
         });
       });
@@ -123,7 +125,7 @@ describe('GithubApiWrapper', async () => {
         afterAll(() => openTeamRequestCount = 0);
 
         it('doesn\'t contain any links', async () => {
-          const result = await github.getNoReviewRequested();
+          const result = await (await GithubApiWrapper()).getNoReviewRequested();
           expect(result.length).toEqual(0);
         });
       });
@@ -133,7 +135,7 @@ describe('GithubApiWrapper', async () => {
         afterAll(() => { scope = ''; });
 
         it('contains three links', async () => {
-          expect((await github.getNoReviewRequested()).length).toEqual(3);
+          expect((await (await GithubApiWrapper()).getNoReviewRequested()).length).toEqual(3);
         });
       });
 
@@ -145,7 +147,7 @@ describe('GithubApiWrapper', async () => {
         });
 
         it('doesn\'t contain any links', async () => {
-          expect((await github.getNoReviewRequested()).length).toEqual(0);
+          expect((await (await GithubApiWrapper()).getNoReviewRequested()).length).toEqual(0);
         });
       });
     });
@@ -172,7 +174,7 @@ describe('GithubApiWrapper', async () => {
       beforeAll(() => pullRequestCount = 0);
 
       it('doesn\'t contain any links', async () => {
-        const result = await github.getAllReviewsDone();
+        const result = await (await GithubApiWrapper()).getAllReviewsDone();
         expect(result.length).toEqual(0);
       });
     });
@@ -181,7 +183,7 @@ describe('GithubApiWrapper', async () => {
       beforeAll(() => pullRequestCount = 1);
 
       it('has the correct link', async () => {
-        const result = await github.getAllReviewsDone();
+        const result = await (await GithubApiWrapper()).getAllReviewsDone();
         expect(result.length).toEqual(1);
         expect(result[0].pull_request.html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
       });
@@ -191,7 +193,7 @@ describe('GithubApiWrapper', async () => {
       beforeAll(() => pullRequestCount = 3);
 
       it('has the correct links', async () => {
-        const result = await github.getAllReviewsDone();
+        const result = await (await GithubApiWrapper()).getAllReviewsDone();
         expect(result.length).toEqual(3);
         expect(result[2].pull_request.html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
       });
@@ -201,7 +203,7 @@ describe('GithubApiWrapper', async () => {
         afterAll(() => openUserRequestCount = 0);
 
         it('doesn\'t contain any links', async () => {
-          const result = await github.getAllReviewsDone();
+          const result = await (await GithubApiWrapper()).getAllReviewsDone();
           expect(result.length).toEqual(0);
         });
       });
@@ -211,7 +213,7 @@ describe('GithubApiWrapper', async () => {
         afterAll(() => openTeamRequestCount = 0);
 
         it('doesn\'t contain any links', async () => {
-          const result = await github.getAllReviewsDone();
+          const result = await (await GithubApiWrapper()).getAllReviewsDone();
           expect(result.length).toEqual(0);
         });
       });
@@ -230,7 +232,7 @@ describe('GithubApiWrapper', async () => {
 
     describe('with no pull requests', () => {
       it('doesn\'t contain any links', async () => {
-        const result = await github.getMissingAssignee();
+        const result = await (await GithubApiWrapper()).getMissingAssignee();
         expect(result.length).toEqual(0);
       });
 
@@ -239,7 +241,7 @@ describe('GithubApiWrapper', async () => {
         afterAll(() => assignee = undefined);
 
         it('doesn\'t contain any links', async () => {
-          const result = await github.getMissingAssignee();
+          const result = await (await GithubApiWrapper()).getMissingAssignee();
           expect(result.length).toEqual(0);
         });
       });
@@ -249,7 +251,7 @@ describe('GithubApiWrapper', async () => {
       beforeAll(() => pullRequestCount = 1);
 
       it('has the correct link', async () => {
-        const result = await github.getMissingAssignee();
+        const result = await (await GithubApiWrapper()).getMissingAssignee();
         expect(result.length).toEqual(1);
         expect(result[0].pull_request.html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
       });
@@ -259,7 +261,7 @@ describe('GithubApiWrapper', async () => {
         afterAll(() => assignee = undefined);
 
         it('doesn\'t contain any links', async () => {
-          const result = await github.getMissingAssignee();
+          const result = await (await GithubApiWrapper()).getMissingAssignee();
           expect(result.length).toEqual(0);
         });
       });
@@ -269,7 +271,7 @@ describe('GithubApiWrapper', async () => {
       beforeAll(() => pullRequestCount = 3);
 
       it('has the correct links', async () => {
-        const result = await github.getMissingAssignee();
+        const result = await (await GithubApiWrapper()).getMissingAssignee();
         expect(result.length).toEqual(3);
         expect(result[2].pull_request.html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
       });
@@ -279,7 +281,7 @@ describe('GithubApiWrapper', async () => {
         afterAll(() => assignee = undefined);
 
         it('doesn\'t contain any links', async () => {
-          const result = await github.getMissingAssignee();
+          const result = await (await GithubApiWrapper()).getMissingAssignee();
           expect(result.length).toEqual(0);
         });
       });
@@ -294,7 +296,17 @@ describe('GithubApiWrapper', async () => {
     });
 
     it('throws', async () =>  {
-      await expect(github.getMissingAssignee()).rejects.toThrow('Too many requests');
+      await expect(GithubApiWrapper()).rejects.toThrow('Too many requests');
+    });
+  });
+
+  describe('With no access token', () => {
+    beforeEach(() => {
+      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({ 'scope': scope }));
+    });
+
+    it('throws', async () =>  {
+      await expect(GithubApiWrapper()).rejects.toThrow('No Access Token');
     });
   });
 });

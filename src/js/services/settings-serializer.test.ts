@@ -81,4 +81,33 @@ describe('StorageSerializer', () => {
       })
     });
   })
+
+  describe('storeAccessToken', () => {
+    it('calls get with the correct arguments', () => {
+      let accessToken = 'secret';
+
+      settingsSerializer.storeAccessToken(accessToken);
+      expect(set).toHaveBeenCalledWith({ accessToken });
+    })
+  })
+
+  describe('loadAccessToken', () => {
+    it('loads the correct data', async () => {
+      let accessToken = 'renuo, github';
+
+      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({ 'accessToken': accessToken }));
+
+      let result = await settingsSerializer.loadAccessToken();
+      expect(result).toEqual(accessToken);
+    })
+
+    describe('with nothing in the storage', () => {
+      it('returns the default values', async () => {
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({}));
+
+        let result = await settingsSerializer.loadAccessToken();
+        expect(result).toEqual('');
+      })
+    });
+  })
 })
