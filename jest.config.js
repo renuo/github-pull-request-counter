@@ -19,4 +19,5 @@ module.exports = {
     "!**/dist/**",
     "!**/mocks/**",
   ],
+  testTimeout: 150000
 }

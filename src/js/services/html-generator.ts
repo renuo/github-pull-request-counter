@@ -4,6 +4,7 @@ import { recordKeysTranslations } from '../static/constants';
 const HTMLGenerator = () => {
   const generate = (record: PullRequestRecord): HTMLDivElement => {
     const topLevelDiv = document.createElement('div');
+    topLevelDiv.classList.add('pull-requests-loaded')
 
     for (const key of Object.keys(record)) {
       if (record[key].length === 0) continue;

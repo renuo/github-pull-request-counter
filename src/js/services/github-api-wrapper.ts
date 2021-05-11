@@ -1,5 +1,6 @@
 import { Issue } from '../static/types';
 import SettingsSerializer from './settings-serializer';
+import { globalMock } from '../../../__test__/mocks/github-api-mock-data';
 
 const GithubApiWrapper = async () => {
   const getReviewRequested = async (): Promise<Issue[]> => {
@@ -43,15 +44,16 @@ const GithubApiWrapper = async () => {
   const makeApiRequest = async (path: string, params?: string): Promise<any> => makeRequest(`https://api.github.com${path}`, params);
 
   const makeRequest = async (path: string, params?: string): Promise<any> => {
-    const response = await fetch(`${path}?${params}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': 'Basic ' + btoa(':' + accessToken)
-      }
-    });
+    // const response = await fetch(`${path}?${params}`, {
+    //   method: 'GET',
+    //   headers: {
+    //     'Authorization': 'Basic ' + btoa(':' + accessToken)
+    //   }
+    // });
+    // if (response.status === 403) throw new Error('Too many requests');
+    // else return response.json();
 
-    if (response.status === 403) throw new Error('Too many requests');
-    else return response.json();
+    return (await globalMock(`${path}?${params}`, { pullRequestCount: 3 })).json();
   };
 
   const processDataIntoIssues = async (issues: Issue[]): Promise<Issue[]> => {
@@ -80,7 +82,7 @@ const GithubApiWrapper = async () => {
   const readOwnerFromUrl = (url: string): string => url.replace('https://api.github.com/repos/', '').split('/pulls/')[0];
 
   const accessToken = await SettingsSerializer().loadAccessToken();
-  if (accessToken === '') throw new Error('No Access Token');
+  // if (accessToken === '') throw new Error('No Access Token');
 
   const userName = (await makeApiRequest('/user')).login;
 

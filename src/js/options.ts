@@ -1,7 +1,6 @@
 import { Counter } from './static/types';
 import SettingsSerializer from './services/settings-serializer';
 import ServiceWoker from './background';
-import GithubApiWrapper from './services/github-api-wrapper';
 import '../css/options.scss';
 
 const Options = () => {
