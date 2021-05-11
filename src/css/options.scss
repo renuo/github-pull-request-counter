@@ -26,19 +26,21 @@
       margin-top: 20px;
     }
 
-    a {
-      margin-top: 15px;
-    }
-
     p {
       font-style: italic;
       margin-top: 0;
     }
   }
 
-  .account-names {
+  .text-input {
     width: 45%;
   }
+}
+
+.link-in-text {
+  font-size: 12px;
+  overflow: visible;
+  margin-right: -3px;
 }
 
 .blue-button {
@@ -47,6 +49,7 @@
   border-radius: 3px;
   color: $link-blue;
   margin-top: 10px;
+  margin-bottom: 10px;
   padding: 5px 10px;
 
   &:hover {

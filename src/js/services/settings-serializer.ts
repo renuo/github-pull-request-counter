@@ -24,12 +24,17 @@ const SettingsSerializer = () => {
 
   const loadScope = async (): Promise<string> => {
     const scope = await load('scope');
-    if (scope === undefined) {
-      return '';
-    } else {
-      return scope;
-    }
+    return scope === undefined ? '' : scope;
   };
+
+  const storeAccessToken = (accessToken: string): void => {
+    store('accessToken', accessToken);
+  };
+
+  const loadAccessToken = async (): Promise<String> => {
+    const accessToken = await load('accessToken');
+    return accessToken === undefined ? '' : accessToken;
+  }
 
   const store = (key: string, value: string): void => {
     chrome.storage.local.set({ [key]: value });
@@ -45,7 +50,7 @@ const SettingsSerializer = () => {
     return data[key];
   };
 
-  return { storeCounter, loadCounter, storeScope, loadScope };
+  return { storeCounter, loadCounter, storeScope, loadScope, storeAccessToken, loadAccessToken };
 };
 
 export default SettingsSerializer;

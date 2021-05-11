@@ -31,15 +31,19 @@
       <h2>Scope</h2>
       <p>Enter a comma seperated list of GitHub account names from which the extension should fetch. (case insensitive)</p>
     </div>
-    <input type="text" id="account-names" class="account-names" placeholder="GitHubUser1, GitHubUser3, GitHubUser3, GitHubUser4"></input>
-
-    <div class="">
-      <button id="options-save" class="blue-button">Save</button>
-    </div>
+    <input type="text" id="account-names" class="text-input" placeholder="GitHubUser1, GitHubUser3, GitHubUser3, GitHubUser4"></input>
 
     <div class="heading-1">
-      <a href="https://github.com/settings/connections/applications/8fc6af57f4e676d5f43b" >Open permissions settings</a>
-      <p>Open the OAuth settings for this extension.</p>
+      <h2>Access Token</h2>
+      <p>Generate a personal access token from
+        <a href="https://github.com/settings/tokens/new?description=github-pull-requests-counter&scopes=repo" target="_blank" class="link-in-text">here</a>
+        . Leave the permissions as is and copy the token in the text box below.
+      </p>
+    </div>
+    <input type="password" id="access-token" class="text-input" placeholder="ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"></input>
+
+    <div >
+      <button id="options-save" class="blue-button">Save</button>
     </div>
   </div>
 </div>

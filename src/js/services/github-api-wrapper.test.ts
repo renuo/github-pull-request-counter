@@ -16,8 +16,8 @@ global.chrome = {
 } as any;
 
 
-describe('GithubApiWrapper', () => {
-  const github = GithubApiWrapper();
+describe('GithubApiWrapper', async () => {
+  const github = await GithubApiWrapper();
   let scope = '';
 
   beforeEach(() => {

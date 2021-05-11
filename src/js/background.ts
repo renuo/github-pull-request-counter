@@ -8,7 +8,7 @@ const pollingInterval = 1;
 
 const ServiceWoker = () => {
   const fetchAndStoreData = async () => {
-    const github = GithubApiWrapper();
+    const github = await GithubApiWrapper();
 
     // TODO: make this async
     const objectToSerialize = {

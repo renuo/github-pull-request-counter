@@ -1,9 +1,9 @@
 import { Issue } from '../static/types';
 import SettingsSerializer from './settings-serializer';
 
-const GithubApiWrapper = () => {
+const GithubApiWrapper = async () => {
   const getReviewRequested = async (): Promise<Issue[]> => {
-    const query = encodeURIComponent('is:open is:pr review-requested:Janis-Leuenberger archived:false');
+    const query = encodeURIComponent(`is:open is:pr review-requested:${userName} archived:false`);
     const issues = await makeApiRequest('/search/issues', `q=${query}`);
 
     return processDataIntoIssues(issues.items);
@@ -18,7 +18,7 @@ const GithubApiWrapper = () => {
   };
 
   const searchIssues = async (reviewModifier: string): Promise<Issue[]> => {
-    const query = encodeURIComponent(`is:pr assignee:Janis-Leuenberger archived:false is:open ${reviewModifier}review:none`);
+    const query = encodeURIComponent(`is:pr assignee:${userName} archived:false is:open ${reviewModifier}review:none`);
     const response = await makeApiRequest('/search/issues', `q=${query}`);
 
     return asyncIssueFilter(response.items, async (issue: Issue) => {
@@ -33,7 +33,7 @@ const GithubApiWrapper = () => {
   };
 
   const getMissingAssignee = async (): Promise<Issue[]> => {
-    const query = encodeURIComponent('is:open is:pr author:Janis-Leuenberger archived:false');
+    const query = encodeURIComponent(`is:open is:pr author:${userName} archived:false`);
     let response = await makeApiRequest('/search/issues', `q=${query}`);
     response = response.items.filter((s: Issue) => !s.assignee);
 
@@ -46,7 +46,7 @@ const GithubApiWrapper = () => {
     const response = await fetch(`${path}?${params}`, {
       method: 'GET',
       headers: {
-        'Authorization': 'Basic ' + btoa(process.env.USERNAME! + ':' + process.env.ACCESS_TOKEN!)
+        'Authorization': 'Basic ' + btoa(':' + accessToken)
       }
     });
 
@@ -78,6 +78,11 @@ const GithubApiWrapper = () => {
   };
 
   const readOwnerFromUrl = (url: string): string => url.replace('https://api.github.com/repos/', '').split('/pulls/')[0];
+
+  const accessToken = await SettingsSerializer().loadAccessToken();
+  if (accessToken === '') throw new Error('No Access Token');
+
+  const userName = (await makeApiRequest('/user')).login;
 
   return { getReviewRequested, getNoReviewRequested, getAllReviewsDone, getMissingAssignee };
 };
