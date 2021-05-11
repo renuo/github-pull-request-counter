@@ -18,6 +18,7 @@ const BadgeSetter = () => {
     return total;
   };
 
+  // TODO add to documentation
   const caculateBackgroundColor = (count: number) => {
     const okLimit = 0;
     const warningLimit = 2;
