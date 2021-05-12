@@ -10,7 +10,13 @@ cd github-pull-request-counter
 bin/setup
 ```
 
-## Run
+## Build
+```sh
+yarn build            # develop
+yarn build-production # production
+```
+
+## Add to chrome
 * Visit `chrome://extensions/`.
 * Enable _"Developer mode"_ in the top right corner.
 * Click _"Load unpacked"_ in the top left corner.
@@ -32,7 +38,7 @@ bin/fastcheck
 
 This is already done for this project.
 
-* Do the steps described under "**Run**"
+* Do the steps described under "**Add to chrome**"
 * Click "Pack extension" and then "Remove"
 * Chrome made 2 new files in the parent directory of the dist folder. Drag and drop `dist.srx` into `chrome://extensions/` and install it. Copy the id displayed under `ID:`.
 * Head to the the User Data Directory. For mac: `~/Library/Application Support/Google/Chrome`. For other: https://chromium.googlesource.com/chromium/src/+/master/docs/user_data_dir.md
@@ -40,10 +46,6 @@ This is already done for this project.
 * Copy the key from `"key:"` and paste it into your manifest.json: `"key: <key>"`
 
 ## Issues
-
-## Create a client ID from github
-TODO: write
-
 * When running the tests chromium might ask you: "_Do you want to allow the application Chromium.app to accept incoming network connections?_". You can remove this by running `sudo codesign --force --deep --sign - ./node_modules/puppeteer/.local-chromium/mac-*/chrome-mac/Chromium.app`. This will create a valid certificate. Sudo is necessary. [Source](https://github.com/puppeteer/puppeteer/issues/4752)
 * Chromium can't be run in headless when testing extensions. [Source](https://github.com/puppeteer/puppeteer/issues/659)
 
