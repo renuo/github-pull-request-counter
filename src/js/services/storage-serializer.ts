@@ -29,7 +29,7 @@ const StorageSerializer = () => {
     });
 
     try { return JSON.parse(data[key]); }
-    catch { return [] }
+    catch { return []; }
   };
 
   return { storePullRequests, loadPullRequests };

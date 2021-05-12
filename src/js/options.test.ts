@@ -67,17 +67,19 @@ describe('Options', () => {
 
     it('loads the scope correctly', () => {
       expect((document.getElementById('account-names') as HTMLInputElement).value).toEqual('renuo');
-    })
+    });
 
     it('loads the access token correctly', () => {
       expect((document.getElementById('access-token') as HTMLInputElement).value).toEqual('ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-    })
+    });
 
     describe('without an access token', () => {
       beforeAll(() => {
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({ 'accessToken': '' }));
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+          'accessToken': ''
+        }));
         (document.getElementById('access-token') as HTMLInputElement).value = '';
-      })
+      });
 
       afterAll(() => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
@@ -85,34 +87,34 @@ describe('Options', () => {
           'accessToken': 'secret' ,
           'scope': 'renuo'
         }));
-      })
+      });
 
       it ('doesn\'t load anything', () => {
         expect((document.getElementById('access-token') as HTMLInputElement).value).toEqual('');
-      })
-    })
+      });
+    });
 
     describe('save button', () => {
       const options = Options();
       beforeEach(() => {
         options.init();
-      })
+      });
 
       it('stores the counter correctly', async () => {
         await options.saveButtonClickHandler();
         expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ counter: JSON.stringify(counter) });
-      })
+      });
 
       it('stores the scope correctly', async () => {
         await options.saveButtonClickHandler();
         expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ scope: 'renuo' });
-      })
+      });
 
       it('stores the access token correctly', async () => {
         (document.getElementById('access-token') as HTMLInputElement).value = 'new access token';
         await options.saveButtonClickHandler();
-        expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ accessToken: 'new access token'});
-      })
-    })
+        expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ accessToken: 'new access token' });
+      });
+    });
   });
-})
+});

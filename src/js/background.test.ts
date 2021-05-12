@@ -19,7 +19,10 @@ global.chrome = {
   },
   storage: {
     local: {
-      get: jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({ 'counter': 'invalid' , 'accessToken': 'secret' })),
+      get: jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+        'counter': 'invalid' ,
+        'accessToken': 'secret'
+      })),
       set: jest.fn()
     }
   },

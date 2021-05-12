@@ -28,17 +28,17 @@ const Options = () => {
 
   const loadAccessTokenToDOM = async () => {
     const accessToken = await settingsSerializer.loadAccessToken();
-    if (accessToken !== "") {
+    if (accessToken !== '') {
       (document.getElementById('access-token') as HTMLInputElement).value = 'ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
     }
-  }
+  };
 
   const saveButtonClickHandler = async () => {
     storeCounterFromDOM();
     storeScopeFromDOM();
     storeAccessTokenFromDom();
     await ServiceWoker().fetchAndStoreData();
-  }
+  };
 
   const storeCounterFromDOM = () => {
     const counter: Counter = {
@@ -61,7 +61,7 @@ const Options = () => {
     if (accessToken !== 'ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') {
       settingsSerializer.storeAccessToken(accessToken);
     }
-  }
+  };
 
   return { init, saveButtonClickHandler };
 };

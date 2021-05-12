@@ -11,103 +11,107 @@ global.chrome = {
 const set = global.chrome.storage.local.set;
 
 describe('StorageSerializer', () => {
-  let settingsSerializer = SettingsSerializer();
+  const settingsSerializer = SettingsSerializer();
 
   describe('storeCounter', () => {
     it('calls get with the correct arguments', () => {
-      let counter = {
+      const counter = {
         'one': true,
         'two': false
       };
 
       settingsSerializer.storeCounter(counter);
       expect(set).toHaveBeenCalledWith({ counter: JSON.stringify(counter) });
-    })
-  })
+    });
+  });
 
   describe('loadCounter', () => {
     it('loads the correct data', async () => {
-      let counter = {
+      const counter = {
         'one': true,
         'two': false
       };
 
-      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({ 'counter': JSON.stringify(counter) }));
+      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+        'counter': JSON.stringify(counter)
+      }));
 
-      let result = await settingsSerializer.loadCounter();
+      const result = await settingsSerializer.loadCounter();
       expect(result).toEqual(result);
-    })
+    });
 
     describe('with nothing in the storage', () => {
       it('returns the default values', async () => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({}));
 
-        let result = await settingsSerializer.loadCounter();
+        const result = await settingsSerializer.loadCounter();
         expect(result).toEqual({
           reviewRequested: true,
           noReviewRequested: true,
           allReviewsDone: true,
           missingAssignee: true
         });
-      })
+      });
     });
-  })
+  });
 
   describe('storeScope', () => {
     it('calls get with the correct arguments', () => {
-      let scope = 'renuo, github';
+      const scope = 'renuo, github';
 
       settingsSerializer.storeScope(scope);
       expect(set).toHaveBeenCalledWith({ scope });
-    })
-  })
+    });
+  });
 
   describe('loadScope', () => {
     it('loads the correct data', async () => {
-      let scope = 'renuo, github';
+      const scope = 'renuo, github';
 
       global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({ 'scope': scope }));
 
-      let result = await settingsSerializer.loadScope();
+      const result = await settingsSerializer.loadScope();
       expect(result).toEqual(scope);
-    })
+    });
 
     describe('with nothing in the storage', () => {
       it('returns the default values', async () => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({}));
 
-        let result = await settingsSerializer.loadScope();
+        const result = await settingsSerializer.loadScope();
         expect(result).toEqual('');
-      })
+      });
     });
-  })
+  });
 
   describe('storeAccessToken', () => {
     it('calls get with the correct arguments', () => {
-      let accessToken = 'secret';
+      const accessToken = 'secret';
 
       settingsSerializer.storeAccessToken(accessToken);
       expect(set).toHaveBeenCalledWith({ accessToken });
-    })
-  })
+    });
+  });
 
   describe('loadAccessToken', () => {
     it('loads the correct data', async () => {
-      let accessToken = 'renuo, github';
+      const accessToken = 'renuo, github';
 
-      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({ 'accessToken': accessToken }));
+      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+        'accessToken': accessToken
+      }));
 
-      let result = await settingsSerializer.loadAccessToken();
+      const result = await settingsSerializer.loadAccessToken();
       expect(result).toEqual(accessToken);
-    })
+    });
 
     describe('with nothing in the storage', () => {
       it('returns the default values', async () => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({}));
 
-        let result = await settingsSerializer.loadAccessToken();
+        const result = await settingsSerializer.loadAccessToken();
         expect(result).toEqual('');
-      })
+      });
     });
-  })
-})
+  });
+});

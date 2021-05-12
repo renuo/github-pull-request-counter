@@ -75,7 +75,7 @@ describe('BadgeSetter', () => {
             'PullRequest-3': true,
             'PullRequest-4': false
           };
-        })
+        });
 
         it('calls setBadgeText with the correct arguments', () => {
           expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '4' });
@@ -84,7 +84,7 @@ describe('BadgeSetter', () => {
         it('calls setBadgeBackgroundColor with the correct arguments', () => {
           expect(global.chrome.action.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#d9534f' });
         });
-      })
+      });
     });
   });
 });

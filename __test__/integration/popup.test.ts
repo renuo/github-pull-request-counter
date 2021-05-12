@@ -13,9 +13,9 @@ const popupLoaded = async () => {
       waitUntil: 'networkidle2'
     });
 
-    if (await page.evaluate ( () => document.getElementById("pull-requests-loaded") !== undefined )) break;
+    if (await page.evaluate (() => document.getElementById('pull-requests-loaded') !== undefined)) break;
   }
-}
+};
 
 const setup = async () => {
   const extensionPath = path.join(__dirname, '../../dist');
@@ -35,7 +35,7 @@ const setup = async () => {
   });
   // TODO: Replace with a more sophisticated solution
   // The popup is loaded before the service worker is done.
-  await page.type('input[id=access-token]', 'secret', { delay: 20 })
+  await page.type('input[id=access-token]', 'secret', { delay: 20 });
   await page.click('button[id="options-save"]');
 
   await popupLoaded();

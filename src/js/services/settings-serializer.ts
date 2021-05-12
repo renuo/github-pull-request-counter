@@ -31,10 +31,10 @@ const SettingsSerializer = () => {
     store('accessToken', accessToken);
   };
 
-  const loadAccessToken = async (): Promise<String> => {
+  const loadAccessToken = async (): Promise<string> => {
     const accessToken = await load('accessToken');
     return accessToken === undefined ? '' : accessToken;
-  }
+  };
 
   const store = (key: string, value: string): void => {
     chrome.storage.local.set({ [key]: value });
