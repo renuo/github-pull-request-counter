@@ -20,7 +20,7 @@ yarn build-production # production
 * Visit `chrome://extensions/`.
 * Enable _"Developer mode"_ in the top right corner.
 * Click _"Load unpacked"_ in the top left corner.
-* Navigate to the root of this repository and select it.
+* Navigate to the root of this repository and select `dist` it.
 
 ## Tests
 
