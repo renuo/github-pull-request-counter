@@ -82,7 +82,10 @@ describe('integration test', () => {
 
   describe('popup', () => {
     it('navigates to the popup', async () => {
-      await page.goto(url('popup.html'), { waitUntil: 'networkidle2' });
+      while (await page.evaluate(() => document.querySelector('.pull-requests-loaded') === null)) {
+        await page.goto(url('popup.html'), { waitUntil: 'networkidle2' });
+      }
+
       expect(page.url()).toEqual(url('popup.html'));
     });
 

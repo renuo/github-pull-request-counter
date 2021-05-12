@@ -23,8 +23,8 @@ const GithubApiWrapper = async () => {
     const response = await makeApiRequest('/search/issues', `q=${query}`);
 
     return asyncIssueFilter(response.items, async (issue: Issue) => {
-      const asd = (await makeRequest(`${issue.pull_request.url}/requested_reviewers`));
-      return asd.users.length + asd.teams.length === 0;
+      const requestedReviewers = (await makeRequest(`${issue.pull_request.url}/requested_reviewers`));
+      return requestedReviewers.users.length + requestedReviewers.teams.length === 0;
     });
   };
 
@@ -44,7 +44,7 @@ const GithubApiWrapper = async () => {
   const makeApiRequest = async (path: string, params?: string): Promise<any> => makeRequest(`https://api.github.com${path}`, params);
 
   const makeRequest = async (path: string, params?: string): Promise<any> => {
-    // TODO: Find cleaner solution to mock this during integration tests.
+    // TODO: Find cleaner solution to mock the API during integration tests.
     /* istanbul ignore next */
     // @ts-ignore
     if (ENV === 'testing') return (await globalMock(`${path}?${params}`, { pullRequestCount: 3 })).json();
@@ -84,7 +84,7 @@ const GithubApiWrapper = async () => {
   const readOwnerFromUrl = (url: string): string => url.replace('https://api.github.com/repos/', '').split('/pulls/')[0];
 
   const accessToken = await SettingsSerializer().loadAccessToken();
-  // TODO: Find cleaner solution to mock this during integration tests.
+  // TODO: Find cleaner solution to mock the API during integration tests.
   // @ts-ignore
   if (ENV !== 'testing' && accessToken === '') throw new Error('No Access Token');
 

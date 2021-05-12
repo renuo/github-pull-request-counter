@@ -21,6 +21,7 @@ const HTMLGenerator = () => {
       const titleP = document.createElement('p');
       titleP.textContent = 'Nothing to do';
       titleP.classList.add('title');
+      topLevelDiv.classList.remove('pull-requests-loaded');
       topLevelDiv.appendChild(titleP);
       topLevelDiv.appendChild(generateNoContent());
     }
