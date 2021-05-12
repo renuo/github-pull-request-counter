@@ -7,11 +7,11 @@ module.exports = {
     'ts-jest': {
       diagnostics: false,
     },
+    'ENV': 'development',
   },
   "moduleNameMapper": {
     "^.+\\.(css|less|scss)$": "identity-obj-proxy"
   },
-  setupFiles: ["dotenv/config"],
   collectCoverage: true,
   collectCoverageFrom: [
     "**/*ts",

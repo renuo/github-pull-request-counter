@@ -44,8 +44,9 @@ const GithubApiWrapper = async () => {
   const makeApiRequest = async (path: string, params?: string): Promise<any> => makeRequest(`https://api.github.com${path}`, params);
 
   const makeRequest = async (path: string, params?: string): Promise<any> => {
-    // @ts-ignored
     // TODO: Find cleaner solution to mock this during integration tests.
+    /* istanbul ignore next */
+    // @ts-ignore
     if (ENV === 'testing') return (await globalMock(`${path}?${params}`, { pullRequestCount: 3 })).json();
     const response = await fetch(`${path}?${params}`, {
       method: 'GET',
@@ -83,8 +84,8 @@ const GithubApiWrapper = async () => {
   const readOwnerFromUrl = (url: string): string => url.replace('https://api.github.com/repos/', '').split('/pulls/')[0];
 
   const accessToken = await SettingsSerializer().loadAccessToken();
-  //@ts-ignore
   // TODO: Find cleaner solution to mock this during integration tests.
+  // @ts-ignore
   if (ENV !== 'testing' && accessToken === '') throw new Error('No Access Token');
 
   const userName = (await makeApiRequest('/user')).login;
