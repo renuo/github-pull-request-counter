@@ -27,5 +27,4 @@ module.exports = {
       "statements": 100
     }
   },
-  testTimeout: 150000
 }
