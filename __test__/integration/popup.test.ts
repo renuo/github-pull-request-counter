@@ -1,10 +1,10 @@
+import { extensionID } from '../../src/js/static/constants';
 import puppeteer from 'puppeteer';
 import path from 'path';
 
 let browser: puppeteer.Browser;
 let page: puppeteer.Page;
 
-const extensionID = 'kiddjljoajjpciconkdenlbgecmbmafm';
 const url = (file: string) => `chrome-extension://${extensionID}/${file}`;
 
 const popupLoaded = async () => {

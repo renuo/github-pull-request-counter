@@ -8,9 +8,9 @@ const pollingInterval = 1;
 
 const ServiceWoker = () => {
   const fetchAndStoreData = async () => {
-    console.log('1');
+    BadgeSetter().update({}, {});
+
     const github = await GithubApiWrapper();
-    console.log('2');
 
     // TODO: make this async
     const objectToSerialize = {
@@ -19,8 +19,6 @@ const ServiceWoker = () => {
       missingAssignee: await github.getMissingAssignee(),
       reviewRequested: await github.getReviewRequested()
     };
-
-    console.log(objectToSerialize);
 
     const counter = await SettingsSerializer().loadCounter();
     BadgeSetter().update(objectToSerialize, counter);

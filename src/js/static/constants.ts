@@ -11,3 +11,5 @@ export const recordKeysTranslations: {[key: string]: string} = {
   allReviewsDone: 'All reviews done',
   missingAssignee: 'Missing Assignee',
 };
+
+export const extensionID = 'kiddjljoajjpciconkdenlbgecmbmafm';

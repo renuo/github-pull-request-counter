@@ -1,5 +1,5 @@
 import { Issue, PullRequestRecord } from '../static/types';
-import { recordKeysTranslations } from '../static/constants';
+import { recordKeysTranslations, extensionID } from '../static/constants';
 
 const HTMLGenerator = () => {
   const generate = (record: PullRequestRecord): HTMLDivElement => {
@@ -51,7 +51,8 @@ const HTMLGenerator = () => {
     const p1 = document.createElement('p');
     const p2 = document.createElement('p');
     p1.textContent = 'Seems like you are a good coworker :)';
-    p2.textContent = 'In the meantime you could recommend the extention to your friends or rate it in the Store.';
+    const link = `<a href="chrome-extension://${extensionID}/options.html" target="_blank" class="link-in-text">options&nbsp;</a>`;
+    p2.innerHTML = `Or you configured the extension wrong. Have a look the ${link}  to verify your configuration.`;
     noContentDiv.appendChild(p1);
     noContentDiv.appendChild(p2);
     return noContentDiv;
