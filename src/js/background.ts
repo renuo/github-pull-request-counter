@@ -8,9 +8,16 @@ const pollingInterval = 1;
 
 const ServiceWoker = () => {
   const fetchAndStoreData = async () => {
-    BadgeSetter().update({}, {});
+    let github;
+    const storageSerilizer = StorageSerializer();
 
-    const github = await GithubApiWrapper();
+    try {
+      github = await GithubApiWrapper();
+    } catch(error) {
+      storageSerilizer.storePullRequests({ noReviewRequested: [], allReviewsDone: [], missingAssignee: [], reviewRequested: [] });
+      BadgeSetter().update({}, {});
+      return;
+    }
 
     // TODO: make this async
     const objectToSerialize = {
@@ -23,7 +30,6 @@ const ServiceWoker = () => {
     const counter = await SettingsSerializer().loadCounter();
     BadgeSetter().update(objectToSerialize, counter);
 
-    const storageSerilizer = StorageSerializer();
     storageSerilizer.storePullRequests(objectToSerialize);
   };
 
