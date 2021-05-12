@@ -10,13 +10,6 @@ global.btoa = (data: string) => Buffer.from(data).toString('base64');
 
 mockedFetch.mockImplementation((url: string) => globalMock(url, { pullRequestCount: 2 }));
 
-const counter = {
-  noReviewRequested: false,
-  allReviewsDone: false,
-  missingAssignee: false,
-  reviewRequested: false
-};
-
 global.chrome = {
   alarms: {
     create: jest.fn(),
@@ -26,7 +19,7 @@ global.chrome = {
   },
   storage: {
     local: {
-      get: jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({ 'counter': counter , 'accessToken': 'secret' })),
+      get: jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({ 'counter': 'invalid' , 'accessToken': 'secret' })),
       set: jest.fn()
     }
   },
