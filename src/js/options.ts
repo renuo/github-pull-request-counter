@@ -10,7 +10,7 @@ const Options = () => {
     loadCounterToDOM();
     loadScopeToDOM();
     loadAccessTokenToDOM();
-    addButtonEventListener();
+    document.getElementById('options-save')!.addEventListener('click', saveButtonClickHandler);
   };
 
   const loadCounterToDOM = async () => {
@@ -33,14 +33,12 @@ const Options = () => {
     }
   }
 
-  const addButtonEventListener = () => {
-    document.getElementById('options-save')!.addEventListener('click', async() => {
-      storeCounterFromDOM();
-      storeScopeFromDOM();
-      storeAccessTokenFromDom();
-      ServiceWoker().fetchAndStoreData();
-    });
-  };
+  const saveButtonClickHandler = async () => {
+    storeCounterFromDOM();
+    storeScopeFromDOM();
+    storeAccessTokenFromDom();
+    await ServiceWoker().fetchAndStoreData();
+  }
 
   const storeCounterFromDOM = () => {
     const counter: Counter = {
@@ -65,9 +63,11 @@ const Options = () => {
     }
   }
 
-  return { init };
+  return { init, saveButtonClickHandler };
 };
 
-Options().init();
+// TODO: Running this code in tests will cause ERR_UNHANDLED_REJECTION.
+/* istanbul ignore next */
+if (process.env.JEST_WORKER_ID === undefined) Options().init();
 
 export default Options;
