@@ -78,7 +78,7 @@ describe('StorageSerialzer', () => {
 
       it('loads an empty arrays', () => {
         expect(result).toEqual({ 'PullRequest-0': [] });
-      })
+      });
     });
 
     describe('with no keys', () => {

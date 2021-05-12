@@ -55,6 +55,30 @@ describe('ServiceWorker', () => {
     it('calls setBadgeBackgroundColor with the correct arguments', () => {
       expect(global.chrome.action.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#d9534f' });
     });
+
+    describe('without an access token', () => {
+      beforeAll(() => {
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+          'counter': 'invalid' ,
+          'accessToken': ''
+        }));
+      });
+
+      afterAll(() => {
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+          'counter': 'invalid' ,
+          'accessToken': 'secret'
+        }));
+      });
+
+      it('calls setBadgeText with the correct arguments', () => {
+        expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '0' });
+      });
+
+      it('calls setBadgeBackgroundColor with the correct arguments', () => {
+        expect(global.chrome.action.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#5cb85c' });
+      });
+    });
   });
 
   describe('#startPolling', () => {
