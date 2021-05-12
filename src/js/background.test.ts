@@ -49,11 +49,11 @@ describe('ServiceWorker', () => {
     });
 
     it('calls setBadgeText with the correct arguments', () => {
-      expect(global.chrome.action.setBadgeText).toHaveBeenNthCalledWith(1, { text: '8' });
+      expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '8' });
     });
 
     it('calls setBadgeBackgroundColor with the correct arguments', () => {
-      expect(global.chrome.action.setBadgeBackgroundColor).toHaveBeenNthCalledWith(1, { color: '#d9534f' });
+      expect(global.chrome.action.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#d9534f' });
     });
   });
 

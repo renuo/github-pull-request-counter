@@ -67,6 +67,20 @@ describe('StorageSerialzer', () => {
       result = await storageSerilizer.loadPullRequests(keys);
     });
 
+    describe('default value', () => {
+      beforeAll(() => {
+        pullRequests = pullRequestRecordFactory(1);
+
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
+          callback({ 'PullRequest-0': undefined });
+        });
+      });
+
+      it('loads an empty arrays', () => {
+        expect(result).toEqual({ 'PullRequest-0': [] });
+      })
+    });
+
     describe('with no keys', () => {
       beforeAll(() => {
         pullRequests = {};

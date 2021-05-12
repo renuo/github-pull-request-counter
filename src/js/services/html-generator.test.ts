@@ -27,7 +27,6 @@ describe('HTMLGenerator', () => {
       it('outputs the backup element', () => {
         expect(result.outerHTML).toContain('Nothing to do');
         expect(result.outerHTML).toContain('Seems like you are a good coworker :)');
-        expect(result.outerHTML).toContain('In the meantime you could recommend the extention to your friends or rate it in the Store.');
       });
     });
 
