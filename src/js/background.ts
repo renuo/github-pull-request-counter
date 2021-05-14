@@ -27,10 +27,10 @@ const ServiceWorker = () => {
     let recordEntries: PullRequest[][];
     try {
       recordEntries = await Promise.all([
+        github.getReviewRequested(),
         github.getNoReviewRequested(),
         github.getAllReviewsDone(),
         github.getMissingAssignee(),
-        github.getReviewRequested()
       ]);
     } catch(error) {
       if (error === tooManyRequestsError) return;
