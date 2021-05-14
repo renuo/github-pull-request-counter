@@ -29,8 +29,8 @@ const GithubApiWrapper = async () => {
     });
   };
 
-  const asyncPullRequestFilter = async (pullRequests: PullRequest[], predicate: (PullRequest: PullRequest) => Promise<boolean>) => {
-    const response = await Promise.all(pullRequests.map(predicate));
+  const asyncPullRequestFilter = async (pullRequests: PullRequest[], filter: (PullRequest: PullRequest) => Promise<boolean>) => {
+    const response = await Promise.all(pullRequests.map(filter));
     return pullRequests.filter((_item, index) => response[index]);
   };
 
