@@ -1,6 +1,7 @@
 import { Issue } from '../static/types';
 import SettingsSerializer from './settings-serializer';
 import { globalMock } from '../../../__test__/mocks/github-api-mock-data';
+import { noAccessTokenError, tooManyRequestsError } from '../static/constants';
 
 const GithubApiWrapper = async () => {
   const getReviewRequested = async (): Promise<Issue[]> => {
@@ -54,7 +55,7 @@ const GithubApiWrapper = async () => {
         'Authorization': 'Basic ' + btoa(':' + accessToken)
       }
     });
-    if (response.status === 403) throw new Error('Too many requests');
+    if (response.status === 403) throw tooManyRequestsError;
     else return response.json();
   };
 
@@ -86,7 +87,7 @@ const GithubApiWrapper = async () => {
   const accessToken = await SettingsSerializer().loadAccessToken();
   // TODO: Find cleaner solution to mock the API during integration tests.
   // @ts-ignore
-  if (ENV !== 'testing' && accessToken === '') throw new Error('No Access Token');
+  if (ENV !== 'testing' && accessToken === '') throw noAccessTokenError;
 
   const userName = (await makeApiRequest('/user')).login;
 

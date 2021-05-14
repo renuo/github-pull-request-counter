@@ -5,7 +5,7 @@ const BadgeSetter = () => {
     const count = calculateTotalPullRequests(record, counter);
 
     chrome.action.setBadgeText({ text: count.toString() });
-    chrome.action.setBadgeBackgroundColor({ color: caculateBackgroundColor(count) });
+    chrome.action.setBadgeBackgroundColor({ color: calculateBackgroundColor(count) });
   };
 
   const calculateTotalPullRequests = (record: PullRequestRecord, counter: Counter) => {
@@ -18,7 +18,7 @@ const BadgeSetter = () => {
     return total;
   };
 
-  const caculateBackgroundColor = (count: number) => {
+  const calculateBackgroundColor = (count: number) => {
     const okLimit = 0;
     const warningLimit = 2;
     const green = '#5cb85c';

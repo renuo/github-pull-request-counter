@@ -2,8 +2,8 @@ import GithubApiWrapper from './services/github-api-wrapper';
 import StorageSerializer from './services/storage-serializer';
 import BadgeSetter from './services/badge-setter';
 import SettingsSerializer from './services/settings-serializer';
-import { recordKeys } from './static/constants';
-import { PullRequestRecord } from './static/types';
+import { recordKeys, noAccessTokenError, tooManyRequestsError } from './static/constants';
+import { PullRequestRecord, Issue } from './static/types';
 
 const pollingInterval = 1;
 
@@ -15,20 +15,31 @@ const ServiceWoker = () => {
     try {
       github = await GithubApiWrapper();
     } catch(error) {
-      storageSerilizer.storePullRequests({ noReviewRequested: [], allReviewsDone: [], missingAssignee: [], reviewRequested: [] });
-      BadgeSetter().update({}, {});
-      return;
+      if (error === noAccessTokenError) {
+        storageSerilizer.storePullRequests({ noReviewRequested: [], allReviewsDone: [], missingAssignee: [], reviewRequested: [] });
+        BadgeSetter().update({}, {});
+        return;
+      } else if (error === tooManyRequestsError) return;
+
+      throw error;
     }
 
-    const recordEntries = await Promise.all([
-      github.getNoReviewRequested(),
-      github.getAllReviewsDone(),
-      github.getMissingAssignee(),
-      github.getReviewRequested()
-    ]);
+    let recordEntries: Issue[][];
+    try {
+      recordEntries = await Promise.all([
+        github.getNoReviewRequested(),
+        github.getAllReviewsDone(),
+        github.getMissingAssignee(),
+        github.getReviewRequested()
+      ]);
+    } catch(error) {
+      if (error === tooManyRequestsError) return;
 
-    let record: PullRequestRecord = {};
-    recordKeys.forEach((key, index) => record[key] = recordEntries[index])
+      throw error;
+    }
+
+    const record: PullRequestRecord = {};
+    recordKeys.forEach((key, index) => record[key] = recordEntries[index]);
 
     const counter = await SettingsSerializer().loadCounter();
     BadgeSetter().update(record, counter);
@@ -36,7 +47,7 @@ const ServiceWoker = () => {
     storageSerilizer.storePullRequests(record);
   };
 
-  const startPolling = async() => {
+  const startPolling = async () => {
     await fetchAndStoreData();
 
     chrome.alarms.create('polling', { periodInMinutes: pollingInterval });

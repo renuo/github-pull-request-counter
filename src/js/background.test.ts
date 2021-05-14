@@ -79,6 +79,70 @@ describe('ServiceWorker', () => {
         expect(global.chrome.action.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#5cb85c' });
       });
     });
+
+    describe('with too many requests', () => {
+      afterAll(() => {
+        mockedFetch.mockImplementation((url: string) => globalMock(url, { pullRequestCount: 2 }));
+      });
+
+      describe('while fetching the user', () => {
+        beforeAll(() => {
+          mockedFetch.mockImplementation(() => Promise.resolve({ status: 403 }));
+        });
+
+        it('doesn\'t call set', () => {
+          expect(global.chrome.storage.local.set).not.toHaveBeenCalled();
+        });
+      });
+
+      describe('while fetchting data', () => {
+        beforeAll(() => {
+          mockedFetch.mockImplementation((url: string) => {
+            if (url.includes('/user')) {
+              return Promise.resolve({ json: () => ({ login: 'renuo' }) });
+            } else {
+              return Promise.resolve({ status: 403 });
+            }
+          });
+        });
+
+        it('doesn\'t call set', () => {
+          expect(global.chrome.storage.local.set).not.toHaveBeenCalled();
+        });
+      });
+    });
+  });
+
+  describe('with other errors', () => {
+    afterAll(() => {
+      mockedFetch.mockImplementation((url: string) => globalMock(url, { pullRequestCount: 2 }));
+    });
+
+    describe('while fetching the user', () => {
+      beforeAll(() => {
+        mockedFetch.mockImplementation(() => Promise.resolve({}));
+      });
+
+      it('doesn\'t call set', () => {
+        expect(serviceWorker.fetchAndStoreData()).rejects.toThrowError('response.json is not a function');
+      });
+    });
+
+    describe('while fetchting data', () => {
+      beforeAll(() => {
+        mockedFetch.mockImplementation((url: string) => {
+          if (url.includes('/user')) {
+            return Promise.resolve({ json: () => ({ login: 'renuo' }) });
+          } else {
+            return Promise.resolve({});
+          }
+        });
+      });
+
+      it('doesn\'t call set', () => {
+        expect(serviceWorker.fetchAndStoreData()).rejects.toThrowError('response.json is not a function');
+      });
+    });
   });
 
   describe('#startPolling', () => {

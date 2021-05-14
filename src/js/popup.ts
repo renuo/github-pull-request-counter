@@ -3,7 +3,7 @@ import StorageSerilizer from './services/storage-serializer';
 import HTMLGenerator from './services/html-generator';
 import { recordKeys } from './static/constants';
 
-const Popup = async() => {
+const Popup = async () => {
   const data = await StorageSerilizer().loadPullRequests(recordKeys);
   const html = HTMLGenerator().generate(data);
   document.getElementById('popup')!.appendChild(html);
