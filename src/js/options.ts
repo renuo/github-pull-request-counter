@@ -1,6 +1,6 @@
 import { Counter } from './static/types';
 import SettingsSerializer from './services/settings-serializer';
-import ServiceWoker from './background';
+import ServiceWorker from './background';
 import '../css/options.scss';
 
 const Options = () => {
@@ -37,7 +37,7 @@ const Options = () => {
     storeCounterFromDOM();
     storeScopeFromDOM();
     storeAccessTokenFromDom();
-    await ServiceWoker().fetchAndStoreData();
+    await ServiceWorker().fetchAndStoreData();
   };
 
   const storeCounterFromDOM = () => {

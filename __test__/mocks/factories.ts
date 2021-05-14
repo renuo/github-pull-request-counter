@@ -1,6 +1,6 @@
 import { PullRequestRecord } from '../../src/js/static/types';
 
-export const issueFactory = (index: number) => ({
+export const pullRequestFactory = (index: number) => ({
   id: index,
   title: `PullRequest-${index}-Title`,
   assignee: undefined,
@@ -15,7 +15,7 @@ export const issueFactory = (index: number) => ({
 export const pullRequestRecordFactory = (count: number) => {
   const record: PullRequestRecord = {};
   for (let i = 0; i < count; i++) {
-    record[`PullRequest-${i}`] = [issueFactory(i), issueFactory(i + count)];
+    record[`PullRequest-${i}`] = [pullRequestFactory(i), pullRequestFactory(i + count)];
   }
   return record;
 };

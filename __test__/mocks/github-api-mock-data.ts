@@ -1,7 +1,7 @@
-import { Issue } from '../../src/js/static/types';
+import { PullRequest } from '../../src/js/static/types';
 
-export const mockListOfIssues = (count: number, params?: { assignee: string | undefined }) => {
-  const createIssues = (count: number): Issue[] => {
+export const mockListOfPullRequests = (count: number, params?: { assignee: string | undefined }) => {
+  const createPullRequests = (count: number): PullRequest[] => {
     const items = [];
 
     for (let i = 0; i < count; i++) {
@@ -23,7 +23,7 @@ export const mockListOfIssues = (count: number, params?: { assignee: string | un
 
   return {
     total_count: count,
-    items: createIssues(count)
+    items: createPullRequests(count)
   };
 };
 
@@ -57,7 +57,7 @@ export const globalMock = (url: string, params?: GlobalMockParams) => {
     });
   } else {
     return Promise.resolve({
-      json: () => mockListOfIssues(params?.pullRequestCount || 0)
+      json: () => mockListOfPullRequests(params?.pullRequestCount || 0)
     });
   }
 };

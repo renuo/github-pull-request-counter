@@ -1,4 +1,4 @@
-import ServiceWoker from './background';
+import ServiceWorker from './background';
 import { globalMock } from '../../__test__/mocks/github-api-mock-data';
 import fetch from 'node-fetch';
 
@@ -33,7 +33,7 @@ global.chrome = {
 } as any;
 
 describe('ServiceWorker', () => {
-  const serviceWorker = ServiceWoker();
+  const serviceWorker = ServiceWorker();
 
   afterEach(() => {
     jest.clearAllMocks();

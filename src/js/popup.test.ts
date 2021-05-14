@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { issueFactory } from '../../__test__/mocks/factories';
+import { pullRequestFactory } from '../../__test__/mocks/factories';
 import { recordKeys } from './static/constants';
 
 import Popup from './popup';
@@ -11,10 +11,10 @@ global.chrome = {
   storage: {
     local: {
       get: jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
-        [recordKeys[0]]: [ JSON.stringify([issueFactory(0), issueFactory(4)]) ],
-        [recordKeys[1]]: [ JSON.stringify([issueFactory(1), issueFactory(5)]) ],
-        [recordKeys[2]]: [ JSON.stringify([issueFactory(2), issueFactory(6)]) ],
-        [recordKeys[3]]: [ JSON.stringify([issueFactory(3), issueFactory(7)]) ],
+        [recordKeys[0]]: [ JSON.stringify([pullRequestFactory(0), pullRequestFactory(4)]) ],
+        [recordKeys[1]]: [ JSON.stringify([pullRequestFactory(1), pullRequestFactory(5)]) ],
+        [recordKeys[2]]: [ JSON.stringify([pullRequestFactory(2), pullRequestFactory(6)]) ],
+        [recordKeys[3]]: [ JSON.stringify([pullRequestFactory(3), pullRequestFactory(7)]) ],
       })),
     }
   },

@@ -1,4 +1,4 @@
-import { Issue, PullRequestRecord } from '../static/types';
+import { PullRequest, PullRequestRecord } from '../static/types';
 import { recordKeysTranslations, extensionID } from '../static/constants';
 
 const HTMLGenerator = () => {
@@ -29,15 +29,15 @@ const HTMLGenerator = () => {
     return topLevelDiv;
   };
 
-  const generateLinkStructure = (issues: Issue[]): HTMLDivElement => {
+  const generateLinkStructure = (pullRequests: PullRequest[]): HTMLDivElement => {
     const groupLevelDiv = document.createElement('div');
     groupLevelDiv.classList.add('group-container');
 
-    for (const issue of issues) {
+    for (const PullRequest of pullRequests) {
       const pullRequestDiv = document.createElement('div');
 
-      pullRequestDiv.appendChild(generateLink(issue));
-      pullRequestDiv.appendChild(generateSubDescription(issue));
+      pullRequestDiv.appendChild(generateLink(PullRequest));
+      pullRequestDiv.appendChild(generateSubDescription(PullRequest));
 
       pullRequestDiv.classList.add('link-container');
       groupLevelDiv.appendChild(pullRequestDiv);
@@ -59,17 +59,17 @@ const HTMLGenerator = () => {
     return noContentDiv;
   };
 
-  const generateLink = (issue: Issue) => {
+  const generateLink = (PullRequest: PullRequest) => {
     const link = document.createElement('a');
-    link.appendChild(document.createTextNode(issue.title));
-    link.href = issue.pull_request.html_url;
+    link.appendChild(document.createTextNode(PullRequest.title));
+    link.href = PullRequest.pull_request.html_url;
     link.target = '_blank';
     return link;
   };
 
-  const generateSubDescription = (issue: Issue) => {
+  const generateSubDescription = (PullRequest: PullRequest) => {
     const subDescriptionP = document.createElement('p');
-    subDescriptionP.textContent = `${issue.owner} #${issue.number}`;
+    subDescriptionP.textContent = `${PullRequest.owner} #${PullRequest.number}`;
     return subDescriptionP;
   };
 

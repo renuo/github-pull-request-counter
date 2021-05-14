@@ -1,6 +1,6 @@
 import StorageSerializer from './storage-serializer';
 import { PullRequestRecord } from '../static/types';
-import { issueFactory, pullRequestRecordFactory } from '../../../__test__/mocks/factories';
+import { pullRequestFactory, pullRequestRecordFactory } from '../../../__test__/mocks/factories';
 
 global.chrome = {
   storage: {
@@ -42,7 +42,7 @@ describe('StorageSerialzer', () => {
       });
 
       it('calls set with the right arguments', () => {
-        expect(setMock).toHaveBeenNthCalledWith(1, { 'PullRequest-0': JSON.stringify([issueFactory(0), issueFactory(1)]) });
+        expect(setMock).toHaveBeenNthCalledWith(1, { 'PullRequest-0': JSON.stringify([pullRequestFactory(0), pullRequestFactory(1)]) });
       });
     });
 
@@ -94,7 +94,7 @@ describe('StorageSerialzer', () => {
     describe('with one stored record', () => {
       beforeAll(() => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
-          callback({ 'PullRequest-0': [ JSON.stringify([issueFactory(0), issueFactory(1)]) ] });
+          callback({ 'PullRequest-0': [ JSON.stringify([pullRequestFactory(0), pullRequestFactory(1)]) ] });
         });
 
         pullRequests = pullRequestRecordFactory(1);
@@ -110,10 +110,10 @@ describe('StorageSerialzer', () => {
       beforeAll(() => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
           callback({
-            'PullRequest-0': [ JSON.stringify([issueFactory(0), issueFactory(4)]) ],
-            'PullRequest-1': [ JSON.stringify([issueFactory(1), issueFactory(5)]) ],
-            'PullRequest-2': [ JSON.stringify([issueFactory(2), issueFactory(6)]) ],
-            'PullRequest-3': [ JSON.stringify([issueFactory(3), issueFactory(7)]) ]
+            'PullRequest-0': [ JSON.stringify([pullRequestFactory(0), pullRequestFactory(4)]) ],
+            'PullRequest-1': [ JSON.stringify([pullRequestFactory(1), pullRequestFactory(5)]) ],
+            'PullRequest-2': [ JSON.stringify([pullRequestFactory(2), pullRequestFactory(6)]) ],
+            'PullRequest-3': [ JSON.stringify([pullRequestFactory(3), pullRequestFactory(7)]) ]
           });
         });
 

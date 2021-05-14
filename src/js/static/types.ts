@@ -1,4 +1,4 @@
-export interface Issue {
+export interface PullRequest {
   id: number;
   assignee: string | undefined;
   title: string;
@@ -11,7 +11,7 @@ export interface Issue {
 }
 
 export interface PullRequestRecord {
-  [key: string]: Issue[];
+  [key: string]: PullRequest[];
 }
 
 export interface Counter {

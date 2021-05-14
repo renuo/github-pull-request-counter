@@ -1,5 +1,5 @@
 import GithubApiWrapper from './github-api-wrapper';
-import { mockListOfIssues, mockRequestedReviewers } from '../../../__test__/mocks/github-api-mock-data';
+import { mockListOfPullRequests, mockRequestedReviewers } from '../../../__test__/mocks/github-api-mock-data';
 import fetch from 'node-fetch';
 
 jest.mock('node-fetch');
@@ -30,7 +30,7 @@ describe('GithubApiWrapper', () => {
     let pullRequestCount: number;
     beforeEach(() => {
       mockedFetch.mockResolvedValue(Promise.resolve({
-        json: () => Promise.resolve(mockListOfIssues(pullRequestCount))
+        json: () => Promise.resolve(mockListOfPullRequests(pullRequestCount))
       }));
     });
 
@@ -73,7 +73,7 @@ describe('GithubApiWrapper', () => {
       mockedFetch.mockImplementation((url: string) => {
         const value = url.includes('/requested_reviewers') ?
               mockRequestedReviewers(openUserRequestCount, openTeamRequestCount) :
-              mockListOfIssues(pullRequestCount);
+              mockListOfPullRequests(pullRequestCount);
 
         return Promise.resolve({
           json: () => Promise.resolve(value)
@@ -162,7 +162,7 @@ describe('GithubApiWrapper', () => {
       mockedFetch.mockImplementation((url: string) => {
         const value = url.includes('/requested_reviewers') ?
               mockRequestedReviewers(openUserRequestCount, openTeamRequestCount) :
-              mockListOfIssues(pullRequestCount);
+              mockListOfPullRequests(pullRequestCount);
 
         return Promise.resolve({
           json: () => Promise.resolve(value)
@@ -226,7 +226,7 @@ describe('GithubApiWrapper', () => {
 
     beforeEach(() => {
       mockedFetch.mockResolvedValue(Promise.resolve({
-        json: () => Promise.resolve(mockListOfIssues(pullRequestCount, { assignee }))
+        json: () => Promise.resolve(mockListOfPullRequests(pullRequestCount, { assignee }))
       }));
     });
 

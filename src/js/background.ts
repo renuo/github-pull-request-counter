@@ -3,11 +3,11 @@ import StorageSerializer from './services/storage-serializer';
 import BadgeSetter from './services/badge-setter';
 import SettingsSerializer from './services/settings-serializer';
 import { recordKeys, noAccessTokenError, tooManyRequestsError } from './static/constants';
-import { PullRequestRecord, Issue } from './static/types';
+import { PullRequestRecord, PullRequest } from './static/types';
 
 const pollingInterval = 1;
 
-const ServiceWoker = () => {
+const ServiceWorker = () => {
   const fetchAndStoreData = async () => {
     let github;
     const storageSerilizer = StorageSerializer();
@@ -24,7 +24,7 @@ const ServiceWoker = () => {
       throw error;
     }
 
-    let recordEntries: Issue[][];
+    let recordEntries: PullRequest[][];
     try {
       recordEntries = await Promise.all([
         github.getNoReviewRequested(),
@@ -65,7 +65,7 @@ const ServiceWoker = () => {
 
 // TODO: Running this code in tests will cause ERR_UNHANDLED_REJECTION.
 /* istanbul ignore next */
-if (process.env.JEST_WORKER_ID === undefined) ServiceWoker().startPolling();
+if (process.env.JEST_WORKER_ID === undefined) ServiceWorker().startPolling();
 
-export default ServiceWoker;
+export default ServiceWorker;
 
