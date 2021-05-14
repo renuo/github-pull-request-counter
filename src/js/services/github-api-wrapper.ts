@@ -91,6 +91,7 @@ const GithubApiWrapper = async () => {
   // @ts-ignore
   if (ENV !== 'testing' && accessToken === '') throw noAccessTokenError;
 
+  // TODO: This should be cached to improve performance
   const userName = (await makeApiRequest('/user')).login;
 
   return { getReviewRequested, getNoReviewRequested, getAllReviewsDone, getMissingAssignee };
