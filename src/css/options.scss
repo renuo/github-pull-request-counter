@@ -59,8 +59,8 @@
 .hover-label-container {
   .hover-label {
     display: none;
-    margin-left: 5px;
     font-weight: 500;
+    margin-left: 5px;
   }
 
   &:hover > label {
@@ -68,8 +68,8 @@
   }
 
   &:hover > .hover-label {
-    display: inline;
     color: $pure-black;
+    display: inline;
   }
 
 }
