@@ -38,6 +38,9 @@ describe('integration test', () => {
   describe('options', () => {
     it('navigates to the options page', async () => {
       await page.goto(url('options.html'), { waitUntil: 'networkidle2' });
+      page.evaluate(() => {
+        document.querySelectorAll('.hover-label').forEach((e) => e.classList.remove('hover-label'));
+      });
 
       expect(page.title()).resolves.toMatch('GitHub Pull Request Counter');
       expect(page.url()).toEqual(url('options.html'));
