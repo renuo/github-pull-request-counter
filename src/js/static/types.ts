@@ -10,9 +10,8 @@ export interface PullRequest {
   };
 }
 
-export interface PullRequestRecord {
-  [key: string]: PullRequest[];
-}
+export type PullRequestRecordKey = 'reviewRequested' | 'noReviewRequested' | 'allReviewsDone' | 'missingAssignee';
+export type PullRequestRecord = Record<PullRequestRecordKey, PullRequest[]>;
 
 export interface Counter {
   [key: string]: boolean;

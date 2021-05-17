@@ -1,9 +1,9 @@
-import { PullRequestRecord, PullRequest } from '../static/types';
+import { PullRequestRecord, PullRequest, PullRequestRecordKey } from '../static/types';
 
 const StorageSerializer = () => {
   const storePullRequests = (pullRequests: PullRequestRecord): void => {
     for (const key of Object.keys(pullRequests)) {
-      storePullRequest(key, pullRequests[key]);
+      storePullRequest(key, pullRequests[key as PullRequestRecordKey]);
     }
   };
 
@@ -11,15 +11,12 @@ const StorageSerializer = () => {
     chrome.storage.local.set({ [key]: JSON.stringify(reviewRequested) });
   };
 
-  const loadPullRequests = async (keys: string[]): Promise<PullRequestRecord> => {
-    const record: PullRequestRecord = {};
-
-    for (const key of keys) {
-      record[key] = await loadPullRequest(key);
-    }
-
-    return record;
-  };
+  const loadPullRequests = async (): Promise<PullRequestRecord> => ({
+    reviewRequested: await loadPullRequest('reviewRequested'),
+    noReviewRequested: await loadPullRequest('noReviewRequested'),
+    allReviewsDone: await loadPullRequest('allReviewsDone'),
+    missingAssignee: await loadPullRequest('missingAssignee'),
+  });
 
   const loadPullRequest = async (key: string): Promise<PullRequest[]> => {
     const data: { [key: string]: string } = await new Promise((resolve) => {

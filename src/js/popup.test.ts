@@ -11,10 +11,10 @@ global.chrome = {
   storage: {
     local: {
       get: jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
-        [recordKeys[0]]: [ JSON.stringify([pullRequestFactory(0), pullRequestFactory(4)]) ],
-        [recordKeys[1]]: [ JSON.stringify([pullRequestFactory(1), pullRequestFactory(5)]) ],
-        [recordKeys[2]]: [ JSON.stringify([pullRequestFactory(2), pullRequestFactory(6)]) ],
-        [recordKeys[3]]: [ JSON.stringify([pullRequestFactory(3), pullRequestFactory(7)]) ],
+        [recordKeys[0]]: [ JSON.stringify([pullRequestFactory(0), pullRequestFactory(0)]) ],
+        [recordKeys[1]]: [ JSON.stringify([pullRequestFactory(0), pullRequestFactory(0)]) ],
+        [recordKeys[2]]: [ JSON.stringify([pullRequestFactory(0), pullRequestFactory(0)]) ],
+        [recordKeys[3]]: [ JSON.stringify([pullRequestFactory(0), pullRequestFactory(0)]) ],
       })),
     }
   },

@@ -28,62 +28,65 @@ describe('StorageSerialzer', () => {
 
     describe('with an empty record', () => {
       beforeAll(() => {
-        pullRequests = {};
+        pullRequests = pullRequestRecordFactory();
       });
 
       it('doesn\'t store anything', () => {
-        expect(setMock).toBeCalledTimes(0);
+        expect(setMock).toBeCalledTimes(4);
       });
     });
 
     describe('with one record entry', () => {
       beforeAll(() => {
-        pullRequests = pullRequestRecordFactory(1);
+        pullRequests = pullRequestRecordFactory({ reviewRequestedCount: 1 });
       });
 
       it('calls set with the right arguments', () => {
-        expect(setMock).toHaveBeenNthCalledWith(1, { 'PullRequest-0': JSON.stringify([pullRequestFactory(0), pullRequestFactory(1)]) });
+        expect(setMock).toHaveBeenNthCalledWith(1, { 'reviewRequested': JSON.stringify([pullRequestFactory(0)]) });
       });
     });
 
-    describe('with five record entries', () => {
+    describe('with four record entries', () => {
       beforeAll(() => {
-        pullRequests = pullRequestRecordFactory(5);
+        pullRequests = pullRequestRecordFactory({
+          reviewRequestedCount: 1,
+          noReviewRequestedCount: 1,
+          allReviewsDoneCount: 1,
+          missingAssigneeCount: 1
+        });
       });
 
-      it('calls set five times', () => {
-        expect(setMock).toBeCalledTimes(5);
+      it('calls set four times', () => {
+        expect(setMock).toBeCalledTimes(4);
       });
     });
   });
 
   describe('#loadPullRequests', () => {
-    let keys: string[];
     let result: PullRequestRecord;
     const getMock = global.chrome.storage.local.get;
 
     beforeEach(async () => {
-      keys = Object.keys(pullRequests);
-      result = await storageSerilizer.loadPullRequests(keys);
+      result = await storageSerilizer.loadPullRequests();
     });
 
     describe('default value', () => {
       beforeAll(() => {
-        pullRequests = pullRequestRecordFactory(1);
+        pullRequests = pullRequestRecordFactory({ reviewRequestedCount: 1 });
 
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
-          callback({ 'PullRequest-0': undefined });
+          callback({});
         });
       });
 
-      it('loads an empty arrays', () => {
-        expect(result).toEqual({ 'PullRequest-0': [] });
+      it('loads empty arrays', () => {
+        expect(result).toEqual({ reviewRequested: [], noReviewRequested: [], allReviewsDone: [], missingAssignee: [] });
       });
     });
 
     describe('with no keys', () => {
       beforeAll(() => {
-        pullRequests = {};
+        pullRequests = pullRequestRecordFactory();
       });
 
       it('doesn\'t load anything', () => {
@@ -94,14 +97,14 @@ describe('StorageSerialzer', () => {
     describe('with one stored record', () => {
       beforeAll(() => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
-          callback({ 'PullRequest-0': [ JSON.stringify([pullRequestFactory(0), pullRequestFactory(1)]) ] });
+          callback({ 'reviewRequested': [JSON.stringify([pullRequestFactory(0)])] });
         });
 
-        pullRequests = pullRequestRecordFactory(1);
+        pullRequests = pullRequestRecordFactory({ reviewRequestedCount: 1 });
       });
 
       it('loads the correct data', () => {
-        expect(global.chrome.storage.local.get).toBeCalledTimes(1);
+        expect(global.chrome.storage.local.get).toBeCalledTimes(4);
         expect(result).toEqual(pullRequests);
       });
     });
@@ -110,14 +113,19 @@ describe('StorageSerialzer', () => {
       beforeAll(() => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
           callback({
-            'PullRequest-0': [ JSON.stringify([pullRequestFactory(0), pullRequestFactory(4)]) ],
-            'PullRequest-1': [ JSON.stringify([pullRequestFactory(1), pullRequestFactory(5)]) ],
-            'PullRequest-2': [ JSON.stringify([pullRequestFactory(2), pullRequestFactory(6)]) ],
-            'PullRequest-3': [ JSON.stringify([pullRequestFactory(3), pullRequestFactory(7)]) ]
+            'reviewRequested': [JSON.stringify([pullRequestFactory(0)])],
+            'noReviewRequested': [JSON.stringify([pullRequestFactory(0)])],
+            'allReviewsDone': [JSON.stringify([pullRequestFactory(0)])],
+            'missingAssignee': [JSON.stringify([pullRequestFactory(0)])],
           });
         });
 
-        pullRequests = pullRequestRecordFactory(4);
+        pullRequests = pullRequestRecordFactory({
+          reviewRequestedCount: 1,
+          noReviewRequestedCount: 1,
+          allReviewsDoneCount: 1,
+          missingAssigneeCount: 1
+        });
       });
 
       it('loads the correct data', () => {

@@ -2,7 +2,7 @@ import GithubApiWrapper from './services/github-api-wrapper';
 import StorageSerializer from './services/storage-serializer';
 import BadgeSetter from './services/badge-setter';
 import SettingsSerializer from './services/settings-serializer';
-import { recordKeys, noAccessTokenError, tooManyRequestsError } from './static/constants';
+import { noAccessTokenError, tooManyRequestsError } from './static/constants';
 import { PullRequestRecord, PullRequest } from './static/types';
 
 const pollingInterval = 1;
@@ -17,7 +17,7 @@ const ServiceWorker = () => {
     } catch(error) {
       if (error === noAccessTokenError) {
         storageSerilizer.storePullRequests({ noReviewRequested: [], allReviewsDone: [], missingAssignee: [], reviewRequested: [] });
-        BadgeSetter().update({}, {});
+        BadgeSetter().update({ noReviewRequested: [], allReviewsDone: [], missingAssignee: [], reviewRequested: [] }, {});
         return;
       } else if (error === tooManyRequestsError) return;
 
@@ -38,8 +38,12 @@ const ServiceWorker = () => {
       throw error;
     }
 
-    const record: PullRequestRecord = {};
-    recordKeys.forEach((key, index) => record[key] = recordEntries[index]);
+    const record: PullRequestRecord = {
+      reviewRequested: recordEntries[0],
+      noReviewRequested: recordEntries[1],
+      allReviewsDone: recordEntries[2],
+      missingAssignee: recordEntries[3],
+    };
 
     const counter = await SettingsSerializer().loadCounter();
     BadgeSetter().update(record, counter);

@@ -1,4 +1,4 @@
-import { PullRequestRecord, Counter } from '../static/types';
+import { PullRequestRecord, Counter, PullRequestRecordKey } from '../static/types';
 
 const BadgeSetter = () => {
   const update = (record: PullRequestRecord, counter: Counter) => {
@@ -12,7 +12,7 @@ const BadgeSetter = () => {
     let total = 0;
 
     for (const key of Object.keys(record)) {
-      if (counter[key]) total += record[key].length;
+      if (counter[key]) total += record[key as PullRequestRecordKey].length;
     }
 
     return total;

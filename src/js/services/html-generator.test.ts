@@ -10,7 +10,7 @@ describe('HTMLGenerator', () => {
   const htmlGenerator = HTMLGenerator();
 
   describe('#generate', () => {
-    let record: PullRequestRecord = {};
+    let record: PullRequestRecord;
     let result: HTMLDivElement;
 
     beforeEach(() => {
@@ -19,9 +19,7 @@ describe('HTMLGenerator', () => {
 
     describe('with an empty record', () => {
       beforeAll(() => {
-        record = {
-          reviewRequested: []
-        };
+        record = pullRequestRecordFactory();
       });
 
       it('outputs the backup element', () => {
@@ -32,11 +30,11 @@ describe('HTMLGenerator', () => {
 
     describe('with a single record entry', () => {
       beforeAll(() => {
-        record = pullRequestRecordFactory(1);
+        record = pullRequestRecordFactory({ reviewRequestedCount: 1 });
       });
 
       it('has the correct <p> as its first child', () => {
-        expect((result.childNodes[0] as HTMLParagraphElement).innerHTML).toEqual('Unknown');
+        expect((result.childNodes[0] as HTMLParagraphElement).innerHTML).toEqual('I must review');
       });
 
       it('has the correct <div> as its second child', () => {
@@ -44,8 +42,8 @@ describe('HTMLGenerator', () => {
       });
 
       describe('second child', () => {
-        it('has two <div>\'s', () => {
-          expect(result.childNodes[1].childNodes.length).toEqual(2);
+        it('has one <div>\'s', () => {
+          expect(result.childNodes[1].childNodes.length).toEqual(1);
         });
 
         describe('first div', () => {
@@ -54,7 +52,7 @@ describe('HTMLGenerator', () => {
 
             expect(a.href).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
             expect(a.target).toEqual('_blank');
-            expect(a.innerHTML).toEqual('PullRequest-0-Title');
+            expect(a.innerHTML).toEqual('PullRequest-Title');
           });
         });
       });
@@ -62,7 +60,7 @@ describe('HTMLGenerator', () => {
 
     describe('with three record entries', () => {
       beforeAll(() => {
-        record = pullRequestRecordFactory(3);
+        record = pullRequestRecordFactory({ reviewRequestedCount: 1, noReviewRequestedCount: 2, allReviewsDoneCount: 3 });
       });
 
       it('has six childNodes', () => {

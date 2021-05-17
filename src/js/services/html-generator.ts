@@ -1,4 +1,4 @@
-import { PullRequest, PullRequestRecord } from '../static/types';
+import { PullRequest, PullRequestRecord, PullRequestRecordKey } from '../static/types';
 import { recordKeysTranslations, extensionID } from '../static/constants';
 
 const HTMLGenerator = () => {
@@ -7,14 +7,14 @@ const HTMLGenerator = () => {
     topLevelDiv.classList.add('pull-requests-loaded');
 
     for (const key of Object.keys(record)) {
-      if (record[key].length === 0) continue;
+      if (record[key as PullRequestRecordKey].length === 0) continue;
 
       const titleP = document.createElement('p');
-      titleP.textContent = recordKeysTranslations[key] || 'Unknown';
+      titleP.textContent = recordKeysTranslations[key];
       titleP.classList.add('title');
       topLevelDiv.appendChild(titleP);
 
-      topLevelDiv.appendChild(generateLinkStructure(record[key]));
+      topLevelDiv.appendChild(generateLinkStructure(record[key as PullRequestRecordKey]));
     }
 
     if (topLevelDiv.children.length === 0) {
