@@ -45,7 +45,7 @@ const ServiceWorker = () => {
       missingAssignee: recordEntries[3],
     };
 
-    const counter = await SettingsStorageAccessor().loadCounterSettings();
+    const counter = await SettingsStorageAccessor().loadCounterConfig();
     BadgeSetter().update(record, counter);
 
     storage.storePullRequests(record);

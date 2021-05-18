@@ -1,14 +1,14 @@
-import { PullRequestRecord, CounterSettings, PullRequestRecordKey } from '../static/types';
+import { PullRequestRecord, CounterConfig, PullRequestRecordKey } from '../static/types';
 
 const BadgeSetter = () => {
-  const update = (record: PullRequestRecord, counter: CounterSettings): void => {
+  const update = (record: PullRequestRecord, counter: CounterConfig): void => {
     const count = calculateTotalPullRequests(record, counter);
 
     chrome.action.setBadgeText({ text: count.toString() });
     chrome.action.setBadgeBackgroundColor({ color: calculateBackgroundColor(count) });
   };
 
-  const calculateTotalPullRequests = (record: PullRequestRecord, counter: CounterSettings): number => {
+  const calculateTotalPullRequests = (record: PullRequestRecord, counter: CounterConfig): number => {
     let total = 0;
 
     for (const key of Object.keys(record)) {

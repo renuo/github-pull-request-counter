@@ -23,4 +23,4 @@ export interface PullRequest {
 export type PullRequestRecordKey = 'reviewRequested' | 'noReviewRequested' | 'allReviewsDone' | 'missingAssignee';
 export type PullRequestRecord = Record<PullRequestRecordKey, PullRequest[]>;
 
-export type CounterSettings = Record<PullRequestRecordKey, boolean>;
+export type CounterConfig = Record<PullRequestRecordKey, boolean>;

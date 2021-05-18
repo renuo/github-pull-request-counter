@@ -1,11 +1,11 @@
-import { CounterSettings } from '../static/types';
+import { CounterConfig } from '../static/types';
 
 const SettingsStorageAccessor = () => {
-  const storeCounterSettings = (counter: CounterSettings): void => {
+  const storeCounterConfig = (counter: CounterConfig): void => {
     store('counter', JSON.stringify(counter));
   };
 
-  const loadCounterSettings = async (): Promise<CounterSettings> => {
+  const loadCounterConfig = async (): Promise<CounterConfig> => {
     try {
       return (JSON.parse(await load('counter')));
     } catch {
@@ -50,7 +50,7 @@ const SettingsStorageAccessor = () => {
     return data[key];
   };
 
-  return { storeCounterSettings, loadCounterSettings, storeScope, loadScope, storeAccessToken, loadAccessToken };
+  return { storeCounterConfig, loadCounterConfig, storeScope, loadScope, storeAccessToken, loadAccessToken };
 };
 
 export default SettingsStorageAccessor;

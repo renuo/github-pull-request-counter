@@ -1,4 +1,4 @@
-import { CounterSettings } from './static/types';
+import { CounterConfig } from './static/types';
 import SettingsStorageAccessor from './services/settings-storage-accessor';
 import ServiceWorker from './background';
 import '../css/options.scss';
@@ -14,7 +14,7 @@ const Options = () => {
   };
 
   const loadCounterToDOM = async () => {
-    const counter = await settings.loadCounterSettings();
+    const counter = await settings.loadCounterConfig();
     (document.getElementById('review-requested') as HTMLInputElement).checked = counter.reviewRequested;
     (document.getElementById('no-review-requested') as HTMLInputElement).checked = counter.noReviewRequested;
     (document.getElementById('all-reviews-done') as HTMLInputElement).checked = counter.allReviewsDone;
@@ -41,14 +41,14 @@ const Options = () => {
   };
 
   const storeCounterFromDOM = () => {
-    const counter: CounterSettings = {
+    const counter: CounterConfig = {
       reviewRequested: (document.getElementById('review-requested') as HTMLInputElement).checked,
       noReviewRequested: (document.getElementById('no-review-requested') as HTMLInputElement).checked,
       allReviewsDone: (document.getElementById('all-reviews-done') as HTMLInputElement).checked,
       missingAssignee: (document.getElementById('missing-assignee') as HTMLInputElement).checked,
     };
 
-    settings.storeCounterSettings(counter);
+    settings.storeCounterConfig(counter);
   };
 
   const storeScopeFromDOM = () => {
