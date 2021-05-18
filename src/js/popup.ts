@@ -1,10 +1,10 @@
 import '../css/popup.scss';
-import StorageSerilizer from './services/pull-request-storage-accessor';
+import PullRequestStorageAccessor from './services/pull-request-storage-accessor';
 import HTMLGenerator from './services/html-generator';
 
 const Popup = async () => {
-  const data = await StorageSerilizer().loadPullRequests();
-  const html = HTMLGenerator().generate(data);
+  const pullRequests = await PullRequestStorageAccessor().loadPullRequests();
+  const html = HTMLGenerator().generate(pullRequests);
   document.getElementById('popup')!.appendChild(html);
 };
 

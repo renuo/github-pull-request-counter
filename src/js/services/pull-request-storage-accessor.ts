@@ -25,8 +25,7 @@ const PullRequestStorageAccessor = () => {
       });
     });
 
-    try { return JSON.parse(data[key]); }
-    catch { return []; }
+    return data[key] ? JSON.parse(data[key]) : [];
   };
 
   const clearPullRequests = (): void => {
