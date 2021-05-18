@@ -1,4 +1,4 @@
-export interface PullRequest {
+export interface Issue {
   id: number;
   assignee: string | undefined;
   title: string;
@@ -8,6 +8,16 @@ export interface PullRequest {
     url: string,
     html_url: string
   };
+}
+
+export interface PullRequest {
+  id: number;
+  assignee: string | undefined;
+  title: string;
+  number: number;
+  owner: string;
+  url: string;
+  html_url: string;
 }
 
 export type PullRequestRecordKey = 'reviewRequested' | 'noReviewRequested' | 'allReviewsDone' | 'missingAssignee';

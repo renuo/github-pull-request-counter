@@ -62,7 +62,7 @@ const HTMLGenerator = () => {
   const generateLink = (PullRequest: PullRequest) => {
     const link = document.createElement('a');
     link.appendChild(document.createTextNode(PullRequest.title));
-    link.href = PullRequest.pull_request.html_url;
+    link.href = PullRequest.html_url;
     link.target = '_blank';
     return link;
   };

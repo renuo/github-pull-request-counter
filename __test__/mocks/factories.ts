@@ -1,18 +1,16 @@
-import { PullRequest } from '../../src/js/static/types';
+import { PullRequest, PullRequestRecord } from '../../src/js/static/types';
 
-export const pullRequestFactory = (index: number) => ({
+export const pullRequestFactory = (index: number): PullRequest => ({
   id: index,
   title: 'PullRequest-Title',
   assignee: undefined,
   number: index,
   owner: 'renuo/github-pull-request-counter',
-  pull_request: {
-    url: `https://api.github.com/repos/renuo/github-pull-request-counter/pulls/${index+1}`,
-    html_url: `https://github.com/renuo/github-pull-request-counter/pull/${index+1}`
-  },
+  url: `https://api.github.com/repos/renuo/github-pull-request-counter/pulls/${index+1}`,
+  html_url: `https://github.com/renuo/github-pull-request-counter/pull/${index+1}`
 });
 
-const createPullRequests = (count: number) => {
+const createPullRequests = (count: number): PullRequest[] => {
   const pullRequests: PullRequest[] = [];
   Array.from(Array(count)).forEach(() => pullRequests.push(pullRequestFactory(0)));
   return pullRequests;
@@ -24,7 +22,7 @@ type Props = {
   allReviewsDoneCount?: number,
   missingAssigneeCount?: number,
 };
-export const pullRequestRecordFactory = (props?: Props) => ({
+export const pullRequestRecordFactory = (props?: Props): PullRequestRecord => ({
   'reviewRequested': createPullRequests(props?.reviewRequestedCount || 0),
   'noReviewRequested': createPullRequests(props?.noReviewRequestedCount || 0),
   'allReviewsDone': createPullRequests(props?.allReviewsDoneCount || 0),

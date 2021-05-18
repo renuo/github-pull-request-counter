@@ -1,7 +1,7 @@
-import { PullRequest } from '../../src/js/static/types';
+import { Issue } from '../../src/js/static/types';
 
 export const mockListOfPullRequests = (count: number, params?: { assignee: string | undefined }) => {
-  const createPullRequests = (count: number): PullRequest[] => {
+  const createIssues = (count: number): Issue[] => {
     const items = [];
 
     for (let i = 0; i < count; i++) {
@@ -23,7 +23,7 @@ export const mockListOfPullRequests = (count: number, params?: { assignee: strin
 
   return {
     total_count: count,
-    items: createPullRequests(count)
+    items: createIssues(count)
   };
 };
 
