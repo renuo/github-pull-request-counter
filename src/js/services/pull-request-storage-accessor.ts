@@ -1,6 +1,6 @@
 import { PullRequestRecord, PullRequest, PullRequestRecordKey } from '../static/types';
 
-const StorageSerializer = () => {
+const PullRequestStorageAccessor = () => {
   const storePullRequests = (pullRequests: PullRequestRecord): void => {
     for (const key of Object.keys(pullRequests)) {
       storePullRequest(key, pullRequests[key as PullRequestRecordKey]);
@@ -29,8 +29,12 @@ const StorageSerializer = () => {
     catch { return []; }
   };
 
-  return { storePullRequests, loadPullRequests };
+  const clearPullRequests = (): void => {
+    storePullRequests({ noReviewRequested: [], allReviewsDone: [], missingAssignee: [], reviewRequested: [] });
+  };
+
+  return { storePullRequests, loadPullRequests, clearPullRequests };
 };
 
-export default StorageSerializer;
+export default PullRequestStorageAccessor;
 

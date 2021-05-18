@@ -1,5 +1,5 @@
 import '../css/popup.scss';
-import StorageSerilizer from './services/storage-serializer';
+import StorageSerilizer from './services/pull-request-storage-accessor';
 import HTMLGenerator from './services/html-generator';
 
 const Popup = async () => {

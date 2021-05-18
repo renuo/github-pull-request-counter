@@ -1,5 +1,5 @@
 import GithubApiWrapper from './services/github-api-wrapper';
-import StorageSerializer from './services/storage-serializer';
+import PullRequestStorageAccessor from './services/pull-request-storage-accessor';
 import BadgeSetter from './services/badge-setter';
 import SettingsSerializer from './services/settings-serializer';
 import { noAccessTokenError, tooManyRequestsError } from './static/constants';
@@ -10,13 +10,13 @@ const pollingInterval = 1;
 const ServiceWorker = () => {
   const fetchAndStoreData = async () => {
     let github;
-    const storageSerializer = StorageSerializer();
+    const storage = PullRequestStorageAccessor();
 
     try {
       github = await GithubApiWrapper();
     } catch(error) {
       if (error === noAccessTokenError) {
-        storageSerializer.storePullRequests({ noReviewRequested: [], allReviewsDone: [], missingAssignee: [], reviewRequested: [] });
+        storage.clearPullRequests();
         BadgeSetter().clear();
         return;
       } else if (error === tooManyRequestsError) return;
@@ -48,7 +48,7 @@ const ServiceWorker = () => {
     const counter = await SettingsSerializer().loadCounterSettings();
     BadgeSetter().update(record, counter);
 
-    storageSerializer.storePullRequests(record);
+    storage.storePullRequests(record);
   };
 
   const startPolling = async () => {
