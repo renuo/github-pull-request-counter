@@ -20,7 +20,7 @@ global.chrome = {
   storage: {
     local: {
       get: jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
-        'counter': 'invalid' ,
+        'counter': undefined,
         'accessToken': 'secret',
       })),
       set: jest.fn(),
@@ -59,14 +59,14 @@ describe('ServiceWorker', () => {
     describe('without an access token', () => {
       beforeAll(() => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
-          'counter': 'invalid' ,
+          'counter': undefined,
           'accessToken': '',
         }));
       });
 
       afterAll(() => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
-          'counter': 'invalid' ,
+          'counter': undefined,
           'accessToken': 'secret',
         }));
       });

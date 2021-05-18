@@ -1,14 +1,13 @@
 import { CounterConfig } from '../static/types';
 
 const SettingsStorageAccessor = () => {
-  const storeCounterConfig = (counter: CounterConfig): void => {
-    store('counter', JSON.stringify(counter));
-  };
+  const storeCounterConfig = (counter: CounterConfig): void => store('counter', JSON.stringify(counter));
 
   const loadCounterConfig = async (): Promise<CounterConfig> => {
-    try {
-      return (JSON.parse(await load('counter')));
-    } catch {
+    const counterJSON = await load('counter');
+    if (counterJSON) {
+      return JSON.parse(counterJSON);
+    } else {
       return {
         reviewRequested: true,
         noReviewRequested: true,
@@ -18,27 +17,15 @@ const SettingsStorageAccessor = () => {
     }
   };
 
-  const storeScope = (list: string): void => {
-    store('scope', list);
-  };
+  const storeScope = (list: string): void => store('scope', list);
 
-  const loadScope = async (): Promise<string> => {
-    const scope = await load('scope');
-    return scope === undefined ? '' : scope;
-  };
+  const loadScope = async (): Promise<string> => (await load('scope')) || '';
 
-  const storeAccessToken = (accessToken: string): void => {
-    store('accessToken', accessToken);
-  };
+  const storeAccessToken = (accessToken: string): void => store('accessToken', accessToken);
 
-  const loadAccessToken = async (): Promise<string> => {
-    const accessToken = await load('accessToken');
-    return accessToken === undefined ? '' : accessToken;
-  };
+  const loadAccessToken = async (): Promise<string> => (await load('accessToken')) || '';
 
-  const store = (key: string, value: string): void => {
-    chrome.storage.local.set({ [key]: value });
-  };
+  const store = (key: string, value: string): void => chrome.storage.local.set({ [key]: value });
 
   const load = async (key: string): Promise<string> => {
     const data: { [key: string]: string } = await new Promise((resolve) => {
