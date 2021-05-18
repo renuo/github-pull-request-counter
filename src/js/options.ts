@@ -1,6 +1,7 @@
 import { CounterConfig } from './static/types';
 import SettingsStorageAccessor from './services/settings-storage-accessor';
 import ServiceWorker from './background';
+import { displayedAccessToken } from './static/constants';
 import '../css/options.scss';
 
 const Options = () => {
@@ -29,7 +30,7 @@ const Options = () => {
   const loadAccessTokenToDOM = async () => {
     const accessToken = await settings.loadAccessToken();
     if (accessToken !== '') {
-      (document.getElementById('access-token') as HTMLInputElement).value = 'ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+      (document.getElementById('access-token') as HTMLInputElement).value = displayedAccessToken;
     }
   };
 
@@ -58,7 +59,7 @@ const Options = () => {
 
   const storeAccessTokenFromDom = () => {
     const accessToken = (document.getElementById('access-token') as HTMLInputElement).value;
-    if (accessToken !== 'ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') {
+    if (accessToken !== displayedAccessToken) {
       settings.storeAccessToken(accessToken);
     }
   };

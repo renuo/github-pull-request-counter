@@ -7,6 +7,7 @@ import { globalMock } from '../../__test__/mocks/github-api-mock-data';
 import fetch from 'node-fetch';
 import fs from 'fs';
 import path from 'path';
+import { displayedAccessToken } from './static/constants';
 
 jest.mock('node-fetch');
 const mockedFetch = fetch as any;
@@ -64,7 +65,7 @@ describe('Options', () => {
     });
 
     it('loads the access token correctly', () => {
-      expect((document.getElementById('access-token') as HTMLInputElement).value).toEqual('ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+      expect((document.getElementById('access-token') as HTMLInputElement).value).toEqual(displayedAccessToken);
     });
 
     describe('without an access token', () => {

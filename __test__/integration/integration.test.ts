@@ -1,4 +1,4 @@
-import { extensionID } from '../../src/js/static/constants';
+import { extensionID, displayedAccessToken } from '../../src/js/static/constants';
 import puppeteer from 'puppeteer';
 import path from 'path';
 
@@ -79,7 +79,7 @@ describe('integration test', () => {
 
       await page.goto(url('options.html'), { waitUntil: 'networkidle2' });
 
-      expect(readProp('#access-token', 'value')).resolves.toEqual('ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+      expect(readProp('#access-token', 'value')).resolves.toEqual(displayedAccessToken);
     });
   });
 
