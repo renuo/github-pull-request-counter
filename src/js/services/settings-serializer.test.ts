@@ -13,14 +13,16 @@ const set = global.chrome.storage.local.set;
 describe('StorageSerializer', () => {
   const settingsSerializer = SettingsSerializer();
 
-  describe('storeCounter', () => {
+  describe('storeCounterSettings', () => {
     it('calls get with the correct arguments', () => {
       const counter = {
-        'one': true,
-        'two': false
+        reviewRequested: true,
+        noReviewRequested: true,
+        allReviewsDone: true,
+        missingAssignee: true
       };
 
-      settingsSerializer.storeCounter(counter);
+      settingsSerializer.storeCounterSettings(counter);
       expect(set).toHaveBeenCalledWith({ counter: JSON.stringify(counter) });
     });
   });
@@ -36,7 +38,7 @@ describe('StorageSerializer', () => {
         'counter': JSON.stringify(counter)
       }));
 
-      const result = await settingsSerializer.loadCounter();
+      const result = await settingsSerializer.loadCounterSettings();
       expect(result).toEqual(result);
     });
 
@@ -44,7 +46,7 @@ describe('StorageSerializer', () => {
       it('returns the default values', async () => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({}));
 
-        const result = await settingsSerializer.loadCounter();
+        const result = await settingsSerializer.loadCounterSettings();
         expect(result).toEqual({
           reviewRequested: true,
           noReviewRequested: true,

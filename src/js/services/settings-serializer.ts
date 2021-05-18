@@ -1,11 +1,11 @@
-import { Counter } from '../static/types';
+import { CounterSettings } from '../static/types';
 
 const SettingsSerializer = () => {
-  const storeCounter = (counter: Counter): void => {
+  const storeCounterSettings = (counter: CounterSettings): void => {
     store('counter', JSON.stringify(counter));
   };
 
-  const loadCounter = async (): Promise<Counter> => {
+  const loadCounterSettings = async (): Promise<CounterSettings> => {
     try {
       return (JSON.parse(await load('counter')));
     } catch {
@@ -50,7 +50,7 @@ const SettingsSerializer = () => {
     return data[key];
   };
 
-  return { storeCounter, loadCounter, storeScope, loadScope, storeAccessToken, loadAccessToken };
+  return { storeCounterSettings, loadCounterSettings, storeScope, loadScope, storeAccessToken, loadAccessToken };
 };
 
 export default SettingsSerializer;

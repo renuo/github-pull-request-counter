@@ -1,4 +1,4 @@
-import { Counter } from './static/types';
+import { CounterSettings } from './static/types';
 import SettingsSerializer from './services/settings-serializer';
 import ServiceWorker from './background';
 import '../css/options.scss';
@@ -14,7 +14,7 @@ const Options = () => {
   };
 
   const loadCounterToDOM = async () => {
-    const counter = await settingsSerializer.loadCounter();
+    const counter = await settingsSerializer.loadCounterSettings();
     (document.getElementById('review-requested') as HTMLInputElement).checked = counter.reviewRequested;
     (document.getElementById('no-review-requested') as HTMLInputElement).checked = counter.noReviewRequested;
     (document.getElementById('all-reviews-done') as HTMLInputElement).checked = counter.allReviewsDone;
@@ -41,14 +41,14 @@ const Options = () => {
   };
 
   const storeCounterFromDOM = () => {
-    const counter: Counter = {
+    const counter: CounterSettings = {
       reviewRequested: (document.getElementById('review-requested') as HTMLInputElement).checked,
       noReviewRequested: (document.getElementById('no-review-requested') as HTMLInputElement).checked,
       allReviewsDone: (document.getElementById('all-reviews-done') as HTMLInputElement).checked,
       missingAssignee: (document.getElementById('missing-assignee') as HTMLInputElement).checked
     };
 
-    settingsSerializer.storeCounter(counter);
+    settingsSerializer.storeCounterSettings(counter);
   };
 
   const storeScopeFromDOM = () => {

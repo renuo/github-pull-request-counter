@@ -17,7 +17,7 @@ const ServiceWorker = () => {
     } catch(error) {
       if (error === noAccessTokenError) {
         storageSerilizer.storePullRequests({ noReviewRequested: [], allReviewsDone: [], missingAssignee: [], reviewRequested: [] });
-        BadgeSetter().update({ noReviewRequested: [], allReviewsDone: [], missingAssignee: [], reviewRequested: [] }, {});
+        BadgeSetter().clear();
         return;
       } else if (error === tooManyRequestsError) return;
 
@@ -45,7 +45,7 @@ const ServiceWorker = () => {
       missingAssignee: recordEntries[3],
     };
 
-    const counter = await SettingsSerializer().loadCounter();
+    const counter = await SettingsSerializer().loadCounterSettings();
     BadgeSetter().update(record, counter);
 
     storageSerilizer.storePullRequests(record);
