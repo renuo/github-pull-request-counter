@@ -17,9 +17,9 @@ describe('SettingsStorageAccessor', () => {
     it('calls get with the correct arguments', () => {
       const counter = {
         reviewRequested: true,
-        noReviewRequested: true,
+        noReviewRequested: false,
         allReviewsDone: true,
-        missingAssignee: true,
+        missingAssignee: false,
       };
 
       settings.storeCounterConfig(counter);
@@ -27,11 +27,13 @@ describe('SettingsStorageAccessor', () => {
     });
   });
 
-  describe('loadCounter', () => {
+  describe('loadCounterConfig', () => {
     it('loads the correct data', async () => {
       const counter = {
-        'one': true,
-        'two': false,
+        reviewRequested: true,
+        noReviewRequested: false,
+        allReviewsDone: true,
+        missingAssignee: false,
       };
 
       global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({

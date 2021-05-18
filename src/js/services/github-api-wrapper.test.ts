@@ -149,6 +149,44 @@ describe('GithubApiWrapper', () => {
           expect((await (await GithubApiWrapper()).getNoReviewRequested()).length).toEqual(0);
         });
       });
+
+      describe('edge-cases', () => {
+        describe('renuo,renuo', () => {
+          beforeAll(() => { scope = 'renuo,renuo'; });
+          afterAll(() => { scope = ''; });
+
+          it('contains three links', async () => {
+            expect((await (await GithubApiWrapper()).getNoReviewRequested()).length).toEqual(3);
+          });
+        });
+
+        describe('renuo,notMatchingScope', () => {
+          beforeAll(() => { scope = 'renuo,notMatchingScope'; });
+          afterAll(() => { scope = ''; });
+
+          it('doesn\'t contain any links', async () => {
+            expect((await (await GithubApiWrapper()).getNoReviewRequested()).length).toEqual(3);
+          });
+        });
+
+        describe(',renuo', () => {
+          beforeAll(() => { scope = ',renuo'; });
+          afterAll(() => { scope = ''; });
+
+          it('contains three links', async () => {
+            expect((await (await GithubApiWrapper()).getNoReviewRequested()).length).toEqual(3);
+          });
+        });
+
+        describe('renuo,', () => {
+          beforeAll(() => { scope = ',renuo'; });
+          afterAll(() => { scope = ''; });
+
+          it('contains three links', async () => {
+            expect((await (await GithubApiWrapper()).getNoReviewRequested()).length).toEqual(3);
+          });
+        });
+      });
     });
   });
 
