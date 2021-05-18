@@ -61,6 +61,13 @@ describe('GithubApiWrapper', () => {
         expect(result[2].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
       });
     });
+
+    describe('ownerAndName', () => {
+      it('has the correct ownerAndName', async () => {
+        const result = await (await GithubApiWrapper()).getReviewRequested();
+        expect(result[0].ownerAndName).toEqual('renuo/github-pull-request-counter');
+      });
+    });
   });
 
   describe('#getNoReviewRequested', () => {

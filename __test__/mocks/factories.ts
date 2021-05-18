@@ -5,7 +5,7 @@ export const pullRequestFactory = (index: number): PullRequest => ({
   title: 'PullRequest-Title',
   assignee: undefined,
   number: index,
-  owner: 'renuo/github-pull-request-counter',
+  ownerAndName: 'renuo/github-pull-request-counter',
   url: `https://api.github.com/repos/renuo/github-pull-request-counter/pulls/${index+1}`,
   html_url: `https://github.com/renuo/github-pull-request-counter/pull/${index+1}`,
 });

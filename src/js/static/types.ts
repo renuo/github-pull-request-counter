@@ -3,7 +3,6 @@ export interface Issue {
   assignee: string | undefined;
   title: string;
   number: number;
-  owner: string;
   pull_request: {
     url: string,
     html_url: string,
@@ -15,7 +14,7 @@ export interface PullRequest {
   assignee: string | undefined;
   title: string;
   number: number;
-  owner: string;
+  ownerAndName: string;
   url: string;
   html_url: string;
 }

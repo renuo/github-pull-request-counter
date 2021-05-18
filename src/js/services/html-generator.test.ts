@@ -42,11 +42,11 @@ describe('HTMLGenerator', () => {
       });
 
       describe('second child', () => {
-        it('has one <div>\'s', () => {
+        it('has one <div>', () => {
           expect(result.childNodes[1].childNodes.length).toEqual(1);
         });
 
-        describe('first div', () => {
+        describe('<div>', () => {
           it('has the correct <a>', () => {
             const a = result.childNodes[1].childNodes[0].childNodes[0] as HTMLAnchorElement;
 
