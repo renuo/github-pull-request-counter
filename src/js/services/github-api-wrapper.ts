@@ -1,5 +1,5 @@
 import { PullRequest, Issue } from '../static/types';
-import SettingsSerializer from './settings-serializer';
+import SettingsStorageAccessor from './settings-storage-accessor';
 import { globalMock } from '../../../__test__/mocks/github-api-mock-data';
 import { noAccessTokenError, tooManyRequestsError } from '../static/constants';
 
@@ -73,7 +73,7 @@ const GithubApiWrapper = async () => {
   };
 
   const filterByScope = async (issues: Issue[]): Promise<Issue[]> => {
-    const scope = await SettingsSerializer().loadScope();
+    const scope = await SettingsStorageAccessor().loadScope();
     if (scope === '') return issues;
 
     const individualScopes = (scope).replace(' ', '').toLowerCase().split(',');
@@ -84,7 +84,7 @@ const GithubApiWrapper = async () => {
 
   const readOwnerFromUrl = (url: string): string => url.replace('https://api.github.com/repos/', '').split('/pulls/')[0];
 
-  const accessToken = await SettingsSerializer().loadAccessToken();
+  const accessToken = await SettingsStorageAccessor().loadAccessToken();
   // TODO: Find cleaner solution to mock the API during integration tests.
   // @ts-ignore
   if (ENV !== 'testing' && accessToken === '') throw noAccessTokenError;

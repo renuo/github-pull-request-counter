@@ -1,7 +1,7 @@
 import GithubApiWrapper from './services/github-api-wrapper';
 import PullRequestStorageAccessor from './services/pull-request-storage-accessor';
 import BadgeSetter from './services/badge-setter';
-import SettingsSerializer from './services/settings-serializer';
+import SettingsStorageAccessor from './services/settings-storage-accessor';
 import { noAccessTokenError, tooManyRequestsError } from './static/constants';
 import { PullRequestRecord, PullRequest } from './static/types';
 
@@ -45,7 +45,7 @@ const ServiceWorker = () => {
       missingAssignee: recordEntries[3],
     };
 
-    const counter = await SettingsSerializer().loadCounterSettings();
+    const counter = await SettingsStorageAccessor().loadCounterSettings();
     BadgeSetter().update(record, counter);
 
     storage.storePullRequests(record);

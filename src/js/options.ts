@@ -1,10 +1,10 @@
 import { CounterSettings } from './static/types';
-import SettingsSerializer from './services/settings-serializer';
+import SettingsStorageAccessor from './services/settings-storage-accessor';
 import ServiceWorker from './background';
 import '../css/options.scss';
 
 const Options = () => {
-  const settingsSerializer = SettingsSerializer();
+  const settings= SettingsStorageAccessor();
 
   const init = () => {
     loadCounterToDOM();
@@ -14,7 +14,7 @@ const Options = () => {
   };
 
   const loadCounterToDOM = async () => {
-    const counter = await settingsSerializer.loadCounterSettings();
+    const counter = await settings.loadCounterSettings();
     (document.getElementById('review-requested') as HTMLInputElement).checked = counter.reviewRequested;
     (document.getElementById('no-review-requested') as HTMLInputElement).checked = counter.noReviewRequested;
     (document.getElementById('all-reviews-done') as HTMLInputElement).checked = counter.allReviewsDone;
@@ -22,12 +22,12 @@ const Options = () => {
   };
 
   const loadScopeToDOM = async () => {
-    const scope = await settingsSerializer.loadScope();
+    const scope = await settings.loadScope();
     (document.getElementById('account-names') as HTMLInputElement).value = scope;
   };
 
   const loadAccessTokenToDOM = async () => {
-    const accessToken = await settingsSerializer.loadAccessToken();
+    const accessToken = await settings.loadAccessToken();
     if (accessToken !== '') {
       (document.getElementById('access-token') as HTMLInputElement).value = 'ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
     }
@@ -48,18 +48,18 @@ const Options = () => {
       missingAssignee: (document.getElementById('missing-assignee') as HTMLInputElement).checked
     };
 
-    settingsSerializer.storeCounterSettings(counter);
+    settings.storeCounterSettings(counter);
   };
 
   const storeScopeFromDOM = () => {
     const scope = (document.getElementById('account-names') as HTMLInputElement).value;
-    settingsSerializer.storeScope(scope);
+    settings.storeScope(scope);
   };
 
   const storeAccessTokenFromDom = () => {
     const accessToken = (document.getElementById('access-token') as HTMLInputElement).value;
     if (accessToken !== 'ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') {
-      settingsSerializer.storeAccessToken(accessToken);
+      settings.storeAccessToken(accessToken);
     }
   };
 

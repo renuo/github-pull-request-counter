@@ -1,6 +1,6 @@
 import { CounterSettings } from '../static/types';
 
-const SettingsSerializer = () => {
+const SettingsStorageAccessor = () => {
   const storeCounterSettings = (counter: CounterSettings): void => {
     store('counter', JSON.stringify(counter));
   };
@@ -53,4 +53,4 @@ const SettingsSerializer = () => {
   return { storeCounterSettings, loadCounterSettings, storeScope, loadScope, storeAccessToken, loadAccessToken };
 };
 
-export default SettingsSerializer;
+export default SettingsStorageAccessor;

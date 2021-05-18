@@ -1,4 +1,4 @@
-import SettingsSerializer from './settings-serializer';
+import SettingsStorageAccessor from './settings-storage-accessor';
 
 global.chrome = {
   storage: {
@@ -11,7 +11,7 @@ global.chrome = {
 const set = global.chrome.storage.local.set;
 
 describe('StorageSerializer', () => {
-  const settingsSerializer = SettingsSerializer();
+  const settings = SettingsStorageAccessor();
 
   describe('storeCounterSettings', () => {
     it('calls get with the correct arguments', () => {
@@ -22,7 +22,7 @@ describe('StorageSerializer', () => {
         missingAssignee: true
       };
 
-      settingsSerializer.storeCounterSettings(counter);
+      settings.storeCounterSettings(counter);
       expect(set).toHaveBeenCalledWith({ counter: JSON.stringify(counter) });
     });
   });
@@ -38,7 +38,7 @@ describe('StorageSerializer', () => {
         'counter': JSON.stringify(counter)
       }));
 
-      const result = await settingsSerializer.loadCounterSettings();
+      const result = await settings.loadCounterSettings();
       expect(result).toEqual(result);
     });
 
@@ -46,7 +46,7 @@ describe('StorageSerializer', () => {
       it('returns the default values', async () => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({}));
 
-        const result = await settingsSerializer.loadCounterSettings();
+        const result = await settings.loadCounterSettings();
         expect(result).toEqual({
           reviewRequested: true,
           noReviewRequested: true,
@@ -61,7 +61,7 @@ describe('StorageSerializer', () => {
     it('calls get with the correct arguments', () => {
       const scope = 'renuo, github';
 
-      settingsSerializer.storeScope(scope);
+      settings.storeScope(scope);
       expect(set).toHaveBeenCalledWith({ scope });
     });
   });
@@ -72,7 +72,7 @@ describe('StorageSerializer', () => {
 
       global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({ 'scope': scope }));
 
-      const result = await settingsSerializer.loadScope();
+      const result = await settings.loadScope();
       expect(result).toEqual(scope);
     });
 
@@ -80,7 +80,7 @@ describe('StorageSerializer', () => {
       it('returns the default values', async () => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({}));
 
-        const result = await settingsSerializer.loadScope();
+        const result = await settings.loadScope();
         expect(result).toEqual('');
       });
     });
@@ -90,7 +90,7 @@ describe('StorageSerializer', () => {
     it('calls get with the correct arguments', () => {
       const accessToken = 'secret';
 
-      settingsSerializer.storeAccessToken(accessToken);
+      settings.storeAccessToken(accessToken);
       expect(set).toHaveBeenCalledWith({ accessToken });
     });
   });
@@ -103,7 +103,7 @@ describe('StorageSerializer', () => {
         'accessToken': accessToken
       }));
 
-      const result = await settingsSerializer.loadAccessToken();
+      const result = await settings.loadAccessToken();
       expect(result).toEqual(accessToken);
     });
 
@@ -111,7 +111,7 @@ describe('StorageSerializer', () => {
       it('returns the default values', async () => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({}));
 
-        const result = await settingsSerializer.loadAccessToken();
+        const result = await settings.loadAccessToken();
         expect(result).toEqual('');
       });
     });
