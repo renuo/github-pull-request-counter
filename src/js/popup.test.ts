@@ -4,8 +4,9 @@
 
 import { pullRequestFactory } from '../../__test__/mocks/factories';
 import { recordKeys } from './static/constants';
-
 import Popup from './popup';
+import fs from 'fs';
+import path from 'path'
 
 global.chrome = {
   storage: {
@@ -21,7 +22,7 @@ global.chrome = {
 } as any;
 
 describe('popup', () => {
-  const dom = '<div id="popup"></div>';
+  const dom = fs.readFileSync(path.resolve(__dirname, '../popup.html')).toString();
 
   beforeAll(() => {
     document.body.innerHTML = dom;

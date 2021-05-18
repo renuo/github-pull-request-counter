@@ -5,6 +5,8 @@
 import Options from './options';
 import { globalMock } from '../../__test__/mocks/github-api-mock-data';
 import fetch from 'node-fetch';
+import fs from 'fs';
+import path from 'path';
 
 jest.mock('node-fetch');
 const mockedFetch = fetch as any;
@@ -39,15 +41,7 @@ global.chrome = {
 } as any;
 
 describe('Options', () => {
-  const dom = `
-    <input type="checkbox" id="review-requested"></input>
-    <input type="checkbox" id="no-review-requested"></input>
-    <input type="checkbox" id="all-reviews-done"></input>
-    <input type="checkbox" id="missing-assignee"></input>
-    <input type="text" id="account-names"></input>
-    <input type="password" id="access-token"></input>
-    <button id="options-save"></button>
-  `;
+  const dom = fs.readFileSync(path.resolve(__dirname, '../options.html')).toString();
 
   beforeAll(() => {
     document.body.innerHTML = dom;
