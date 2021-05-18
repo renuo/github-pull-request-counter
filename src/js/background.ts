@@ -72,4 +72,3 @@ const ServiceWorker = () => {
 if (process.env.JEST_WORKER_ID === undefined) ServiceWorker().startPolling();
 
 export default ServiceWorker;
-

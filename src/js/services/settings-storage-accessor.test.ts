@@ -5,8 +5,8 @@ global.chrome = {
     local: {
       get: jest.fn(),
       set: jest.fn(),
-    }
-  }
+    },
+  },
 } as any;
 const set = global.chrome.storage.local.set;
 
@@ -19,7 +19,7 @@ describe('StorageSerializer', () => {
         reviewRequested: true,
         noReviewRequested: true,
         allReviewsDone: true,
-        missingAssignee: true
+        missingAssignee: true,
       };
 
       settings.storeCounterSettings(counter);
@@ -31,11 +31,11 @@ describe('StorageSerializer', () => {
     it('loads the correct data', async () => {
       const counter = {
         'one': true,
-        'two': false
+        'two': false,
       };
 
       global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
-        'counter': JSON.stringify(counter)
+        'counter': JSON.stringify(counter),
       }));
 
       const result = await settings.loadCounterSettings();
@@ -51,7 +51,7 @@ describe('StorageSerializer', () => {
           reviewRequested: true,
           noReviewRequested: true,
           allReviewsDone: true,
-          missingAssignee: true
+          missingAssignee: true,
         });
       });
     });
@@ -100,7 +100,7 @@ describe('StorageSerializer', () => {
       const accessToken = 'renuo, github';
 
       global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
-        'accessToken': accessToken
+        'accessToken': accessToken,
       }));
 
       const result = await settings.loadAccessToken();

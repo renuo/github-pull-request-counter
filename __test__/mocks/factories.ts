@@ -7,7 +7,7 @@ export const pullRequestFactory = (index: number): PullRequest => ({
   number: index,
   owner: 'renuo/github-pull-request-counter',
   url: `https://api.github.com/repos/renuo/github-pull-request-counter/pulls/${index+1}`,
-  html_url: `https://github.com/renuo/github-pull-request-counter/pull/${index+1}`
+  html_url: `https://github.com/renuo/github-pull-request-counter/pull/${index+1}`,
 });
 
 const createPullRequests = (count: number): PullRequest[] => {
@@ -26,5 +26,5 @@ export const pullRequestRecordFactory = (props?: Props): PullRequestRecord => ({
   'reviewRequested': createPullRequests(props?.reviewRequestedCount || 0),
   'noReviewRequested': createPullRequests(props?.noReviewRequestedCount || 0),
   'allReviewsDone': createPullRequests(props?.allReviewsDoneCount || 0),
-  'missingAssignee': createPullRequests(props?.missingAssigneeCount || 0)
+  'missingAssignee': createPullRequests(props?.missingAssigneeCount || 0),
 });

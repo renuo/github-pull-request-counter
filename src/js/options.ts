@@ -45,7 +45,7 @@ const Options = () => {
       reviewRequested: (document.getElementById('review-requested') as HTMLInputElement).checked,
       noReviewRequested: (document.getElementById('no-review-requested') as HTMLInputElement).checked,
       allReviewsDone: (document.getElementById('all-reviews-done') as HTMLInputElement).checked,
-      missingAssignee: (document.getElementById('missing-assignee') as HTMLInputElement).checked
+      missingAssignee: (document.getElementById('missing-assignee') as HTMLInputElement).checked,
     };
 
     settings.storeCounterSettings(counter);

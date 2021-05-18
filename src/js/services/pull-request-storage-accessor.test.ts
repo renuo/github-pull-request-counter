@@ -6,9 +6,9 @@ global.chrome = {
   storage: {
     local: {
       get: jest.fn(),
-      set: jest.fn()
-    }
-  }
+      set: jest.fn(),
+    },
+  },
 } as any;
 
 describe('StorageSerialzer', () => {
@@ -52,7 +52,7 @@ describe('StorageSerialzer', () => {
           reviewRequestedCount: 1,
           noReviewRequestedCount: 1,
           allReviewsDoneCount: 1,
-          missingAssigneeCount: 1
+          missingAssigneeCount: 1,
         });
       });
 
@@ -124,7 +124,7 @@ describe('StorageSerialzer', () => {
           reviewRequestedCount: 1,
           noReviewRequestedCount: 1,
           allReviewsDoneCount: 1,
-          missingAssigneeCount: 1
+          missingAssigneeCount: 1,
         });
       });
 

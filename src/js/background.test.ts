@@ -14,22 +14,22 @@ global.chrome = {
   alarms: {
     create: jest.fn(),
     onAlarm: {
-      addListener: jest.fn()
-    }
+      addListener: jest.fn(),
+    },
   },
   storage: {
     local: {
       get: jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
         'counter': 'invalid' ,
-        'accessToken': 'secret'
+        'accessToken': 'secret',
       })),
-      set: jest.fn()
-    }
+      set: jest.fn(),
+    },
   },
   action: {
     setBadgeText: jest.fn(),
     setBadgeBackgroundColor: jest.fn(),
-  }
+  },
 } as any;
 
 describe('ServiceWorker', () => {
@@ -60,14 +60,14 @@ describe('ServiceWorker', () => {
       beforeAll(() => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
           'counter': 'invalid' ,
-          'accessToken': ''
+          'accessToken': '',
         }));
       });
 
       afterAll(() => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
           'counter': 'invalid' ,
-          'accessToken': 'secret'
+          'accessToken': 'secret',
         }));
       });
 
@@ -159,4 +159,3 @@ describe('ServiceWorker', () => {
     });
   });
 });
-

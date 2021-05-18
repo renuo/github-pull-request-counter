@@ -27,15 +27,15 @@ global.chrome = {
       get: jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
         'counter': JSON.stringify(counter),
         'accessToken': 'secret' ,
-        'scope': 'renuo'
+        'scope': 'renuo',
       })),
-      set: jest.fn()
-    }
+      set: jest.fn(),
+    },
   },
   action: {
     setBadgeText: jest.fn(),
     setBadgeBackgroundColor: jest.fn(),
-  }
+  },
 } as any;
 
 describe('Options', () => {
@@ -76,7 +76,7 @@ describe('Options', () => {
     describe('without an access token', () => {
       beforeAll(() => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
-          'accessToken': ''
+          'accessToken': '',
         }));
         (document.getElementById('access-token') as HTMLInputElement).value = '';
       });
@@ -85,7 +85,7 @@ describe('Options', () => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
           'counter': JSON.stringify(counter),
           'accessToken': 'secret' ,
-          'scope': 'renuo'
+          'scope': 'renuo',
         }));
       });
 

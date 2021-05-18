@@ -11,10 +11,9 @@ global.chrome = {
   storage: {
     local: {
       get: jest.fn(),
-    }
-  }
+    },
+  },
 } as any;
-
 
 describe('GithubApiWrapper', () => {
   let scope = '';
@@ -22,7 +21,7 @@ describe('GithubApiWrapper', () => {
   beforeEach(async () => {
     global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
       'scope': scope ,
-      'accessToken': 'secret'
+      'accessToken': 'secret',
     }));
   });
 
@@ -30,7 +29,7 @@ describe('GithubApiWrapper', () => {
     let pullRequestCount: number;
     beforeEach(() => {
       mockedFetch.mockResolvedValue(Promise.resolve({
-        json: () => Promise.resolve(mockListOfPullRequests(pullRequestCount))
+        json: () => Promise.resolve(mockListOfPullRequests(pullRequestCount)),
       }));
     });
 
@@ -76,7 +75,7 @@ describe('GithubApiWrapper', () => {
               mockListOfPullRequests(pullRequestCount);
 
         return Promise.resolve({
-          json: () => Promise.resolve(value)
+          json: () => Promise.resolve(value),
         });
       });
     });
@@ -165,7 +164,7 @@ describe('GithubApiWrapper', () => {
               mockListOfPullRequests(pullRequestCount);
 
         return Promise.resolve({
-          json: () => Promise.resolve(value)
+          json: () => Promise.resolve(value),
         });
       });
     });
@@ -226,7 +225,7 @@ describe('GithubApiWrapper', () => {
 
     beforeEach(() => {
       mockedFetch.mockResolvedValue(Promise.resolve({
-        json: () => Promise.resolve(mockListOfPullRequests(pullRequestCount, { assignee }))
+        json: () => Promise.resolve(mockListOfPullRequests(pullRequestCount, { assignee })),
       }));
     });
 
@@ -291,7 +290,7 @@ describe('GithubApiWrapper', () => {
   describe('Too many requests', () => {
     beforeEach(() => {
       mockedFetch.mockResolvedValue(Promise.resolve({
-        status: 403
+        status: 403,
       }));
     });
 

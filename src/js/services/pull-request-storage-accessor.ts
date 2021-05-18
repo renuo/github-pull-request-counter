@@ -37,4 +37,3 @@ const PullRequestStorageAccessor = () => {
 };
 
 export default PullRequestStorageAccessor;
-

@@ -21,7 +21,7 @@ const setup = async () => {
     ignoreHTTPSErrors: true,
     args: [
       `--disable-extensions-except=${extensionPath}`,
-    ]
+    ],
   });
 
   page = await browser.newPage();

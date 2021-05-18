@@ -6,7 +6,7 @@ export interface Issue {
   owner: string;
   pull_request: {
     url: string,
-    html_url: string
+    html_url: string,
   };
 }
 

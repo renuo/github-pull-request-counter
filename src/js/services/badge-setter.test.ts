@@ -6,9 +6,8 @@ global.chrome = {
   action: {
     setBadgeText: jest.fn(),
     setBadgeBackgroundColor: jest.fn(),
-  }
+  },
 } as any;
-
 
 describe('BadgeSetter', () => {
   describe('update', () => {

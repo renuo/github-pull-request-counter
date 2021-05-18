@@ -13,7 +13,7 @@ const SettingsStorageAccessor = () => {
         reviewRequested: true,
         noReviewRequested: true,
         allReviewsDone: true,
-        missingAssignee: true
+        missingAssignee: true,
       };
     }
   };

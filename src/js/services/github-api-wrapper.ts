@@ -52,8 +52,8 @@ const GithubApiWrapper = async () => {
     const response = await fetch(`${path}?${params}`, {
       method: 'GET',
       headers: {
-        'Authorization': 'Basic ' + btoa(':' + accessToken)
-      }
+        'Authorization': 'Basic ' + btoa(':' + accessToken),
+      },
     });
     if (response.status === 403) throw tooManyRequestsError;
     else return response.json();

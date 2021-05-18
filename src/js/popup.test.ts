@@ -16,7 +16,7 @@ global.chrome = {
         [recordKeys[2]]: [ JSON.stringify([pullRequestFactory(0), pullRequestFactory(0)]) ],
         [recordKeys[3]]: [ JSON.stringify([pullRequestFactory(0), pullRequestFactory(0)]) ],
       })),
-    }
+    },
   },
 } as any;
 
