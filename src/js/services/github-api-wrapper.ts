@@ -12,15 +12,15 @@ const GithubApiWrapper = async () => {
   };
 
   const getNoReviewRequested = async (): Promise<PullRequest[]> => {
-    return processDataIntoPullRequests(await searchPullRequests(''));
+    return processDataIntoPullRequests(await searchPullRequests('review:none'));
   };
 
   const getAllReviewsDone = async (): Promise<PullRequest[]> => {
-    return processDataIntoPullRequests(await searchPullRequests('-'));
+    return processDataIntoPullRequests(await searchPullRequests('-review:none'));
   };
 
   const searchPullRequests = async (reviewModifier: string): Promise<Issue[]> => {
-    const query = encodeURIComponent(`is:pr assignee:${userName} archived:false is:open ${reviewModifier}review:none`);
+    const query = encodeURIComponent(`is:pr assignee:${userName} archived:false is:open ${reviewModifier}`);
     const response = await makeApiRequest('/search/issues', `q=${query}`);
 
     return asyncPullRequestFilter(response.items, async (PullRequest: Issue) => {
