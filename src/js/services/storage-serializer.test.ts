@@ -12,7 +12,7 @@ global.chrome = {
 } as any;
 
 describe('StorageSerialzer', () => {
-  const storageSerilizer = StorageSerializer();
+  const storageSerializer = StorageSerializer();
   const setMock = global.chrome.storage.local.set;
   let pullRequests: PullRequestRecord;
 
@@ -23,7 +23,7 @@ describe('StorageSerialzer', () => {
   describe('#storePullRequests', () => {
 
     beforeEach(() => {
-      storageSerilizer.storePullRequests(pullRequests);
+      storageSerializer.storePullRequests(pullRequests);
     });
 
     describe('with an empty record', () => {
@@ -67,7 +67,7 @@ describe('StorageSerialzer', () => {
     const getMock = global.chrome.storage.local.get;
 
     beforeEach(async () => {
-      result = await storageSerilizer.loadPullRequests();
+      result = await storageSerializer.loadPullRequests();
     });
 
     describe('default value', () => {

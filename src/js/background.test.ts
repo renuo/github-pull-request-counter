@@ -95,7 +95,7 @@ describe('ServiceWorker', () => {
         });
       });
 
-      describe('while fetchting data', () => {
+      describe('while fetching data', () => {
         beforeAll(() => {
           mockedFetch.mockImplementation((url: string) => {
             if (url.includes('/user')) {
@@ -128,7 +128,7 @@ describe('ServiceWorker', () => {
       });
     });
 
-    describe('while fetchting data', () => {
+    describe('while fetching data', () => {
       beforeAll(() => {
         mockedFetch.mockImplementation((url: string) => {
           if (url.includes('/user')) {

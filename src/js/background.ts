@@ -10,13 +10,13 @@ const pollingInterval = 1;
 const ServiceWorker = () => {
   const fetchAndStoreData = async () => {
     let github;
-    const storageSerilizer = StorageSerializer();
+    const storageSerializer = StorageSerializer();
 
     try {
       github = await GithubApiWrapper();
     } catch(error) {
       if (error === noAccessTokenError) {
-        storageSerilizer.storePullRequests({ noReviewRequested: [], allReviewsDone: [], missingAssignee: [], reviewRequested: [] });
+        storageSerializer.storePullRequests({ noReviewRequested: [], allReviewsDone: [], missingAssignee: [], reviewRequested: [] });
         BadgeSetter().clear();
         return;
       } else if (error === tooManyRequestsError) return;
@@ -48,7 +48,7 @@ const ServiceWorker = () => {
     const counter = await SettingsSerializer().loadCounterSettings();
     BadgeSetter().update(record, counter);
 
-    storageSerilizer.storePullRequests(record);
+    storageSerializer.storePullRequests(record);
   };
 
   const startPolling = async () => {
