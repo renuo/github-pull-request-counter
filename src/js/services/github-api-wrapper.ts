@@ -1,5 +1,5 @@
-import { PullRequest } from '../static/types';
-import SettingsSerializer from './settings-serializer';
+import { PullRequest, Issue } from '../static/types';
+import SettingsStorageAccessor from './settings-storage-accessor';
 import { globalMock } from '../../../__test__/mocks/github-api-mock-data';
 import { noAccessTokenError, tooManyRequestsError } from '../static/constants';
 
@@ -12,24 +12,24 @@ const GithubApiWrapper = async () => {
   };
 
   const getNoReviewRequested = async (): Promise<PullRequest[]> => {
-    return processDataIntoPullRequests(await searchPullRequests(''));
+    return processDataIntoPullRequests(await searchMyIssues('review:none'));
   };
 
   const getAllReviewsDone = async (): Promise<PullRequest[]> => {
-    return processDataIntoPullRequests(await searchPullRequests('-'));
+    return processDataIntoPullRequests(await searchMyIssues('-review:none'));
   };
 
-  const searchPullRequests = async (reviewModifier: string): Promise<PullRequest[]> => {
-    const query = encodeURIComponent(`is:pr assignee:${userName} archived:false is:open ${reviewModifier}review:none`);
+  const searchMyIssues = async (reviewModifier: string): Promise<Issue[]> => {
+    const query = encodeURIComponent(`is:pr assignee:${userName} archived:false is:open ${reviewModifier}`);
     const response = await makeApiRequest('/search/issues', `q=${query}`);
 
-    return asyncPullRequestFilter(response.items, async (PullRequest: PullRequest) => {
+    return asyncFilterIssues(response.items, async (PullRequest: Issue) => {
       const requestedReviewers = (await makeRequest(`${PullRequest.pull_request.url}/requested_reviewers`));
       return requestedReviewers.users.length + requestedReviewers.teams.length === 0;
     });
   };
 
-  const asyncPullRequestFilter = async (pullRequests: PullRequest[], filter: (PullRequest: PullRequest) => Promise<boolean>) => {
+  const asyncFilterIssues = async (pullRequests: Issue[], filter: (PullRequest: Issue) => Promise<boolean>) => {
     const response = await Promise.all(pullRequests.map(filter));
     return pullRequests.filter((_item, index) => response[index]);
   };
@@ -52,41 +52,39 @@ const GithubApiWrapper = async () => {
     const response = await fetch(`${path}?${params}`, {
       method: 'GET',
       headers: {
-        'Authorization': 'Basic ' + btoa(':' + accessToken)
-      }
+        'Authorization': 'Basic ' + btoa(':' + accessToken),
+      },
     });
     if (response.status === 403) throw tooManyRequestsError;
     else return response.json();
   };
 
-  const processDataIntoPullRequests = async (pullRequests: PullRequest[]): Promise<PullRequest[]> => {
-    pullRequests = await filterByScope(pullRequests);
-    return pullRequests.map(pullRequest => ({
+  const processDataIntoPullRequests = async (issues: Issue[]): Promise<PullRequest[]> => {
+    issues = await filterByScope(issues);
+    return issues.map(issue => ({
       id: 12,
       assignee: undefined,
-      title: pullRequest.title,
-      number: pullRequest.number,
-      owner: readOwnerFromUrl(pullRequest.pull_request.url),
-      pull_request: {
-        url: pullRequest.pull_request.url,
-        html_url: pullRequest.pull_request.html_url,
-      }
+      title: issue.title,
+      number: issue.number,
+      ownerAndName: readOwnerAndNameFromUrl(issue.pull_request.url),
+      url: issue.pull_request.url,
+      html_url: issue.pull_request.html_url,
     }));
   };
 
-  const filterByScope = async (pullRequests: PullRequest[]): Promise<PullRequest[]> => {
-    const scope = await SettingsSerializer().loadScope();
-    if (scope === '') return pullRequests;
+  const filterByScope = async (issues: Issue[]): Promise<Issue[]> => {
+    const scope = await SettingsStorageAccessor().loadScope();
+    if (scope === '') return issues;
 
     const individualScopes = (scope).replace(' ', '').toLowerCase().split(',');
-    return pullRequests.filter(pullRequest => (
-      individualScopes.includes(readOwnerFromUrl(pullRequest.pull_request.url).split('/')[0].toLowerCase())
+    return issues.filter(issue => (
+      individualScopes.includes(readOwnerAndNameFromUrl(issue.pull_request.url).split('/')[0].toLowerCase())
     ));
   };
 
-  const readOwnerFromUrl = (url: string): string => url.replace('https://api.github.com/repos/', '').split('/pulls/')[0];
+  const readOwnerAndNameFromUrl = (url: string): string => url.replace('https://api.github.com/repos/', '').split('/pulls/')[0];
 
-  const accessToken = await SettingsSerializer().loadAccessToken();
+  const accessToken = await SettingsStorageAccessor().loadAccessToken();
   // TODO: Find cleaner solution to mock the API during integration tests.
   // @ts-ignore
   if (ENV !== 'testing' && accessToken === '') throw noAccessTokenError;

@@ -1,8 +1,8 @@
 import GithubApiWrapper from './services/github-api-wrapper';
-import StorageSerializer from './services/storage-serializer';
+import PullRequestStorageAccessor from './services/pull-request-storage-accessor';
 import BadgeSetter from './services/badge-setter';
-import SettingsSerializer from './services/settings-serializer';
-import { recordKeys, noAccessTokenError, tooManyRequestsError } from './static/constants';
+import SettingsStorageAccessor from './services/settings-storage-accessor';
+import { noAccessTokenError, tooManyRequestsError } from './static/constants';
 import { PullRequestRecord, PullRequest } from './static/types';
 
 const pollingInterval = 1;
@@ -10,14 +10,14 @@ const pollingInterval = 1;
 const ServiceWorker = () => {
   const fetchAndStoreData = async () => {
     let github;
-    const storageSerilizer = StorageSerializer();
+    const storage = PullRequestStorageAccessor();
 
     try {
       github = await GithubApiWrapper();
     } catch(error) {
       if (error === noAccessTokenError) {
-        storageSerilizer.storePullRequests({ noReviewRequested: [], allReviewsDone: [], missingAssignee: [], reviewRequested: [] });
-        BadgeSetter().update({}, {});
+        storage.clearPullRequests();
+        BadgeSetter().clear();
         return;
       } else if (error === tooManyRequestsError) return;
 
@@ -38,13 +38,17 @@ const ServiceWorker = () => {
       throw error;
     }
 
-    const record: PullRequestRecord = {};
-    recordKeys.forEach((key, index) => record[key] = recordEntries[index]);
+    const record: PullRequestRecord = {
+      reviewRequested: recordEntries[0],
+      noReviewRequested: recordEntries[1],
+      allReviewsDone: recordEntries[2],
+      missingAssignee: recordEntries[3],
+    };
 
-    const counter = await SettingsSerializer().loadCounter();
+    const counter = await SettingsStorageAccessor().loadCounterConfig();
     BadgeSetter().update(record, counter);
 
-    storageSerilizer.storePullRequests(record);
+    storage.storePullRequests(record);
   };
 
   const startPolling = async () => {
@@ -68,4 +72,3 @@ const ServiceWorker = () => {
 if (process.env.JEST_WORKER_ID === undefined) ServiceWorker().startPolling();
 
 export default ServiceWorker;
-

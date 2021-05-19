@@ -11,10 +11,9 @@ global.chrome = {
   storage: {
     local: {
       get: jest.fn(),
-    }
-  }
+    },
+  },
 } as any;
-
 
 describe('GithubApiWrapper', () => {
   let scope = '';
@@ -22,7 +21,7 @@ describe('GithubApiWrapper', () => {
   beforeEach(async () => {
     global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
       'scope': scope ,
-      'accessToken': 'secret'
+      'accessToken': 'secret',
     }));
   });
 
@@ -30,7 +29,7 @@ describe('GithubApiWrapper', () => {
     let pullRequestCount: number;
     beforeEach(() => {
       mockedFetch.mockResolvedValue(Promise.resolve({
-        json: () => Promise.resolve(mockListOfPullRequests(pullRequestCount))
+        json: () => Promise.resolve(mockListOfPullRequests(pullRequestCount)),
       }));
     });
 
@@ -49,7 +48,7 @@ describe('GithubApiWrapper', () => {
       it('has the correct link', async () => {
         const result = await (await GithubApiWrapper()).getReviewRequested();
         expect(result.length).toEqual(1);
-        expect(result[0].pull_request.html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
+        expect(result[0].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
       });
     });
 
@@ -59,7 +58,14 @@ describe('GithubApiWrapper', () => {
       it('has the correct links', async () => {
         const result = await (await GithubApiWrapper()).getReviewRequested();
         expect(result.length).toEqual(3);
-        expect(result[2].pull_request.html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
+        expect(result[2].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
+      });
+    });
+
+    describe('ownerAndName', () => {
+      it('has the correct ownerAndName', async () => {
+        const result = await (await GithubApiWrapper()).getReviewRequested();
+        expect(result[0].ownerAndName).toEqual('renuo/github-pull-request-counter');
       });
     });
   });
@@ -76,7 +82,7 @@ describe('GithubApiWrapper', () => {
               mockListOfPullRequests(pullRequestCount);
 
         return Promise.resolve({
-          json: () => Promise.resolve(value)
+          json: () => Promise.resolve(value),
         });
       });
     });
@@ -96,7 +102,7 @@ describe('GithubApiWrapper', () => {
       it('has the correct link', async () => {
         const result = await (await GithubApiWrapper()).getNoReviewRequested();
         expect(result.length).toEqual(1);
-        expect(result[0].pull_request.html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
+        expect(result[0].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
       });
     });
 
@@ -106,7 +112,7 @@ describe('GithubApiWrapper', () => {
       it('has the correct links', async () => {
         const result = await (await GithubApiWrapper()).getNoReviewRequested();
         expect(result.length).toEqual(3);
-        expect(result[2].pull_request.html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
+        expect(result[2].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
       });
 
       describe('with a requested review from a user', () => {
@@ -150,6 +156,44 @@ describe('GithubApiWrapper', () => {
           expect((await (await GithubApiWrapper()).getNoReviewRequested()).length).toEqual(0);
         });
       });
+
+      describe('edge-cases', () => {
+        describe('renuo,renuo', () => {
+          beforeAll(() => { scope = 'renuo,renuo'; });
+          afterAll(() => { scope = ''; });
+
+          it('contains three links', async () => {
+            expect((await (await GithubApiWrapper()).getNoReviewRequested()).length).toEqual(3);
+          });
+        });
+
+        describe('renuo,notMatchingScope', () => {
+          beforeAll(() => { scope = 'renuo,notMatchingScope'; });
+          afterAll(() => { scope = ''; });
+
+          it('doesn\'t contain any links', async () => {
+            expect((await (await GithubApiWrapper()).getNoReviewRequested()).length).toEqual(3);
+          });
+        });
+
+        describe(',renuo', () => {
+          beforeAll(() => { scope = ',renuo'; });
+          afterAll(() => { scope = ''; });
+
+          it('contains three links', async () => {
+            expect((await (await GithubApiWrapper()).getNoReviewRequested()).length).toEqual(3);
+          });
+        });
+
+        describe('renuo,', () => {
+          beforeAll(() => { scope = ',renuo'; });
+          afterAll(() => { scope = ''; });
+
+          it('contains three links', async () => {
+            expect((await (await GithubApiWrapper()).getNoReviewRequested()).length).toEqual(3);
+          });
+        });
+      });
     });
   });
 
@@ -165,7 +209,7 @@ describe('GithubApiWrapper', () => {
               mockListOfPullRequests(pullRequestCount);
 
         return Promise.resolve({
-          json: () => Promise.resolve(value)
+          json: () => Promise.resolve(value),
         });
       });
     });
@@ -185,7 +229,7 @@ describe('GithubApiWrapper', () => {
       it('has the correct link', async () => {
         const result = await (await GithubApiWrapper()).getAllReviewsDone();
         expect(result.length).toEqual(1);
-        expect(result[0].pull_request.html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
+        expect(result[0].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
       });
     });
 
@@ -195,7 +239,7 @@ describe('GithubApiWrapper', () => {
       it('has the correct links', async () => {
         const result = await (await GithubApiWrapper()).getAllReviewsDone();
         expect(result.length).toEqual(3);
-        expect(result[2].pull_request.html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
+        expect(result[2].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
       });
 
       describe('with a requested review from a user', () => {
@@ -226,7 +270,7 @@ describe('GithubApiWrapper', () => {
 
     beforeEach(() => {
       mockedFetch.mockResolvedValue(Promise.resolve({
-        json: () => Promise.resolve(mockListOfPullRequests(pullRequestCount, { assignee }))
+        json: () => Promise.resolve(mockListOfPullRequests(pullRequestCount, { assignee })),
       }));
     });
 
@@ -253,7 +297,7 @@ describe('GithubApiWrapper', () => {
       it('has the correct link', async () => {
         const result = await (await GithubApiWrapper()).getMissingAssignee();
         expect(result.length).toEqual(1);
-        expect(result[0].pull_request.html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
+        expect(result[0].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
       });
 
       describe('with an assignee', () => {
@@ -273,7 +317,7 @@ describe('GithubApiWrapper', () => {
       it('has the correct links', async () => {
         const result = await (await GithubApiWrapper()).getMissingAssignee();
         expect(result.length).toEqual(3);
-        expect(result[2].pull_request.html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
+        expect(result[2].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
       });
 
       describe('with an assignee', () => {
@@ -291,7 +335,7 @@ describe('GithubApiWrapper', () => {
   describe('Too many requests', () => {
     beforeEach(() => {
       mockedFetch.mockResolvedValue(Promise.resolve({
-        status: 403
+        status: 403,
       }));
     });
 

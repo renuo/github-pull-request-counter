@@ -6,19 +6,17 @@ global.chrome = {
   action: {
     setBadgeText: jest.fn(),
     setBadgeBackgroundColor: jest.fn(),
-  }
+  },
 } as any;
-
 
 describe('BadgeSetter', () => {
   describe('update', () => {
     let record: PullRequestRecord;
     let counter = {
-      'PullRequest-0': true,
-      'PullRequest-1': true,
-      'PullRequest-2': true,
-      'PullRequest-3': true,
-      'PullRequest-4': true
+      'reviewRequested': true,
+      'noReviewRequested': true,
+      'allReviewsDone': true,
+      'missingAssignee': true,
     };
 
     beforeEach(() => {
@@ -27,7 +25,7 @@ describe('BadgeSetter', () => {
 
     describe('with an empty record', () => {
       beforeAll(() => {
-        record = pullRequestRecordFactory(0);
+        record = pullRequestRecordFactory();
       });
 
       it('calls setBadgeText with the correct arguments', () => {
@@ -41,11 +39,11 @@ describe('BadgeSetter', () => {
 
     describe('with one record entry', () => {
       beforeAll(() => {
-        record = pullRequestRecordFactory(1);
+        record = pullRequestRecordFactory({ reviewRequestedCount: 1 });
       });
 
       it('calls setBadgeText with the correct arguments', () => {
-        expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '2' });
+        expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '1' });
       });
 
       it('calls setBadgeBackgroundColor with the correct arguments', () => {
@@ -53,32 +51,31 @@ describe('BadgeSetter', () => {
       });
     });
 
-    describe('with five record entries', () => {
+    describe('with two record entries and five pull requests', () => {
       beforeAll(() => {
-        record = pullRequestRecordFactory(5);
+        record = pullRequestRecordFactory({ noReviewRequestedCount: 2, missingAssigneeCount: 3 });
       });
 
       it('calls setBadgeText with the correct arguments', () => {
-        expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '10' });
+        expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '5' });
       });
 
       it('calls setBadgeBackgroundColor with the correct arguments', () => {
         expect(global.chrome.action.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#d9534f' });
       });
 
-      describe('with some of the counter set to false', () => {
+      describe('with the missing assignee set to false', () => {
         beforeAll(() => {
           counter = {
-            'PullRequest-0': false,
-            'PullRequest-1': true,
-            'PullRequest-2': false,
-            'PullRequest-3': true,
-            'PullRequest-4': false
+            'reviewRequested': true,
+            'noReviewRequested': true,
+            'allReviewsDone': true,
+            'missingAssignee': false,
           };
         });
 
         it('calls setBadgeText with the correct arguments', () => {
-          expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '4' });
+          expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '2' });
         });
 
         it('calls setBadgeBackgroundColor with the correct arguments', () => {

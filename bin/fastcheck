@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 echo "Executing tslint"
 yarn lint
 if [ ! $? -eq 0 ]; then

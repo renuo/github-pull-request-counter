@@ -1,10 +1,11 @@
-import { Counter } from './static/types';
-import SettingsSerializer from './services/settings-serializer';
+import { CounterConfig } from './static/types';
+import SettingsStorageAccessor from './services/settings-storage-accessor';
 import ServiceWorker from './background';
+import { displayedAccessToken } from './static/constants';
 import '../css/options.scss';
 
 const Options = () => {
-  const settingsSerializer = SettingsSerializer();
+  const settings= SettingsStorageAccessor();
 
   const init = () => {
     loadCounterToDOM();
@@ -14,7 +15,7 @@ const Options = () => {
   };
 
   const loadCounterToDOM = async () => {
-    const counter = await settingsSerializer.loadCounter();
+    const counter = await settings.loadCounterConfig();
     (document.getElementById('review-requested') as HTMLInputElement).checked = counter.reviewRequested;
     (document.getElementById('no-review-requested') as HTMLInputElement).checked = counter.noReviewRequested;
     (document.getElementById('all-reviews-done') as HTMLInputElement).checked = counter.allReviewsDone;
@@ -22,14 +23,14 @@ const Options = () => {
   };
 
   const loadScopeToDOM = async () => {
-    const scope = await settingsSerializer.loadScope();
+    const scope = await settings.loadScope();
     (document.getElementById('account-names') as HTMLInputElement).value = scope;
   };
 
   const loadAccessTokenToDOM = async () => {
-    const accessToken = await settingsSerializer.loadAccessToken();
+    const accessToken = await settings.loadAccessToken();
     if (accessToken !== '') {
-      (document.getElementById('access-token') as HTMLInputElement).value = 'ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+      (document.getElementById('access-token') as HTMLInputElement).value = displayedAccessToken;
     }
   };
 
@@ -41,25 +42,25 @@ const Options = () => {
   };
 
   const storeCounterFromDOM = () => {
-    const counter: Counter = {
+    const counter: CounterConfig = {
       reviewRequested: (document.getElementById('review-requested') as HTMLInputElement).checked,
       noReviewRequested: (document.getElementById('no-review-requested') as HTMLInputElement).checked,
       allReviewsDone: (document.getElementById('all-reviews-done') as HTMLInputElement).checked,
-      missingAssignee: (document.getElementById('missing-assignee') as HTMLInputElement).checked
+      missingAssignee: (document.getElementById('missing-assignee') as HTMLInputElement).checked,
     };
 
-    settingsSerializer.storeCounter(counter);
+    settings.storeCounterConfig(counter);
   };
 
   const storeScopeFromDOM = () => {
     const scope = (document.getElementById('account-names') as HTMLInputElement).value;
-    settingsSerializer.storeScope(scope);
+    settings.storeScope(scope);
   };
 
   const storeAccessTokenFromDom = () => {
     const accessToken = (document.getElementById('access-token') as HTMLInputElement).value;
-    if (accessToken !== 'ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') {
-      settingsSerializer.storeAccessToken(accessToken);
+    if (accessToken !== displayedAccessToken) {
+      settings.storeAccessToken(accessToken);
     }
   };
 

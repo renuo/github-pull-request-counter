@@ -16,3 +16,5 @@ export const extensionID = 'kiddjljoajjpciconkdenlbgecmbmafm';
 
 export const noAccessTokenError = new Error('No Access Token');
 export const tooManyRequestsError = new Error('Too many requests');
+
+export const displayedAccessToken = 'ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';

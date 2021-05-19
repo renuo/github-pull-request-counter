@@ -1,4 +1,4 @@
-import { PullRequest, PullRequestRecord } from '../static/types';
+import { PullRequest, PullRequestRecord, PullRequestRecordKey } from '../static/types';
 import { recordKeysTranslations, extensionID } from '../static/constants';
 
 const HTMLGenerator = () => {
@@ -7,14 +7,14 @@ const HTMLGenerator = () => {
     topLevelDiv.classList.add('pull-requests-loaded');
 
     for (const key of Object.keys(record)) {
-      if (record[key].length === 0) continue;
+      if (record[key as PullRequestRecordKey].length === 0) continue;
 
       const titleP = document.createElement('p');
-      titleP.textContent = recordKeysTranslations[key] || 'Unknown';
+      titleP.textContent = recordKeysTranslations[key];
       titleP.classList.add('title');
       topLevelDiv.appendChild(titleP);
 
-      topLevelDiv.appendChild(generateLinkStructure(record[key]));
+      topLevelDiv.appendChild(generateLinkStructure(record[key as PullRequestRecordKey]));
     }
 
     if (topLevelDiv.children.length === 0) {
@@ -62,14 +62,14 @@ const HTMLGenerator = () => {
   const generateLink = (PullRequest: PullRequest) => {
     const link = document.createElement('a');
     link.appendChild(document.createTextNode(PullRequest.title));
-    link.href = PullRequest.pull_request.html_url;
+    link.href = PullRequest.html_url;
     link.target = '_blank';
     return link;
   };
 
   const generateSubDescription = (PullRequest: PullRequest) => {
     const subDescriptionP = document.createElement('p');
-    subDescriptionP.textContent = `${PullRequest.owner} #${PullRequest.number}`;
+    subDescriptionP.textContent = `${PullRequest.ownerAndName} #${PullRequest.number}`;
     return subDescriptionP;
   };
 

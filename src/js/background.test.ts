@@ -14,22 +14,22 @@ global.chrome = {
   alarms: {
     create: jest.fn(),
     onAlarm: {
-      addListener: jest.fn()
-    }
+      addListener: jest.fn(),
+    },
   },
   storage: {
     local: {
       get: jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
-        'counter': 'invalid' ,
-        'accessToken': 'secret'
+        'counter': undefined,
+        'accessToken': 'secret',
       })),
-      set: jest.fn()
-    }
+      set: jest.fn(),
+    },
   },
   action: {
     setBadgeText: jest.fn(),
     setBadgeBackgroundColor: jest.fn(),
-  }
+  },
 } as any;
 
 describe('ServiceWorker', () => {
@@ -59,15 +59,15 @@ describe('ServiceWorker', () => {
     describe('without an access token', () => {
       beforeAll(() => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
-          'counter': 'invalid' ,
-          'accessToken': ''
+          'counter': undefined,
+          'accessToken': '',
         }));
       });
 
       afterAll(() => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
-          'counter': 'invalid' ,
-          'accessToken': 'secret'
+          'counter': undefined,
+          'accessToken': 'secret',
         }));
       });
 
@@ -95,7 +95,7 @@ describe('ServiceWorker', () => {
         });
       });
 
-      describe('while fetchting data', () => {
+      describe('while fetching data', () => {
         beforeAll(() => {
           mockedFetch.mockImplementation((url: string) => {
             if (url.includes('/user')) {
@@ -128,7 +128,7 @@ describe('ServiceWorker', () => {
       });
     });
 
-    describe('while fetchting data', () => {
+    describe('while fetching data', () => {
       beforeAll(() => {
         mockedFetch.mockImplementation((url: string) => {
           if (url.includes('/user')) {
@@ -159,4 +159,3 @@ describe('ServiceWorker', () => {
     });
   });
 });
-

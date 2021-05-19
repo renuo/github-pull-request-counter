@@ -1,7 +1,7 @@
-import { PullRequest } from '../../src/js/static/types';
+import { Issue } from '../../src/js/static/types';
 
 export const mockListOfPullRequests = (count: number, params?: { assignee: string | undefined }) => {
-  const createPullRequests = (count: number): PullRequest[] => {
+  const createIssues = (count: number): Issue[] => {
     const items = [];
 
     for (let i = 0; i < count; i++) {
@@ -10,10 +10,9 @@ export const mockListOfPullRequests = (count: number, params?: { assignee: strin
         title: 'PR Title',
         assignee: params?.assignee,
         number: i+1,
-        owner: 'renuo/github-pull-request-counter',
         pull_request: {
           url: `https://api.github.com/repos/renuo/github-pull-request-counter/pulls/${i+1}`,
-          html_url: `https://github.com/renuo/github-pull-request-counter/pull/${i+1}`
+          html_url: `https://github.com/renuo/github-pull-request-counter/pull/${i+1}`,
         },
       });
     }
@@ -23,7 +22,7 @@ export const mockListOfPullRequests = (count: number, params?: { assignee: strin
 
   return {
     total_count: count,
-    items: createPullRequests(count)
+    items: createIssues(count),
   };
 };
 
@@ -40,7 +39,7 @@ export const mockRequestedReviewers = (usersCount: number, teamsCount: number) =
 
   return {
     users: createReviewers(usersCount),
-    teams: createReviewers(teamsCount)
+    teams: createReviewers(teamsCount),
   };
 };
 
@@ -53,11 +52,11 @@ interface GlobalMockParams {
 export const globalMock = (url: string, params?: GlobalMockParams) => {
   if (url.includes('/requested_reviewers')) {
     return Promise.resolve({
-      json: () => Promise.resolve(mockRequestedReviewers(params?.openUserRequestCount || 0, params?.openTeamRequestCount || 0))
+      json: () => Promise.resolve(mockRequestedReviewers(params?.openUserRequestCount || 0, params?.openTeamRequestCount || 0)),
     });
   } else {
     return Promise.resolve({
-      json: () => mockListOfPullRequests(params?.pullRequestCount || 0)
+      json: () => mockListOfPullRequests(params?.pullRequestCount || 0),
     });
   }
 };

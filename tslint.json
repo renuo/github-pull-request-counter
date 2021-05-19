@@ -48,6 +48,8 @@
     "semicolon": [
       true,
       "always"
-    ]
+    ],
+    "no-consecutive-blank-lines": true,
+    "trailing-comma": [true, { "multiline": "always", "singleline": "never" }]
   }
 }
