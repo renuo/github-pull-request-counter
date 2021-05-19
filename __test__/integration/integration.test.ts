@@ -7,6 +7,10 @@ let page: puppeteer.Page;
 
 const url = (file: string) => `chrome-extension://${extensionID}/${file}`;
 
+// readProp('.password', 'value', 1)
+// will run
+// document.querySelectorAll('.password')[1].value
+// and return the value of the second node matching the selector '.password'.
 const readProp = async (query: string, prop: string, index = 0) => (
   page.evaluate((query, prop, index) => (
     document.querySelectorAll(query)[index][prop]
