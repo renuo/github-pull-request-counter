@@ -16,13 +16,13 @@ const createPullRequests = (count: number): PullRequest[] => {
   return pullRequests;
 };
 
-type Props = {
+type FactoryConfiguration = {
   reviewRequestedCount?: number,
   noReviewRequestedCount?: number,
   allReviewsDoneCount?: number,
   missingAssigneeCount?: number,
 };
-export const pullRequestRecordFactory = (props?: Props): PullRequestRecord => ({
+export const pullRequestRecordFactory = (props?: FactoryConfiguration): PullRequestRecord => ({
   'reviewRequested': createPullRequests(props?.reviewRequestedCount || 0),
   'noReviewRequested': createPullRequests(props?.noReviewRequestedCount || 0),
   'allReviewsDone': createPullRequests(props?.allReviewsDoneCount || 0),
