@@ -43,11 +43,11 @@ const GithubApiWrapper = async () => {
   };
 
   const getAllAssigned = async (): Promise<PullRequest[]> => {
-    const query = encodeURIComponent(`is:open is:pr assignee:Janis-Leuenberger archived:false`);
+    const query = encodeURIComponent('is:open is:pr assignee:Janis-Leuenberger archived:false');
     const response = await makeApiRequest('/search/issues', `q=${query}`);
 
     return processDataIntoPullRequests(response.items);
-  }
+  };
 
   const makeApiRequest = async (path: string, params?: string): Promise<any> => makeRequest(`https://api.github.com${path}`, params);
 
