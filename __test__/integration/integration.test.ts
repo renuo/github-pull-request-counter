@@ -58,6 +58,7 @@ describe('integration test', () => {
     it('checkboxes', async () => {
       await page.click('#review-requested');
       await page.click('#all-reviews-done');
+      await page.click('#all-assigned');
       await page.click('button[id="options-save"]');
 
       await page.goto(url('options.html'), { waitUntil: 'networkidle2' });
@@ -66,6 +67,7 @@ describe('integration test', () => {
       expect(readProp('#no-review-requested', 'checked')).resolves.toEqual(true);
       expect(readProp('#all-reviews-done', 'checked')).resolves.toEqual(false);
       expect(readProp('#missing-assignee', 'checked')).resolves.toEqual(true);
+      expect(readProp('#all-assigned', 'checked')).resolves.toEqual(true); // Because it is false by default
     });
 
     it('scope', async () => {
@@ -102,6 +104,7 @@ describe('integration test', () => {
       expect(readProp('.title', 'innerHTML', 1)).resolves.toEqual('Someone must review');
       expect(readProp('.title', 'innerHTML', 2)).resolves.toEqual('All reviews done');
       expect(readProp('.title', 'innerHTML', 3)).resolves.toEqual('Missing Assignee');
+      expect(readProp('.title', 'innerHTML', 4)).resolves.toEqual('Assigned');
     });
 
     it('has the correct links', () => {

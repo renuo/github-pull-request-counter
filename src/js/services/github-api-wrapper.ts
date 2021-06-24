@@ -42,6 +42,13 @@ const GithubApiWrapper = async () => {
     return processDataIntoPullRequests(response);
   };
 
+  const getAllAssigned = async (): Promise<PullRequest[]> => {
+    const query = encodeURIComponent(`is:open is:pr assignee:Janis-Leuenberger archived:false`);
+    const response = await makeApiRequest('/search/issues', `q=${query}`);
+
+    return processDataIntoPullRequests(response.items);
+  }
+
   const makeApiRequest = async (path: string, params?: string): Promise<any> => makeRequest(`https://api.github.com${path}`, params);
 
   const makeRequest = async (path: string, params?: string): Promise<any> => {
@@ -92,7 +99,7 @@ const GithubApiWrapper = async () => {
   // TODO: This should be cached to improve performance
   const userName = (await makeApiRequest('/user')).login;
 
-  return { getReviewRequested, getNoReviewRequested, getAllReviewsDone, getMissingAssignee };
+  return { getReviewRequested, getNoReviewRequested, getAllReviewsDone, getMissingAssignee, getAllAssigned };
 };
 
 export default GithubApiWrapper;

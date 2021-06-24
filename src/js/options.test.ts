@@ -22,6 +22,7 @@ const counter = {
   noReviewRequested: true,
   allReviewsDone: false,
   missingAssignee: true,
+  allAssigned: false,
 };
 
 global.chrome = {
@@ -54,10 +55,11 @@ describe('Options', () => {
     });
 
     it('loads the checkboxes correctly', () => {
+      expect((document.getElementById('review-requested') as HTMLInputElement).checked).toEqual(false);
       expect((document.getElementById('no-review-requested') as HTMLInputElement).checked).toEqual(true);
       expect((document.getElementById('all-reviews-done') as HTMLInputElement).checked).toEqual(false);
       expect((document.getElementById('missing-assignee') as HTMLInputElement).checked).toEqual(true);
-      expect((document.getElementById('review-requested') as HTMLInputElement).checked).toEqual(false);
+      expect((document.getElementById('all-assigned') as HTMLInputElement).checked).toEqual(false);
     });
 
     it('loads the scope correctly', () => {
