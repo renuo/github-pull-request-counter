@@ -33,26 +33,23 @@
   }
 
   .text-input {
+    color: $pure-black;
+    padding: 5px;
     width: 45%;
   }
 }
 
 .blue-button {
-  background-color: $pure-white;
-  border-color: $link-blue;
-  border-radius: 3px;
-  color: $link-blue;
+  background-color: $background-gray;
+  border-color: $pure-white;
+  color: $pure-white;
   margin-bottom: 10px;
   margin-top: 10px;
   padding: 5px 10px;
 
   &:hover {
-    background-color: $background-gray;
-  }
-
-  &:active {
-    background-color: $link-blue;
-    color: $pure-white;
+    background-color: $pure-white;
+    color: $background-gray;
   }
 }
 
@@ -64,11 +61,11 @@
   }
 
   &:hover > label {
-    color: $box-shadow-gray;
+    color: $light-gray;
   }
 
   &:hover > .hover-label {
-    color: $pure-black;
+    color: $pure-white;
     display: inline;
   }
 }
