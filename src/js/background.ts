@@ -31,6 +31,7 @@ const ServiceWorker = () => {
         github.getNoReviewRequested(),
         github.getAllReviewsDone(),
         github.getMissingAssignee(),
+        github.getAllAssigned(),
       ]);
     } catch(error) {
       if (error === tooManyRequestsError) return;
@@ -43,6 +44,7 @@ const ServiceWorker = () => {
       noReviewRequested: recordEntries[1],
       allReviewsDone: recordEntries[2],
       missingAssignee: recordEntries[3],
+      allAssigned: recordEntries[4],
     };
 
     const counter = await SettingsStorageAccessor().loadCounterConfig();

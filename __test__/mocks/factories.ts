@@ -21,10 +21,12 @@ type FactoryConfiguration = {
   noReviewRequestedCount?: number,
   allReviewsDoneCount?: number,
   missingAssigneeCount?: number,
+  allAssignedCount?: number,
 };
 export const pullRequestRecordFactory = (props?: FactoryConfiguration): PullRequestRecord => ({
   'reviewRequested': createPullRequests(props?.reviewRequestedCount || 0),
   'noReviewRequested': createPullRequests(props?.noReviewRequestedCount || 0),
   'allReviewsDone': createPullRequests(props?.allReviewsDoneCount || 0),
   'missingAssignee': createPullRequests(props?.missingAssigneeCount || 0),
+  'allAssigned': createPullRequests(props?.allAssignedCount || 0),
 });

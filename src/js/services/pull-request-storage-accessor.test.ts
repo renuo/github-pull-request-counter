@@ -32,7 +32,7 @@ describe('StorageSerialzer', () => {
       });
 
       it('doesn\'t store anything', () => {
-        expect(setMock).toBeCalledTimes(4);
+        expect(setMock).toBeCalledTimes(5);
       });
     });
 
@@ -53,11 +53,12 @@ describe('StorageSerialzer', () => {
           noReviewRequestedCount: 1,
           allReviewsDoneCount: 1,
           missingAssigneeCount: 1,
+          allAssignedCount: 1,
         });
       });
 
-      it('calls set four times', () => {
-        expect(setMock).toBeCalledTimes(4);
+      it('calls set five times', () => {
+        expect(setMock).toBeCalledTimes(5);
       });
     });
   });
@@ -80,7 +81,7 @@ describe('StorageSerialzer', () => {
       });
 
       it('loads empty arrays', () => {
-        expect(result).toEqual({ reviewRequested: [], noReviewRequested: [], allReviewsDone: [], missingAssignee: [] });
+        expect(result).toEqual({ reviewRequested: [], noReviewRequested: [], allReviewsDone: [], missingAssignee: [], allAssigned: [] });
       });
     });
 
@@ -104,7 +105,7 @@ describe('StorageSerialzer', () => {
       });
 
       it('loads the correct data', () => {
-        expect(global.chrome.storage.local.get).toBeCalledTimes(4);
+        expect(global.chrome.storage.local.get).toBeCalledTimes(5);
         expect(result).toEqual(pullRequests);
       });
     });
@@ -117,6 +118,7 @@ describe('StorageSerialzer', () => {
             'noReviewRequested': [JSON.stringify([pullRequestFactory(0)])],
             'allReviewsDone': [JSON.stringify([pullRequestFactory(0)])],
             'missingAssignee': [JSON.stringify([pullRequestFactory(0)])],
+            'allAssigned': [JSON.stringify([pullRequestFactory(0)])],
           });
         });
 
@@ -125,11 +127,12 @@ describe('StorageSerialzer', () => {
           noReviewRequestedCount: 1,
           allReviewsDoneCount: 1,
           missingAssigneeCount: 1,
+          allAssignedCount: 1,
         });
       });
 
       it('loads the correct data', () => {
-        expect(global.chrome.storage.local.get).toBeCalledTimes(4);
+        expect(global.chrome.storage.local.get).toBeCalledTimes(5);
         expect(result).toEqual(pullRequests);
       });
     });

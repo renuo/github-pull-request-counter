@@ -20,6 +20,7 @@ describe('SettingsStorageAccessor', () => {
         noReviewRequested: false,
         allReviewsDone: true,
         missingAssignee: false,
+        allAssigned: true,
       };
 
       settings.storeCounterConfig(counter);
@@ -34,6 +35,7 @@ describe('SettingsStorageAccessor', () => {
         noReviewRequested: false,
         allReviewsDone: true,
         missingAssignee: false,
+        allAssigned: true,
       };
 
       global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
@@ -54,6 +56,7 @@ describe('SettingsStorageAccessor', () => {
           noReviewRequested: true,
           allReviewsDone: true,
           missingAssignee: true,
+          allAssigned: false,
         });
       });
     });

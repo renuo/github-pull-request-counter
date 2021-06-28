@@ -44,12 +44,12 @@ describe('ServiceWorker', () => {
       await serviceWorker.fetchAndStoreData();
     });
 
-    it('calls set four times', () => {
-      expect(global.chrome.storage.local.set).toBeCalledTimes(4);
+    it('calls set five times', () => {
+      expect(global.chrome.storage.local.set).toBeCalledTimes(5);
     });
 
     it('calls setBadgeText with the correct arguments', () => {
-      expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '8' });
+      expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '8' }); // Because allAssigned is false by default
     });
 
     it('calls setBadgeBackgroundColor with the correct arguments', () => {
@@ -150,8 +150,8 @@ describe('ServiceWorker', () => {
       await serviceWorker.startPolling();
     });
 
-    it('calls set four times', () => {
-      expect(global.chrome.storage.local.set).toBeCalledTimes(4);
+    it('calls set five times', () => {
+      expect(global.chrome.storage.local.set).toBeCalledTimes(5);
     });
 
     it('calls addListener', () => {

@@ -20,6 +20,7 @@ const Options = () => {
     (document.getElementById('no-review-requested') as HTMLInputElement).checked = counter.noReviewRequested;
     (document.getElementById('all-reviews-done') as HTMLInputElement).checked = counter.allReviewsDone;
     (document.getElementById('missing-assignee') as HTMLInputElement).checked = counter.missingAssignee;
+    (document.getElementById('all-assigned') as HTMLInputElement).checked = counter.allAssigned;
   };
 
   const loadScopeToDOM = async () => {
@@ -47,6 +48,7 @@ const Options = () => {
       noReviewRequested: (document.getElementById('no-review-requested') as HTMLInputElement).checked,
       allReviewsDone: (document.getElementById('all-reviews-done') as HTMLInputElement).checked,
       missingAssignee: (document.getElementById('missing-assignee') as HTMLInputElement).checked,
+      allAssigned: (document.getElementById('all-assigned') as HTMLInputElement).checked,
     };
 
     settings.storeCounterConfig(counter);

@@ -17,6 +17,7 @@ describe('BadgeSetter', () => {
       'noReviewRequested': true,
       'allReviewsDone': true,
       'missingAssignee': true,
+      'allAssigned': true,
     };
 
     beforeEach(() => {
@@ -71,6 +72,7 @@ describe('BadgeSetter', () => {
             'noReviewRequested': true,
             'allReviewsDone': true,
             'missingAssignee': false,
+            'allAssigned': true,
           };
         });
 
