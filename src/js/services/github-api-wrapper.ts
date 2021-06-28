@@ -43,7 +43,7 @@ const GithubApiWrapper = async () => {
   };
 
   const getAllAssigned = async (): Promise<PullRequest[]> => {
-    const query = encodeURIComponent('is:open is:pr assignee:Janis-Leuenberger archived:false');
+    const query = encodeURIComponent(`is:open is:pr assignee:${userName} archived:false`);
     const response = await makeApiRequest('/search/issues', `q=${query}`);
 
     return processDataIntoPullRequests(response.items);
