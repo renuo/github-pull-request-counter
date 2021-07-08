@@ -9,6 +9,7 @@ const Options = () => {
 
   const init = () => {
     loadCounterToDOM();
+    loadMaximumAgeFromDOM();
     loadScopeToDOM();
     loadAccessTokenToDOM();
     document.getElementById('options-save')!.addEventListener('click', saveButtonClickHandler);
@@ -37,6 +38,7 @@ const Options = () => {
 
   const saveButtonClickHandler = async () => {
     storeCounterFromDOM();
+    storeMaximumAgeFromDOM();
     storeScopeFromDOM();
     storeAccessTokenFromDom();
     await ServiceWorker().fetchAndStoreData();
@@ -52,6 +54,18 @@ const Options = () => {
     };
 
     settings.storeCounterConfig(counter);
+  };
+
+  const storeMaximumAgeFromDOM = () => {
+    const maximumAgeValue = (document.getElementById('maximum-age-value') as HTMLInputElement).value;
+    const maximumAgeUnit = (document.getElementById('maximum-age-unit') as HTMLSelectElement).value;
+    settings.storeMaximumAge(parseInt(maximumAgeValue, 10), maximumAgeUnit);
+  };
+
+  const loadMaximumAgeFromDOM = async () => {
+    const [maximumAgeValue, maximumAgeUnit] = await settings.loadMaximumAge();
+    (document.getElementById('maximum-age-value') as HTMLInputElement).value = maximumAgeValue.toString();
+    (document.getElementById('maximum-age-unit') as HTMLSelectElement).value = maximumAgeUnit;
   };
 
   const storeScopeFromDOM = () => {

@@ -30,6 +30,8 @@ global.chrome = {
     local: {
       get: jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
         'counter': JSON.stringify(counter),
+        'maximumAgeValue': '555',
+        'maximumAgeUnit': 'months',
         'accessToken': 'secret' ,
         'scope': 'renuo',
       })),
@@ -62,6 +64,11 @@ describe('Options', () => {
       expect((document.getElementById('all-assigned') as HTMLInputElement).checked).toEqual(false);
     });
 
+    it('loads the maximum age correctly', () => {
+      expect((document.getElementById('maximum-age-value') as HTMLInputElement).value).toEqual('555');
+      expect((document.getElementById('maximum-age-unit') as HTMLInputElement).value).toEqual('months');
+    });
+
     it('loads the scope correctly', () => {
       expect((document.getElementById('account-names') as HTMLInputElement).value).toEqual('renuo');
     });
@@ -81,6 +88,8 @@ describe('Options', () => {
       afterAll(() => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
           'counter': JSON.stringify(counter),
+          'maximumAgeValue': '555',
+          'maximumAgeUnit': 'months',
           'accessToken': 'secret' ,
           'scope': 'renuo',
         }));
@@ -90,28 +99,34 @@ describe('Options', () => {
         expect((document.getElementById('access-token') as HTMLInputElement).value).toEqual('');
       });
     });
+  });
 
-    describe('save button', () => {
-      const options = Options();
-      beforeEach(() => {
-        options.init();
-      });
+  describe('save button', () => {
+    const options = Options();
+    beforeEach(() => {
+      options.init();
+    });
 
-      it('stores the counter correctly', async () => {
-        await options.saveButtonClickHandler();
-        expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ counter: JSON.stringify(counter) });
-      });
+    it('stores the counter correctly', async () => {
+      await options.saveButtonClickHandler();
+      expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ counter: JSON.stringify(counter) });
+    });
 
-      it('stores the scope correctly', async () => {
-        await options.saveButtonClickHandler();
-        expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ scope: 'renuo' });
-      });
+    it('stores the maximum age correctly', async () => {
+      await options.saveButtonClickHandler();
+      expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ maximumAgeValue: '555' });
+      expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ maximumAgeUnit: 'months' });
+    });
 
-      it('stores the access token correctly', async () => {
-        (document.getElementById('access-token') as HTMLInputElement).value = 'new access token';
-        await options.saveButtonClickHandler();
-        expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ accessToken: 'new access token' });
-      });
+    it('stores the scope correctly', async () => {
+      await options.saveButtonClickHandler();
+      expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ scope: 'renuo' });
+    });
+
+    it('stores the access token correctly', async () => {
+      (document.getElementById('access-token') as HTMLInputElement).value = 'new access token';
+      await options.saveButtonClickHandler();
+      expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ accessToken: 'new access token' });
     });
   });
 });

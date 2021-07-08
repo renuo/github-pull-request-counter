@@ -1,6 +1,7 @@
 import GithubApiWrapper from './github-api-wrapper';
 import { mockListOfPullRequests, mockRequestedReviewers } from '../../../__test__/mocks/github-api-mock-data';
 import fetch from 'node-fetch';
+import MockDate from 'mockdate';
 
 jest.mock('node-fetch');
 const mockedFetch = fetch as any;
@@ -18,7 +19,7 @@ global.chrome = {
 describe('GithubApiWrapper', () => {
   let scope = '';
 
-  beforeEach(async () => {
+  beforeEach(() => {
     global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
       'scope': scope ,
       'accessToken': 'secret',
@@ -270,7 +271,7 @@ describe('GithubApiWrapper', () => {
 
     beforeEach(() => {
       mockedFetch.mockResolvedValue(Promise.resolve({
-        json: () => Promise.resolve(mockListOfPullRequests(pullRequestCount, { assignee })),
+        json: () => Promise.resolve(mockListOfPullRequests(pullRequestCount, { assignee, created_at: undefined })),
       }));
     });
 
@@ -366,6 +367,77 @@ describe('GithubApiWrapper', () => {
         const result = await (await GithubApiWrapper()).getAllAssigned();
         expect(result.length).toEqual(3);
         expect(result[2].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
+      });
+    });
+
+    describe('filterByMaximumAge', () => {
+      const pullRequest1 = mockListOfPullRequests(1, { assignee: undefined, created_at: '2021-05-20T14:17:00Z' });
+      const pullRequest2 = mockListOfPullRequests(1, { assignee: undefined, created_at: '2021-06-25T14:17:00Z' });
+      const pullRequest3 = mockListOfPullRequests(1, { assignee: undefined, created_at: '2021-04-15T14:17:00Z' });
+
+      beforeEach(() => {
+        mockedFetch.mockResolvedValue(Promise.resolve({
+          json: () => Promise.resolve({ total_count: 3, items: [...pullRequest1.items, ...pullRequest2.items, ...pullRequest3.items] }),
+        }));
+      });
+
+      beforeEach(() => MockDate.set('2021-07-08'));
+      afterEach(() => MockDate.reset());
+
+      it('has the correct order', async () => {
+        const result = await (await GithubApiWrapper()).getAllAssigned();
+
+        expect(result[0].createdAt).toEqual('2021-06-25T14:17:00Z');
+        expect(result[1].createdAt).toEqual('2021-05-20T14:17:00Z');
+        expect(result[2].createdAt).toEqual('2021-04-15T14:17:00Z');
+      });
+
+      describe('with a maximum age of 10 days', () => {
+        beforeEach(() => {
+          global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+            'scope': scope , 'accessToken': 'secret', 'maximumAgeValue': '10', 'maximumAgeUnit': 'days',
+          }));
+        });
+
+        it('reduces the ammount to 0', async () => {
+          expect((await (await GithubApiWrapper()).getAllAssigned()).length).toEqual(0);
+        });
+      });
+
+      describe('with a maximum age of 20 days', () => {
+        beforeEach(() => {
+          global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+            'scope': scope , 'accessToken': 'secret', 'maximumAgeValue': '20', 'maximumAgeUnit': 'days',
+          }));
+        });
+
+        it('reduces the ammount to 1', async () => {
+          expect((await (await GithubApiWrapper()).getAllAssigned()).length).toEqual(1);
+        });
+      });
+
+      describe('with a maximum age of 2 months', () => {
+        beforeEach(() => {
+          global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+            'scope': scope , 'accessToken': 'secret', 'maximumAgeValue': '2', 'maximumAgeUnit': 'months',
+          }));
+        });
+
+        it('reduces the ammount to 2', async () => {
+          expect((await (await GithubApiWrapper()).getAllAssigned()).length).toEqual(2);
+        });
+      });
+
+      describe('with a maximum age of 1 year', () => {
+        beforeEach(() => {
+          global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+            'scope': scope , 'accessToken': 'secret', 'maximumAgeValue': '1', 'maximumAgeUnit': 'years',
+          }));
+        });
+
+        it('still has all pull requests', async () => {
+          expect((await (await GithubApiWrapper()).getAllAssigned()).length).toEqual(3);
+        });
       });
     });
   });

@@ -91,6 +91,43 @@ describe('SettingsStorageAccessor', () => {
     });
   });
 
+  describe('storeMaximumAge', () => {
+    it('calls get with the correct arguments', () => {
+      const value = 777;
+      const unit = 'years';
+
+      settings.storeMaximumAge(value, unit);
+      expect(set).toHaveBeenCalledWith({ maximumAgeValue: value.toString() });
+      expect(set).toHaveBeenCalledWith({ maximumAgeUnit: unit });
+    });
+  });
+
+  describe('loadMaximumAge', () => {
+    it('loads the correct data', async () => {
+      const value = 777;
+      const unit = 'years';
+
+      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback(
+        {
+          'maximumAgeValue': value ,
+          'maximumAgeUnit': unit,
+        },
+      ));
+
+      const result = await settings.loadMaximumAge();
+      expect(result).toEqual([value, unit]);
+    });
+
+    describe('with nothing in the storage', () => {
+      it('returns the default values', async () => {
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({}));
+
+        const result = await settings.loadMaximumAge();
+        expect(result).toEqual([99, 'years']);
+      });
+    });
+  });
+
   describe('storeAccessToken', () => {
     it('calls get with the correct arguments', () => {
       const accessToken = 'secret';
