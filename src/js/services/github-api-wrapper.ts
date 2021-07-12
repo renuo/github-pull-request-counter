@@ -79,7 +79,7 @@ const GithubApiWrapper = async () => {
       html_url: issue.pull_request.html_url,
     }));
 
-    return filterByMaximumAge(pullRequests);
+    return filterByMaximumAge(sortByDate(pullRequests));
   };
 
   const filterByScope = async (issues: Issue[]): Promise<Issue[]> => {
@@ -92,6 +92,11 @@ const GithubApiWrapper = async () => {
     ));
   };
 
+  const sortByDate = (pullRequests: PullRequest[]) =>
+    pullRequests.sort((pullRequest1: PullRequest, pullRequest2: PullRequest) => (
+    new Date(pullRequest2.createdAt).getTime() - new Date(pullRequest1.createdAt).getTime()
+  ));
+
   const readOwnerAndNameFromUrl = (url: string): string => url.replace('https://api.github.com/repos/', '').split('/pulls/')[0];
 
   const filterByMaximumAge = async (pullRequests: PullRequest[]): Promise<PullRequest[]> => {
@@ -101,10 +106,7 @@ const GithubApiWrapper = async () => {
     if (maximumAgeUnit === 'months') days = maximumAgeValue * 30;
     if (maximumAgeUnit === 'years') days = maximumAgeValue * 365;
 
-    return pullRequests.filter(pullRequest => getDifferenceInDays(new Date(pullRequest.createdAt)) < days)
-                       .sort((pullRequest1: PullRequest, pullRequest2: PullRequest) => (
-                         new Date(pullRequest2.createdAt).getTime() - new Date(pullRequest1.createdAt).getTime()
-                       ));
+    return pullRequests.filter(pullRequest => getDifferenceInDays(new Date(pullRequest.createdAt)) < days);
   };
 
   const getDifferenceInDays = (date2: Date): number => (Date.now() - date2.getTime()) / 86_400_000; // 1000 * 3600 * 24
