@@ -68,15 +68,18 @@ const GithubApiWrapper = async () => {
 
   const processDataIntoPullRequests = async (issues: Issue[]): Promise<PullRequest[]> => {
     issues = await filterByScope(issues);
-    return issues.map(issue => ({
+    const pullRequests = issues.map(issue => ({
       id: 12,
       assignee: undefined,
       title: issue.title,
       number: issue.number,
       ownerAndName: readOwnerAndNameFromUrl(issue.pull_request.url),
+      createdAt: issue.created_at,
       url: issue.pull_request.url,
       html_url: issue.pull_request.html_url,
     }));
+
+    return filterByMaximumAge(sortByDate(pullRequests));
   };
 
   const filterByScope = async (issues: Issue[]): Promise<Issue[]> => {
@@ -89,7 +92,20 @@ const GithubApiWrapper = async () => {
     ));
   };
 
+  const sortByDate = (pullRequests: PullRequest[]) =>
+    pullRequests.sort((pullRequest1: PullRequest, pullRequest2: PullRequest) => (
+    new Date(pullRequest2.createdAt).getTime() - new Date(pullRequest1.createdAt).getTime()
+  ));
+
   const readOwnerAndNameFromUrl = (url: string): string => url.replace('https://api.github.com/repos/', '').split('/pulls/')[0];
+
+  const filterByMaximumAge = async (pullRequests: PullRequest[]): Promise<PullRequest[]> => {
+    const maximumAge = await SettingsStorageAccessor().loadMaximumAge();
+
+    return pullRequests.filter(pullRequest => getDifferenceInDays(new Date(pullRequest.createdAt)) < maximumAge);
+  };
+
+  const getDifferenceInDays = (date2: Date): number => (Date.now() - date2.getTime()) / 86_400_000; // 1000 * 3600 * 24
 
   const accessToken = await SettingsStorageAccessor().loadAccessToken();
   // TODO: Find cleaner solution to mock the API during integration tests.

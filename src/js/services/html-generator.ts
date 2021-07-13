@@ -69,7 +69,10 @@ const HTMLGenerator = () => {
 
   const generateSubDescription = (PullRequest: PullRequest) => {
     const subDescriptionP = document.createElement('p');
-    subDescriptionP.textContent = `${PullRequest.ownerAndName} #${PullRequest.number}`;
+    subDescriptionP.textContent = PullRequest.ownerAndName;
+    const numberB = document.createElement('b');
+    numberB.textContent = ` #${PullRequest.number}`;
+    subDescriptionP.appendChild(numberB);
     return subDescriptionP;
   };
 

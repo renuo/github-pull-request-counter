@@ -22,6 +22,12 @@ const SettingsStorageAccessor = () => {
 
   const loadScope = async (): Promise<string> => (await load('scope')) || '';
 
+  const storeMaximumAge = (value: number): void => {
+    store('maximumAge', value.toString());
+  };
+
+  const loadMaximumAge = async (): Promise<number> => parseInt(await load('maximumAge') || '999', 10);
+
   const storeAccessToken = (accessToken: string): void => store('accessToken', accessToken);
 
   const loadAccessToken = async (): Promise<string> => (await load('accessToken')) || '';
@@ -38,7 +44,8 @@ const SettingsStorageAccessor = () => {
     return data[key];
   };
 
-  return { storeCounterConfig, loadCounterConfig, storeScope, loadScope, storeAccessToken, loadAccessToken };
+  return { storeCounterConfig, loadCounterConfig, storeScope, loadScope, storeMaximumAge, loadMaximumAge,
+           storeAccessToken, loadAccessToken };
 };
 
 export default SettingsStorageAccessor;
