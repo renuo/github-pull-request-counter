@@ -57,15 +57,13 @@ const Options = () => {
   };
 
   const storeMaximumAgeFromDOM = () => {
-    const maximumAgeValue = (document.getElementById('maximum-age-value') as HTMLInputElement).value;
-    const maximumAgeUnit = (document.getElementById('maximum-age-unit') as HTMLSelectElement).value;
-    settings.storeMaximumAge(parseInt(maximumAgeValue, 10), maximumAgeUnit);
+    const maximumAge = (document.getElementById('maximum-age') as HTMLInputElement).value;
+    settings.storeMaximumAge(parseInt(maximumAge, 10));
   };
 
   const loadMaximumAgeFromDOM = async () => {
-    const [maximumAgeValue, maximumAgeUnit] = await settings.loadMaximumAge();
-    (document.getElementById('maximum-age-value') as HTMLInputElement).value = maximumAgeValue.toString();
-    (document.getElementById('maximum-age-unit') as HTMLSelectElement).value = maximumAgeUnit;
+    const maximumAge = await settings.loadMaximumAge();
+    (document.getElementById('maximum-age') as HTMLInputElement).value = maximumAge.toString();
   };
 
   const storeScopeFromDOM = () => {

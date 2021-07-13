@@ -30,8 +30,7 @@ global.chrome = {
     local: {
       get: jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
         'counter': JSON.stringify(counter),
-        'maximumAgeValue': '555',
-        'maximumAgeUnit': 'months',
+        'maximumAge': '555',
         'accessToken': 'secret' ,
         'scope': 'renuo',
       })),
@@ -65,8 +64,7 @@ describe('Options', () => {
     });
 
     it('loads the maximum age correctly', () => {
-      expect((document.getElementById('maximum-age-value') as HTMLInputElement).value).toEqual('555');
-      expect((document.getElementById('maximum-age-unit') as HTMLInputElement).value).toEqual('months');
+      expect((document.getElementById('maximum-age') as HTMLInputElement).value).toEqual('555');
     });
 
     it('loads the scope correctly', () => {
@@ -88,8 +86,7 @@ describe('Options', () => {
       afterAll(() => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
           'counter': JSON.stringify(counter),
-          'maximumAgeValue': '555',
-          'maximumAgeUnit': 'months',
+          'maximumAge': '555',
           'accessToken': 'secret' ,
           'scope': 'renuo',
         }));
@@ -114,8 +111,7 @@ describe('Options', () => {
 
     it('stores the maximum age correctly', async () => {
       await options.saveButtonClickHandler();
-      expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ maximumAgeValue: '555' });
-      expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ maximumAgeUnit: 'months' });
+      expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ maximumAge: '555' });
     });
 
     it('stores the scope correctly', async () => {

@@ -395,7 +395,7 @@ describe('GithubApiWrapper', () => {
       describe('with a maximum age of 10 days', () => {
         beforeEach(() => {
           global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
-            'scope': scope , 'accessToken': 'secret', 'maximumAgeValue': '10', 'maximumAgeUnit': 'days',
+            'scope': scope , 'accessToken': 'secret', 'maximumAge': '10',
           }));
         });
 
@@ -407,7 +407,7 @@ describe('GithubApiWrapper', () => {
       describe('with a maximum age of 20 days', () => {
         beforeEach(() => {
           global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
-            'scope': scope , 'accessToken': 'secret', 'maximumAgeValue': '20', 'maximumAgeUnit': 'days',
+            'scope': scope , 'accessToken': 'secret', 'maximumAge': '20',
           }));
         });
 
@@ -419,7 +419,7 @@ describe('GithubApiWrapper', () => {
       describe('with a maximum age of 2 months', () => {
         beforeEach(() => {
           global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
-            'scope': scope , 'accessToken': 'secret', 'maximumAgeValue': '2', 'maximumAgeUnit': 'months',
+            'scope': scope , 'accessToken': 'secret', 'maximumAge': '60',
           }));
         });
 
@@ -431,7 +431,7 @@ describe('GithubApiWrapper', () => {
       describe('with a maximum age of 1 year', () => {
         beforeEach(() => {
           global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
-            'scope': scope , 'accessToken': 'secret', 'maximumAgeValue': '1', 'maximumAgeUnit': 'years',
+            'scope': scope , 'accessToken': 'secret', 'maximumAge': '365',
           }));
         });
 

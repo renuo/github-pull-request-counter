@@ -100,13 +100,9 @@ const GithubApiWrapper = async () => {
   const readOwnerAndNameFromUrl = (url: string): string => url.replace('https://api.github.com/repos/', '').split('/pulls/')[0];
 
   const filterByMaximumAge = async (pullRequests: PullRequest[]): Promise<PullRequest[]> => {
-    const [maximumAgeValue, maximumAgeUnit] = await SettingsStorageAccessor().loadMaximumAge();
+    const maximumAge = await SettingsStorageAccessor().loadMaximumAge();
 
-    let days = maximumAgeValue;
-    if (maximumAgeUnit === 'months') days = maximumAgeValue * 30;
-    if (maximumAgeUnit === 'years') days = maximumAgeValue * 365;
-
-    return pullRequests.filter(pullRequest => getDifferenceInDays(new Date(pullRequest.createdAt)) < days);
+    return pullRequests.filter(pullRequest => getDifferenceInDays(new Date(pullRequest.createdAt)) < maximumAge);
   };
 
   const getDifferenceInDays = (date2: Date): number => (Date.now() - date2.getTime()) / 86_400_000; // 1000 * 3600 * 24
