@@ -29,6 +29,8 @@ const setup = async () => {
   });
 
   page = await browser.newPage();
+
+  page.on('dialog', async dialog => dialog.dismiss());
 };
 
 const teardown = async () => {

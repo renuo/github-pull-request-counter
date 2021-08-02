@@ -17,6 +17,8 @@ global.btoa = (data: string) => Buffer.from(data).toString('base64');
 
 mockedFetch.mockImplementation((url: string) => globalMock(url, { pullRequestCount: 2 }));
 
+global.window.alert = jest.fn();
+
 const counter = {
   reviewRequested: false,
   noReviewRequested: true,
@@ -123,6 +125,11 @@ describe('Options', () => {
       (document.getElementById('access-token') as HTMLInputElement).value = 'new access token';
       await options.saveButtonClickHandler();
       expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ accessToken: 'new access token' });
+    });
+
+    it('opens an alert window', async () => {
+      await options.saveButtonClickHandler();
+      expect(global.window.alert).toHaveBeenCalledWith('Your settings have been saved and your pull requests will be updated shortly!');
     });
   });
 });
