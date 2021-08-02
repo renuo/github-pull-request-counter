@@ -5,7 +5,19 @@
   margin-left: auto;
   margin-right: auto;
   margin-top: 5%;
-  width: 35%;
+
+  @media (min-width: 800px) {
+    width: 80%;
+  }
+  @media (min-width: 1000px) {
+    width: 60%;
+  }
+  @media (min-width: 1400px) {
+    width: 40%;
+  }
+  @media (min-width: 1600px) {
+    width: 35%;
+  }
 
   .title {
     margin-bottom: 1px;
