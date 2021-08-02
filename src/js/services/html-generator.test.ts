@@ -3,22 +3,31 @@
  */
 
 import HTMLGenerator from './html-generator';
-import { PullRequestRecord } from '../static/types';
+import { CounterConfig, PullRequestRecord } from '../static/types';
 import { pullRequestRecordFactory } from '../../../__test__/mocks/factories';
 
 describe('HTMLGenerator', () => {
   const htmlGenerator = HTMLGenerator();
+  const defaultCounter = {
+    reviewRequested: true,
+    noReviewRequested: true,
+    allReviewsDone: true,
+    missingAssignee: true,
+    allAssigned: false,
+  };
 
   describe('#generate', () => {
     let record: PullRequestRecord;
+    let counter: CounterConfig;
     let result: HTMLDivElement;
 
     beforeEach(() => {
-      result = htmlGenerator.generate(record);
+      result = htmlGenerator.generate(record, counter);
     });
 
     describe('with an empty record', () => {
       beforeAll(() => {
+        counter = defaultCounter;
         record = pullRequestRecordFactory();
       });
 
@@ -54,6 +63,27 @@ describe('HTMLGenerator', () => {
             expect(a.target).toEqual('_blank');
             expect(a.innerHTML).toEqual('PullRequest-Title');
           });
+        });
+      });
+
+      describe('with the relevent category set to false', () => {
+        beforeAll(() => {
+          record = pullRequestRecordFactory({ reviewRequestedCount: 1 });
+          counter = {
+            reviewRequested: false,
+            noReviewRequested: true,
+            allReviewsDone: true,
+            missingAssignee: true,
+            allAssigned: true,
+          };
+        });
+
+        it('the title has an additional class', () => {
+          expect((result.childNodes[0] as HTMLParagraphElement).classList.value).toEqual('title less-relevant-group');
+        });
+
+        it('the group container has an additional class', () => {
+          expect((result.childNodes[1] as HTMLDivElement).classList.value).toEqual('group-container less-relevant-group');
         });
       });
     });
