@@ -74,6 +74,10 @@
 }
 
 .hover-label-container {
+  .pointer {
+    cursor: pointer;
+  }
+
   .hover-label {
     display: none;
     font-weight: 500;
