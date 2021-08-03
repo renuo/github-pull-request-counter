@@ -13,7 +13,7 @@ blocks:
         - name: github-pull-request-counter
       prologue:
         commands:
-          - apt-get -y install curl jq
+          - sudo apt-get install -y curl jq
       jobs:
         - name: Upload to Chrome Web Store
           commands:
