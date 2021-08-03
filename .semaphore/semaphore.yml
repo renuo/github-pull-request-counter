@@ -21,7 +21,7 @@ blocks:
             - nvm install
             - yarn install --cache-folder ~/.cache/yarn
             - cache store
-  - name: tests
+  - name: Test
     dependencies: ['cache']
     task:
       secrets:
@@ -35,3 +35,9 @@ blocks:
         - name: tests
           commands:
             - bin/check
+
+promotions:
+  - name: deploy
+    pipeline_file: deploy.yml
+    auto_promote:
+      when: "branch = 'master"

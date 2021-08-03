@@ -1,0 +1,23 @@
+version: v1.0
+name: deploy
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: Deploy
+    execution_time_limit:
+      minutes: 15
+    task:
+      secrets:
+        - name: github-pull-request-counter
+      prologue:
+        commands:
+          - apt-get -y install curl jq
+      jobs:
+        - name: Upload to Chrome Web Store
+          commands:
+            - checkout
+            - zip -vr dist.zip dist
+            - ACCESS_TOKEN=$(curl "https://accounts.google.com/o/oauth2/token" -d "client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&refresh_token=${REFRESH_TOKEN}&grant_type=refresh_token&redirect_uri=urn:ietf:wg:oauth:2.0:oob" | jq -r .access_token)
+            - curl -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "x-goog-api-version: 2" -X PUT -T dist.zip -v "https://www.googleapis.com/upload/chromewebstore/v1.1/items/${APP_ID}"
