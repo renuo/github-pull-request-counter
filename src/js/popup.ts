@@ -1,10 +1,12 @@
 import '../css/popup.scss';
 import PullRequestStorageAccessor from './services/pull-request-storage-accessor';
 import HTMLGenerator from './services/html-generator';
+import SettingsStorageAccessor from './services/settings-storage-accessor';
 
 const Popup = async () => {
   const pullRequests = await PullRequestStorageAccessor().loadPullRequests();
-  const html = HTMLGenerator().generate(pullRequests);
+  const counter = await SettingsStorageAccessor().loadCounterConfig();
+  const html = HTMLGenerator().generate(pullRequests, counter);
   document.getElementById('popup')!.appendChild(html);
 };
 

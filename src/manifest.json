@@ -10,8 +10,7 @@
   "options_page": "options.html",
   "permissions": [
     "alarms",
-    "storage",
-    "tabs"
+    "storage"
   ],
   "background": {
     "service_worker": "background.js"

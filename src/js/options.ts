@@ -41,6 +41,7 @@ const Options = () => {
     storeMaximumAgeFromDOM();
     storeScopeFromDOM();
     storeAccessTokenFromDom();
+    alert('Your settings have been saved and your pull requests will be updated shortly!');
     await ServiceWorker().fetchAndStoreData();
   };
 
