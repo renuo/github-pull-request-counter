@@ -34,6 +34,9 @@ bin/check
 bin/fastcheck
 ```
 
+## Deployment
+Commits on master will automatically try to upload to the chrome web store, though they will be rejected if the version is not greater than the previous one. To make a version bump go to `src/manifest.json` and increase `version`. Uploaded builds are not automatically published. To accomplish this go to the Chrome Web Store Develop Dashboard.
+
 ## Create a permanent development ID
 
 This is already done for this project.
@@ -41,7 +44,7 @@ This is already done for this project.
 * Do the steps described under "**Add to chrome**"
 * Click "Pack extension" and then "Remove"
 * Chrome made 2 new files in the parent directory of the dist folder. Drag and drop `dist.srx` into `chrome://extensions/` and install it. Copy the id displayed under `ID:`.
-* Head to the the User Data Directory. For mac: `~/Library/Application Support/Google/Chrome`. For other: https://chromium.googlesource.com/chromium/src/+/master/docs/user_data_dir.md
+* Head to the the User Data Directory. For mac: `~/Library/Application\ Support/Google/Chrome`. For other: https://chromium.googlesource.com/chromium/src/+/master/docs/user_data_dir.md
 * From the User Data Directory open `Default/Extensions/_<extensionId>_/_<versionString>_/manifest.json`. `_<extensionId>_` is equal to the ID gained in step 3. `_<versionString>_` is just `0.0.0`.
 * Copy the key from `"key:"` and paste it into your manifest.json: `"key: <key>"`
 
