@@ -45,14 +45,14 @@
   }
 
   .text-input {
-    color: $pure-black;
+    color: var(--contrast-color);
     padding: 5px;
     width: 45%;
   }
 
   .label-inside-input {
     border: 0;
-    color: $pure-black;
+    color: var(--contrast-color);
     margin-left: -21%;
     padding: 4px;
     width: 20%;
@@ -60,16 +60,16 @@
 }
 
 .blue-button {
-  background-color: $background-gray;
-  border-color: $pure-white;
-  color: $pure-white;
+  background-color: var(--background-color);
+  border-color: var(--font-color);
+  color: var(--font-color);
   margin-bottom: 10px;
   margin-top: 10px;
   padding: 5px 10px;
 
   &:hover {
-    background-color: $pure-white;
-    color: $background-gray;
+    background-color: var(--font-color);
+    color: var(--background-color);
   }
 }
 
@@ -85,11 +85,11 @@
   }
 
   &:hover > label {
-    color: $light-gray;
+    color: var(--hover-color);
   }
 
   &:hover > .hover-label {
-    color: $pure-white;
+    color: var(--font-color);
     display: inline;
   }
 }
