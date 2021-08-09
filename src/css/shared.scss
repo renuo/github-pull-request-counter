@@ -1,11 +1,11 @@
 body {
-  background-color: $background-gray;
-  color: $pure-white;
+  background-color: var(--background-color);
+  color: var(--font-color);
   margin: 10px;
 }
 
 a {
-  color: $link-blue;
+  color: var(--link-blue);
   display: inline-block;
   font-size: 15px;
   font-weight: bold;
@@ -33,7 +33,7 @@ a {
     margin-top: 0;
 
     a {
-      color: $pure-white;
+      color: var(--font-color);
       display: inline;
     }
   }
