@@ -75,6 +75,7 @@ const GithubApiWrapper = async () => {
       number: issue.number,
       ownerAndName: readOwnerAndNameFromUrl(issue.pull_request.url),
       createdAt: issue.created_at,
+      ageInDays: getDifferenceInDays(new Date(issue.created_at)),
       url: issue.pull_request.url,
       html_url: issue.pull_request.html_url,
     }));
@@ -102,7 +103,7 @@ const GithubApiWrapper = async () => {
   const filterByMaximumAge = async (pullRequests: PullRequest[]): Promise<PullRequest[]> => {
     const maximumAge = await SettingsStorageAccessor().loadMaximumAge();
 
-    return pullRequests.filter(pullRequest => getDifferenceInDays(new Date(pullRequest.createdAt)) < maximumAge);
+    return pullRequests.filter(pullRequest => pullRequest.ageInDays < maximumAge);
   };
 
   const getDifferenceInDays = (date2: Date): number => (Date.now() - date2.getTime()) / 86_400_000; // 1000 * 3600 * 24

@@ -120,9 +120,9 @@ describe('integration test', () => {
     it('has the correct subtitles', () => {
       const subtitle = (index: number) => `renuo/github-pull-request-counter<b> #${index+1}</b>`;
 
-      expect(readProp('.link-container > p', 'innerHTML', 0)).resolves.toEqual(subtitle(0));
-      expect(readProp('.link-container > p', 'innerHTML', 1)).resolves.toEqual(subtitle(1));
-      expect(readProp('.link-container > p', 'innerHTML', 2)).resolves.toEqual(subtitle(2));
+      expect(readProp('.link-container > .subdescription', 'innerHTML', 0)).resolves.toEqual(subtitle(0));
+      expect(readProp('.link-container > .subdescription', 'innerHTML', 1)).resolves.toEqual(subtitle(1));
+      expect(readProp('.link-container > .subdescription', 'innerHTML', 2)).resolves.toEqual(subtitle(2));
     });
   });
 });

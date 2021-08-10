@@ -22,6 +22,8 @@ yarn build-production # production
 * Click _"Load unpacked"_ in the top left corner.
 * Navigate to the root of this repository and select `dist` it.
 
+_Note: If you have the extension already installed through the webstore you won't be able to add the development version. Either remove it or create a new chrome profile to get around the issue._
+
 ## Tests
 
 ```sh

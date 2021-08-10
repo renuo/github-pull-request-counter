@@ -17,6 +17,7 @@ export interface PullRequest {
   number: number;
   ownerAndName: string;
   createdAt: string;
+  ageInDays: number;
   url: string;
   html_url: string;
 }
