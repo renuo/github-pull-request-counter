@@ -41,7 +41,6 @@ const HTMLGenerator = () => {
 
       pullRequestDiv.appendChild(generateLink(PullRequest));
       pullRequestDiv.appendChild(generateSubDescription(PullRequest));
-      pullRequestDiv.appendChild(generateDate(PullRequest));
 
       pullRequestDiv.classList.add('link-container');
       groupLevelDiv.appendChild(pullRequestDiv);
@@ -78,13 +77,8 @@ const HTMLGenerator = () => {
     const numberB = document.createElement('b');
     numberB.textContent = ` #${PullRequest.number}`;
     subDescriptionP.appendChild(numberB);
+    subDescriptionP.appendChild(document.createTextNode(` (${Math.floor(PullRequest.ageInDays)} days ago)`));
     return subDescriptionP;
-  };
-
-  const generateDate = (PullRequest: PullRequest) => {
-    const dateP = document.createElement('p');
-    dateP.textContent = `${Math.floor(PullRequest.ageInDays)} days ago`;
-    return dateP;
   };
 
   return { generate };

@@ -66,14 +66,10 @@ describe('HTMLGenerator', () => {
 
           it('has the correct subdescription', () => {
             const p = result.childNodes[1].childNodes[0].childNodes[1] as HTMLAnchorElement;
+            const age = Math.floor(record.reviewRequested[0].ageInDays);
+            const id = record.reviewRequested[0].id;
 
-            expect(p.innerHTML).toEqual(`renuo/github-pull-request-counter<b> #${record.reviewRequested[0].id}</b>`);
-          });
-
-          it('has the correct age', () => {
-            const p = result.childNodes[1].childNodes[0].childNodes[2] as HTMLAnchorElement;
-
-            expect(p.innerHTML).toEqual(`${Math.floor(record.reviewRequested[0].ageInDays)} days ago`);
+            expect(p.innerHTML).toEqual(`renuo/github-pull-request-counter<b> #${id}</b> (${age} days ago)`);
           });
         });
       });
