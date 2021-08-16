@@ -1,8 +1,10 @@
 # Github Pull Request Counter
 
 A chrome extension to remove mental load when working with pull requests.
+It has been published in the [Chrome Web Store](https://chrome.google.com/webstore/detail/github-pull-request-count/eeejbcmnmgogpkgeinlbchoafjjbegmi)
+to be installed with one click.
 
-## Setup
+## Manual setup
 
 ```sh
 git clone git@github.com:renuo/github-pull-request-counter.git
@@ -54,6 +56,6 @@ This is already done for this project.
 
 ## Copyright
 
-Coypright 2021 [Renuo AG](https://www.renuo.ch/).
+Coypright 2021 [Renuo AG](https://www.renuo.ch/), published under the MIT license.
 
 
