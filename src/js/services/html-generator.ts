@@ -73,9 +73,11 @@ const HTMLGenerator = () => {
   const generateSubDescription = (PullRequest: PullRequest) => {
     const subDescriptionP = document.createElement('p');
     subDescriptionP.textContent = PullRequest.ownerAndName;
+    subDescriptionP.classList.add('subdescription');
     const numberB = document.createElement('b');
     numberB.textContent = ` #${PullRequest.number}`;
     subDescriptionP.appendChild(numberB);
+    subDescriptionP.appendChild(document.createTextNode(` (${Math.floor(PullRequest.ageInDays)} days ago)`));
     return subDescriptionP;
   };
 

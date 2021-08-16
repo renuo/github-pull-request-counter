@@ -56,12 +56,20 @@ describe('HTMLGenerator', () => {
         });
 
         describe('<div>', () => {
-          it('has the correct <a>', () => {
+          it('has the correct link', () => {
             const a = result.childNodes[1].childNodes[0].childNodes[0] as HTMLAnchorElement;
 
             expect(a.href).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
             expect(a.target).toEqual('_blank');
             expect(a.innerHTML).toEqual('PullRequest-Title');
+          });
+
+          it('has the correct subdescription', () => {
+            const p = result.childNodes[1].childNodes[0].childNodes[1] as HTMLAnchorElement;
+            const age = Math.floor(record.reviewRequested[0].ageInDays);
+            const id = record.reviewRequested[0].id;
+
+            expect(p.innerHTML).toEqual(`renuo/github-pull-request-counter<b> #${id}</b> (${age} days ago)`);
           });
         });
       });
