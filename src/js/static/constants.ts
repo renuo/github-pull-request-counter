@@ -11,7 +11,7 @@ export const recordKeysTranslations: {[key: string]: string} = {
   noReviewRequested: 'Someone must review',
   allReviewsDone: 'All reviews done',
   missingAssignee: 'Missing Assignee',
-  allAssigned: 'Assigned',
+  allAssigned: 'Assigned to me',
 };
 
 export const extensionID = 'eeejbcmnmgogpkgeinlbchoafjjbegmi';
