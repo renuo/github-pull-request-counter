@@ -5,7 +5,7 @@ import SettingsStorageAccessor from './services/settings-storage-accessor';
 import { noAccessTokenError, tooManyRequestsError } from './static/constants';
 import { PullRequestRecord, PullRequest } from './static/types';
 
-const pollingInterval = 1;
+const pollingInterval = 0.1;
 
 const ServiceWorker = () => {
   const fetchAndStoreData = async () => {
