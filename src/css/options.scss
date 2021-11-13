@@ -46,6 +46,8 @@
 
   .text-input {
     color: var(--font-color);
+    background-color: var(--constrast-color);
+    border-width: thin;
     padding: 5px;
     width: 45%;
   }
