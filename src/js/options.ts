@@ -5,12 +5,13 @@ import { displayedAccessToken } from './static/constants';
 import '../css/options.scss';
 
 const Options = () => {
-  const settings= SettingsStorageAccessor();
+  const settings = SettingsStorageAccessor();
 
   const init = () => {
     loadCounterToDOM();
     loadMaximumAgeFromDOM();
     loadScopeToDOM();
+    loadTeamsToDOM();
     loadAccessTokenToDOM();
     document.getElementById('options-save')!.addEventListener('click', saveButtonClickHandler);
   };
@@ -18,6 +19,7 @@ const Options = () => {
   const loadCounterToDOM = async () => {
     const counter = await settings.loadCounterConfig();
     (document.getElementById('review-requested') as HTMLInputElement).checked = counter.reviewRequested;
+    (document.getElementById('team-review-requested') as HTMLInputElement).checked = counter.teamReviewRequested;
     (document.getElementById('no-review-requested') as HTMLInputElement).checked = counter.noReviewRequested;
     (document.getElementById('all-reviews-done') as HTMLInputElement).checked = counter.allReviewsDone;
     (document.getElementById('missing-assignee') as HTMLInputElement).checked = counter.missingAssignee;
@@ -27,6 +29,11 @@ const Options = () => {
   const loadScopeToDOM = async () => {
     const scope = await settings.loadScope();
     (document.getElementById('account-names') as HTMLInputElement).value = scope;
+  };
+
+  const loadTeamsToDOM = async () => {
+    const teams = await settings.loadTeams();
+    (document.getElementById('teams') as HTMLInputElement).value = teams;
   };
 
   const loadAccessTokenToDOM = async () => {
@@ -40,6 +47,7 @@ const Options = () => {
     storeCounterFromDOM();
     storeMaximumAgeFromDOM();
     storeScopeFromDOM();
+    storeTeamsFromDOM();
     storeAccessTokenFromDom();
     alert('Your settings have been saved and your pull requests will be updated shortly!');
     await ServiceWorker().fetchAndStoreData();
@@ -48,6 +56,7 @@ const Options = () => {
   const storeCounterFromDOM = () => {
     const counter: CounterConfig = {
       reviewRequested: (document.getElementById('review-requested') as HTMLInputElement).checked,
+      teamReviewRequested: (document.getElementById('team-review-requested') as HTMLInputElement).checked,
       noReviewRequested: (document.getElementById('no-review-requested') as HTMLInputElement).checked,
       allReviewsDone: (document.getElementById('all-reviews-done') as HTMLInputElement).checked,
       missingAssignee: (document.getElementById('missing-assignee') as HTMLInputElement).checked,
@@ -70,6 +79,11 @@ const Options = () => {
   const storeScopeFromDOM = () => {
     const scope = (document.getElementById('account-names') as HTMLInputElement).value;
     settings.storeScope(scope);
+  };
+
+  const storeTeamsFromDOM = () => {
+    const teams = (document.getElementById('teams') as HTMLInputElement).value;
+    settings.storeTeams(teams);
   };
 
   const storeAccessTokenFromDom = () => {

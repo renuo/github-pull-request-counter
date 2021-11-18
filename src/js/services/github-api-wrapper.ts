@@ -7,8 +7,27 @@ const GithubApiWrapper = async () => {
   const getReviewRequested = async (): Promise<PullRequest[]> => {
     const query = encodeURIComponent(`is:open is:pr review-requested:${userName} archived:false`);
     const pullRequests = await makeApiRequest('/search/issues', `q=${query}`);
+    const processedPullRequests = await processDataIntoPullRequests(pullRequests.items);
 
-    return processDataIntoPullRequests(pullRequests.items);
+    const teamPullRequestUrls = (await getTeamReviewRequested()).map(pr => pr.url);
+    return processedPullRequests.filter((pr) => !teamPullRequestUrls.includes(pr.url));
+  };
+
+  const getTeamReviewRequested = async (): Promise<PullRequest[]> => {
+    const teams = await SettingsStorageAccessor().loadTeams();
+    if (teams === '') return [];
+
+    let combinedPullRequests: Issue[] = [];
+
+    for (const team of teams.replace(/ /g, '').split(',')) {
+      const query = encodeURIComponent(`is:open is:pr team-review-requested:${team} archived:false`);
+      const pullRequests = await makeApiRequest('/search/issues', `q=${query}`);
+
+      /* istanbul ignore next */
+      if (!pullRequests.errors) combinedPullRequests = combinedPullRequests.concat(pullRequests.items);
+    }
+
+    return processDataIntoPullRequests(combinedPullRequests);
   };
 
   const getNoReviewRequested = async (): Promise<PullRequest[]> => {
@@ -116,7 +135,7 @@ const GithubApiWrapper = async () => {
   // TODO: This should be cached to improve performance
   const userName = (await makeApiRequest('/user')).login;
 
-  return { getReviewRequested, getNoReviewRequested, getAllReviewsDone, getMissingAssignee, getAllAssigned };
+  return { getReviewRequested, getTeamReviewRequested, getNoReviewRequested, getAllReviewsDone, getMissingAssignee, getAllAssigned };
 };
 
 export default GithubApiWrapper;

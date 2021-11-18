@@ -14,7 +14,7 @@ const ServiceWorker = () => {
 
     try {
       github = await GithubApiWrapper();
-    } catch(error) {
+    } catch (error) {
       if (error === noAccessTokenError) {
         storage.clearPullRequests();
         BadgeSetter().clear();
@@ -28,12 +28,13 @@ const ServiceWorker = () => {
     try {
       recordEntries = await Promise.all([
         github.getReviewRequested(),
+        github.getTeamReviewRequested(),
         github.getNoReviewRequested(),
         github.getAllReviewsDone(),
         github.getMissingAssignee(),
         github.getAllAssigned(),
       ]);
-    } catch(error) {
+    } catch (error) {
       if (error === tooManyRequestsError) return;
 
       throw error;
@@ -41,10 +42,11 @@ const ServiceWorker = () => {
 
     const record: PullRequestRecord = {
       reviewRequested: recordEntries[0],
-      noReviewRequested: recordEntries[1],
-      allReviewsDone: recordEntries[2],
-      missingAssignee: recordEntries[3],
-      allAssigned: recordEntries[4],
+      teamReviewRequested: recordEntries[1],
+      noReviewRequested: recordEntries[2],
+      allReviewsDone: recordEntries[3],
+      missingAssignee: recordEntries[4],
+      allAssigned: recordEntries[5],
     };
 
     const counter = await SettingsStorageAccessor().loadCounterConfig();
