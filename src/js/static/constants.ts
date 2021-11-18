@@ -6,9 +6,9 @@ export const recordKeys = [
   'allAssigned',
 ];
 
-export const recordKeysTranslations: {[key: string]: string} = {
+export const recordKeysTranslations: { [key: string]: string } = {
   reviewRequested: 'I must review',
-  noReviewRequested: 'Someone must review',
+  noReviewRequested: 'No review requested',
   allReviewsDone: 'All reviews done',
   missingAssignee: 'Missing Assignee',
   allAssigned: 'Assigned to me',
