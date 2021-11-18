@@ -7,7 +7,7 @@ const GithubApiWrapper = async () => {
   const getReviewRequested = async (): Promise<PullRequest[]> => {
     const query = encodeURIComponent(`is:open is:pr review-requested:${userName} archived:false`);
     const pullRequests = await makeApiRequest('/search/issues', `q=${query}`);
-    const processedPullRequests = await processDataIntoPullRequests(pullRequests.items);
+    const processedPullRequests = await processDataIntoPullRequests(pullRequests.items, false);
 
     const teamPullRequestUrls = (await getTeamReviewRequested()).map(pr => pr.url);
     return processedPullRequests.filter((pr) => !teamPullRequestUrls.includes(pr.url));
@@ -27,7 +27,7 @@ const GithubApiWrapper = async () => {
       if (!pullRequests.errors) combinedPullRequests = combinedPullRequests.concat(pullRequests.items);
     }
 
-    return processDataIntoPullRequests(combinedPullRequests);
+    return processDataIntoPullRequests(combinedPullRequests, false);
   };
 
   const getNoReviewRequested = async (): Promise<PullRequest[]> => {
@@ -85,7 +85,7 @@ const GithubApiWrapper = async () => {
     else return response.json();
   };
 
-  const processDataIntoPullRequests = async (issues: Issue[]): Promise<PullRequest[]> => {
+  const processDataIntoPullRequests = async (issues: Issue[], shouldFilterByMaximumAge: boolean = true): Promise<PullRequest[]> => {
     issues = await filterByScope(issues);
     const pullRequests = issues.map(issue => ({
       id: 12,
@@ -99,7 +99,8 @@ const GithubApiWrapper = async () => {
       html_url: issue.pull_request.html_url,
     }));
 
-    return filterByMaximumAge(sortByDate(pullRequests));
+    const sorted = sortByDate(pullRequests);
+    return shouldFilterByMaximumAge ? filterByMaximumAge(sorted) : sorted;
   };
 
   const filterByScope = async (issues: Issue[]): Promise<Issue[]> => {
