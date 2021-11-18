@@ -45,7 +45,7 @@ describe('ServiceWorker', () => {
     });
 
     it('calls set five times', () => {
-      expect(global.chrome.storage.local.set).toBeCalledTimes(5);
+      expect(global.chrome.storage.local.set).toBeCalledTimes(6);
     });
 
     it('calls setBadgeText with the correct arguments', () => {
@@ -151,7 +151,7 @@ describe('ServiceWorker', () => {
     });
 
     it('calls set five times', () => {
-      expect(global.chrome.storage.local.set).toBeCalledTimes(5);
+      expect(global.chrome.storage.local.set).toBeCalledTimes(6);
     });
 
     it('calls addListener', () => {

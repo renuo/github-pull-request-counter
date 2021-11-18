@@ -32,7 +32,7 @@ describe('StorageSerialzer', () => {
       });
 
       it('doesn\'t store anything', () => {
-        expect(setMock).toBeCalledTimes(5);
+        expect(setMock).toBeCalledTimes(6);
       });
     });
 
@@ -50,6 +50,7 @@ describe('StorageSerialzer', () => {
       beforeAll(() => {
         pullRequests = pullRequestRecordFactory({
           reviewRequestedCount: 1,
+          teamReviewRequestedCount: 1,
           noReviewRequestedCount: 1,
           allReviewsDoneCount: 1,
           missingAssigneeCount: 1,
@@ -58,7 +59,7 @@ describe('StorageSerialzer', () => {
       });
 
       it('calls set five times', () => {
-        expect(setMock).toBeCalledTimes(5);
+        expect(setMock).toBeCalledTimes(6);
       });
     });
   });
@@ -81,7 +82,14 @@ describe('StorageSerialzer', () => {
       });
 
       it('loads empty arrays', () => {
-        expect(result).toEqual({ reviewRequested: [], noReviewRequested: [], allReviewsDone: [], missingAssignee: [], allAssigned: [] });
+        expect(result).toEqual({
+          reviewRequested: [],
+          teamReviewRequested: [],
+          noReviewRequested: [],
+          allReviewsDone: [],
+          missingAssignee: [],
+          allAssigned: [],
+        });
       });
     });
 
@@ -105,7 +113,7 @@ describe('StorageSerialzer', () => {
       });
 
       it('loads the correct data', () => {
-        expect(global.chrome.storage.local.get).toBeCalledTimes(5);
+        expect(global.chrome.storage.local.get).toBeCalledTimes(6);
         expect(result).toEqual(pullRequests);
       });
     });
@@ -115,6 +123,7 @@ describe('StorageSerialzer', () => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
           callback({
             'reviewRequested': [JSON.stringify([pullRequestFactory(0)])],
+            'teamReviewRequested': [JSON.stringify([pullRequestFactory(0)])],
             'noReviewRequested': [JSON.stringify([pullRequestFactory(0)])],
             'allReviewsDone': [JSON.stringify([pullRequestFactory(0)])],
             'missingAssignee': [JSON.stringify([pullRequestFactory(0)])],
@@ -124,6 +133,7 @@ describe('StorageSerialzer', () => {
 
         pullRequests = pullRequestRecordFactory({
           reviewRequestedCount: 1,
+          teamReviewRequestedCount: 1,
           noReviewRequestedCount: 1,
           allReviewsDoneCount: 1,
           missingAssigneeCount: 1,
@@ -132,7 +142,7 @@ describe('StorageSerialzer', () => {
       });
 
       it('loads the correct data', () => {
-        expect(global.chrome.storage.local.get).toBeCalledTimes(5);
+        expect(global.chrome.storage.local.get).toBeCalledTimes(6);
         expect(result).toEqual(pullRequests);
       });
     });

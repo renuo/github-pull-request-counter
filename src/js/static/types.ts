@@ -22,7 +22,7 @@ export interface PullRequest {
   html_url: string;
 }
 
-export type PullRequestRecordKey = 'reviewRequested' | 'noReviewRequested' | 'allReviewsDone' | 'missingAssignee' | 'allAssigned';
+export type PullRequestRecordKey = 'reviewRequested' | 'teamReviewRequested' | 'noReviewRequested' | 'allReviewsDone' | 'missingAssignee' | 'allAssigned';
 export type PullRequestRecord = Record<PullRequestRecordKey, PullRequest[]>;
 
 export type CounterConfig = Record<PullRequestRecordKey, boolean>;

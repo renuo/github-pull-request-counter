@@ -14,6 +14,7 @@ describe('BadgeSetter', () => {
     let record: PullRequestRecord;
     let counter = {
       'reviewRequested': true,
+      'teamReviewRequested': true,
       'noReviewRequested': true,
       'allReviewsDone': true,
       'missingAssignee': true,
@@ -69,6 +70,7 @@ describe('BadgeSetter', () => {
         beforeAll(() => {
           counter = {
             'reviewRequested': true,
+            'teamReviewRequested': true,
             'noReviewRequested': true,
             'allReviewsDone': true,
             'missingAssignee': false,
