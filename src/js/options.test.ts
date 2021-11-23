@@ -21,6 +21,7 @@ global.window.alert = jest.fn();
 
 const counter = {
   reviewRequested: false,
+  teamReviewRequested: false,
   noReviewRequested: true,
   allReviewsDone: false,
   missingAssignee: true,
@@ -33,7 +34,7 @@ global.chrome = {
       get: jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
         'counter': JSON.stringify(counter),
         'maximumAge': '555',
-        'accessToken': 'secret' ,
+        'accessToken': 'secret',
         'scope': 'renuo',
       })),
       set: jest.fn(),
@@ -89,12 +90,12 @@ describe('Options', () => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
           'counter': JSON.stringify(counter),
           'maximumAge': '555',
-          'accessToken': 'secret' ,
+          'accessToken': 'secret',
           'scope': 'renuo',
         }));
       });
 
-      it ('doesn\'t load anything', () => {
+      it('doesn\'t load anything', () => {
         expect((document.getElementById('access-token') as HTMLInputElement).value).toEqual('');
       });
     });

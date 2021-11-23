@@ -10,6 +10,7 @@ describe('HTMLGenerator', () => {
   const htmlGenerator = HTMLGenerator();
   const defaultCounter = {
     reviewRequested: true,
+    teamReviewRequested: true,
     noReviewRequested: true,
     allReviewsDone: true,
     missingAssignee: true,
@@ -79,6 +80,7 @@ describe('HTMLGenerator', () => {
           record = pullRequestRecordFactory({ reviewRequestedCount: 1 });
           counter = {
             reviewRequested: false,
+            teamReviewRequested: false,
             noReviewRequested: true,
             allReviewsDone: true,
             missingAssignee: true,

@@ -7,8 +7,26 @@ const GithubApiWrapper = async () => {
   const getReviewRequested = async (): Promise<PullRequest[]> => {
     const query = encodeURIComponent(`is:open is:pr review-requested:${userName} archived:false`);
     const pullRequests = await makeApiRequest('/search/issues', `q=${query}`);
+    const processedPullRequests = await processDataIntoPullRequests(pullRequests.items, false);
 
-    return processDataIntoPullRequests(pullRequests.items);
+    const teamPullRequestUrls = (await getTeamReviewRequested()).map(pr => pr.url);
+    return processedPullRequests.filter((pr) => !teamPullRequestUrls.includes(pr.url));
+  };
+
+  const getTeamReviewRequested = async (): Promise<PullRequest[]> => {
+    const teams = await SettingsStorageAccessor().loadTeams();
+    if (teams === '') return [];
+
+    let combinedPullRequests: Issue[] = [];
+
+    for (const team of teams.replace(/ /g, '').split(',')) {
+      const query = encodeURIComponent(`is:open is:pr team-review-requested:${team} archived:false`);
+      const pullRequests = await makeApiRequest('/search/issues', `q=${query}`);
+
+      if (!pullRequests.errors) combinedPullRequests = combinedPullRequests.concat(pullRequests.items);
+    }
+
+    return processDataIntoPullRequests(combinedPullRequests, false);
   };
 
   const getNoReviewRequested = async (): Promise<PullRequest[]> => {
@@ -66,7 +84,7 @@ const GithubApiWrapper = async () => {
     else return response.json();
   };
 
-  const processDataIntoPullRequests = async (issues: Issue[]): Promise<PullRequest[]> => {
+  const processDataIntoPullRequests = async (issues: Issue[], shouldFilterByMaximumAge: boolean = true): Promise<PullRequest[]> => {
     issues = await filterByScope(issues);
     const pullRequests = issues.map(issue => ({
       id: 12,
@@ -80,7 +98,8 @@ const GithubApiWrapper = async () => {
       html_url: issue.pull_request.html_url,
     }));
 
-    return filterByMaximumAge(sortByDate(pullRequests));
+    const sorted = sortByDate(pullRequests);
+    return shouldFilterByMaximumAge ? filterByMaximumAge(sorted) : sorted;
   };
 
   const filterByScope = async (issues: Issue[]): Promise<Issue[]> => {
@@ -95,8 +114,8 @@ const GithubApiWrapper = async () => {
 
   const sortByDate = (pullRequests: PullRequest[]) =>
     pullRequests.sort((pullRequest1: PullRequest, pullRequest2: PullRequest) => (
-    new Date(pullRequest2.createdAt).getTime() - new Date(pullRequest1.createdAt).getTime()
-  ));
+      new Date(pullRequest2.createdAt).getTime() - new Date(pullRequest1.createdAt).getTime()
+    ));
 
   const readOwnerAndNameFromUrl = (url: string): string => url.replace('https://api.github.com/repos/', '').split('/pulls/')[0];
 
@@ -116,7 +135,7 @@ const GithubApiWrapper = async () => {
   // TODO: This should be cached to improve performance
   const userName = (await makeApiRequest('/user')).login;
 
-  return { getReviewRequested, getNoReviewRequested, getAllReviewsDone, getMissingAssignee, getAllAssigned };
+  return { getReviewRequested, getTeamReviewRequested, getNoReviewRequested, getAllReviewsDone, getMissingAssignee, getAllAssigned };
 };
 
 export default GithubApiWrapper;

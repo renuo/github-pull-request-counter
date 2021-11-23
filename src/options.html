@@ -19,8 +19,13 @@
       <label class="hover-label">Someone requested a review from you!</label>
     </div>
     <div class="hover-label-container">
+      <input class="pointer" type="checkbox" id="team-review-requested" name="team-review-requested">
+      <label class="pointer" for="team-review-requested">Team reviews</label>
+      <label class="hover-label">Someone requested a review from one of your teams!</label>
+    </div>
+    <div class="hover-label-container">
       <input class="pointer" type="checkbox" id="no-review-requested" name="no-review-requested">
-      <label class="pointer" for="no-review-requested">Someone must review</label>
+      <label class="pointer" for="no-review-requested">No review requested</label>
       <label class="hover-label">Your pull request doesn't have any reviews requested!</label>
     </div>
     <div class="hover-label-container">
@@ -41,26 +46,38 @@
 
     <div class="heading-1">
       <h2>Maximum Age</h2>
-      <p>Customize the maximum age of pull requests (in days).</p>
+      <p>Customize the maximum age of pull requests (in days). It does not apply to "I must review" and "My team must
+        review."</p>
     </div>
     <input type="number" id="maximum-age" class="text-input"></input>
 
     <div class="heading-1">
       <h2>Scope</h2>
-      <p>Enter a comma seperated list of GitHub account names from which the extension should fetch. (case insensitive)</p>
+      <p>Enter a comma seperated list of GitHub account names from which the extension should fetch. (case insensitive)
+      </p>
     </div>
-    <input type="text" id="account-names" class="text-input" placeholder="GitHubUser1, GitHubUser3, GitHubUser3, GitHubUser4"></input>
+    <input type="text" id="account-names" class="text-input" placeholder="User1, User2, User3, ..."></input>
+
+    <div class="heading-1">
+      <h2>Teams</h2>
+      <p>Enter a comma seperated list of GitHub teams of which the team review requests you would like to be displayed
+        seperatly. If a team is not present here it's review requests will be displayed in "I must review".
+      </p>
+    </div>
+    <input type="text" id="teams" class="text-input" placeholder="Team1, Team2, Team3, ..."></input>
 
     <div class="heading-1">
       <h2>Access Token</h2>
       <p>Generate a personal access token from
-        <a href="https://github.com/settings/tokens/new?description=github-pull-requests-counter&scopes=repo" target="_blank" class="link-in-text">here</a>
+        <a href="https://github.com/settings/tokens/new?description=github-pull-requests-counter&scopes=repo"
+          target="_blank" class="link-in-text">here</a>
         . Leave the permissions as is and copy the token in the text box below.
       </p>
     </div>
-    <input type="password" id="access-token" class="text-input" placeholder="ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"></input>
+    <input type="password" id="access-token" class="text-input"
+      placeholder="ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"></input>
 
-    <div >
+    <div>
       <button id="options-save" class="blue-button">Save</button>
     </div>
   </div>

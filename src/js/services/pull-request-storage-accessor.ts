@@ -13,6 +13,7 @@ const PullRequestStorageAccessor = () => {
 
   const loadPullRequests = async (): Promise<PullRequestRecord> => ({
     reviewRequested: await loadPullRequest('reviewRequested'),
+    teamReviewRequested: await loadPullRequest('teamReviewRequested'),
     noReviewRequested: await loadPullRequest('noReviewRequested'),
     allReviewsDone: await loadPullRequest('allReviewsDone'),
     missingAssignee: await loadPullRequest('missingAssignee'),
@@ -30,7 +31,14 @@ const PullRequestStorageAccessor = () => {
   };
 
   const clearPullRequests = (): void => {
-    storePullRequests({ noReviewRequested: [], allReviewsDone: [], missingAssignee: [], reviewRequested: [], allAssigned: [] });
+    storePullRequests({
+      noReviewRequested: [],
+      teamReviewRequested: [],
+      allReviewsDone: [],
+      missingAssignee: [],
+      reviewRequested: [],
+      allAssigned: [],
+    });
   };
 
   return { storePullRequests, loadPullRequests, clearPullRequests };

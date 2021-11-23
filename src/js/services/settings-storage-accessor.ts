@@ -10,6 +10,7 @@ const SettingsStorageAccessor = () => {
     } else {
       return {
         reviewRequested: true,
+        teamReviewRequested: true,
         noReviewRequested: true,
         allReviewsDone: true,
         missingAssignee: true,
@@ -21,6 +22,10 @@ const SettingsStorageAccessor = () => {
   const storeScope = (list: string): void => store('scope', list);
 
   const loadScope = async (): Promise<string> => (await load('scope')) || '';
+
+  const storeTeams = (list: string): void => store('teams', list);
+
+  const loadTeams = async (): Promise<string> => (await load('teams')) || '';
 
   const storeMaximumAge = (value: number): void => {
     store('maximumAge', value.toString());
@@ -44,8 +49,10 @@ const SettingsStorageAccessor = () => {
     return data[key];
   };
 
-  return { storeCounterConfig, loadCounterConfig, storeScope, loadScope, storeMaximumAge, loadMaximumAge,
-           storeAccessToken, loadAccessToken };
+  return {
+    storeCounterConfig, loadCounterConfig, storeScope, loadScope, storeTeams, loadTeams, storeMaximumAge, loadMaximumAge,
+    storeAccessToken, loadAccessToken,
+  };
 };
 
 export default SettingsStorageAccessor;

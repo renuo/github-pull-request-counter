@@ -66,6 +66,7 @@ describe('integration test', () => {
       await page.goto(url('options.html'), { waitUntil: 'networkidle2' });
 
       expect(readProp('#review-requested', 'checked')).resolves.toEqual(false);
+      expect(readProp('#team-review-requested', 'checked')).resolves.toEqual(true);
       expect(readProp('#no-review-requested', 'checked')).resolves.toEqual(true);
       expect(readProp('#all-reviews-done', 'checked')).resolves.toEqual(false);
       expect(readProp('#missing-assignee', 'checked')).resolves.toEqual(true);
@@ -103,14 +104,14 @@ describe('integration test', () => {
     it('has the correct content', () => {
       expect(readProp('#link-to-renuo', 'href')).resolves.toEqual('https://www.renuo.ch/');
       expect(readProp('.title', 'innerHTML', 0)).resolves.toEqual('I must review');
-      expect(readProp('.title', 'innerHTML', 1)).resolves.toEqual('Someone must review');
+      expect(readProp('.title', 'innerHTML', 1)).resolves.toEqual('No review requested');
       expect(readProp('.title', 'innerHTML', 2)).resolves.toEqual('All reviews done');
       expect(readProp('.title', 'innerHTML', 3)).resolves.toEqual('Missing Assignee');
-      expect(readProp('.title', 'innerHTML', 4)).resolves.toEqual('Assigned');
+      expect(readProp('.title', 'innerHTML', 4)).resolves.toEqual('Assigned to me');
     });
 
     it('has the correct links', () => {
-      const link = (index: number) => `https://github.com/renuo/github-pull-request-counter/pull/${index+1}`;
+      const link = (index: number) => `https://github.com/renuo/github-pull-request-counter/pull/${index + 1}`;
 
       expect(readProp('.link-container > a', 'href', 0)).resolves.toEqual(link(0));
       expect(readProp('.link-container > a', 'href', 1)).resolves.toEqual(link(1));
@@ -118,11 +119,11 @@ describe('integration test', () => {
     });
 
     it('has the correct subtitles', () => {
-      const subtitle = (index: number) => `renuo/github-pull-request-counter<b> #${index+1}</b>`;
+      const subtitle = (index: number) => `renuo/github-pull-request-counter<b> #${index + 1}</b>`;
 
-      expect(readProp('.link-container > .subdescription', 'innerHTML', 0)).resolves.toEqual(subtitle(0));
-      expect(readProp('.link-container > .subdescription', 'innerHTML', 1)).resolves.toEqual(subtitle(1));
-      expect(readProp('.link-container > .subdescription', 'innerHTML', 2)).resolves.toEqual(subtitle(2));
+      expect(readProp('.link-container > .subdescription', 'innerHTML', 0)).resolves.toContain(subtitle(0));
+      expect(readProp('.link-container > .subdescription', 'innerHTML', 1)).resolves.toContain(subtitle(1));
+      expect(readProp('.link-container > .subdescription', 'innerHTML', 2)).resolves.toContain(subtitle(2));
     });
   });
 });
