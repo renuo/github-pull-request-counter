@@ -66,6 +66,7 @@ describe('integration test', () => {
       await page.goto(url('options.html'), { waitUntil: 'networkidle2' });
 
       expect(readProp('#review-requested', 'checked')).resolves.toEqual(false);
+      expect(readProp('#team-review-requested', 'checked')).resolves.toEqual(true);
       expect(readProp('#no-review-requested', 'checked')).resolves.toEqual(true);
       expect(readProp('#all-reviews-done', 'checked')).resolves.toEqual(false);
       expect(readProp('#missing-assignee', 'checked')).resolves.toEqual(true);
