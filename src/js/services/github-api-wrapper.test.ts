@@ -90,6 +90,9 @@ describe('GithubApiWrapper', () => {
       mockedFetch.mockResolvedValue(Promise.resolve({
         json: () => Promise.resolve(mockListOfPullRequests(teamPullRequestCount)),
       }));
+      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+        'teams': 'myTeam', 'accessToken': 'secret',
+      }));
     });
 
     describe('with no pull requests', () => {
@@ -103,16 +106,24 @@ describe('GithubApiWrapper', () => {
 
     describe('with a single pull request', () => {
       beforeAll(() => teamPullRequestCount = 1);
-      beforeEach(() => {
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
-          'teams': 'myTeam', 'accessToken': 'secret',
-        }));
-      });
 
       it('has the correct link', async () => {
         const result = await (await GithubApiWrapper()).getTeamReviewRequested();
         expect(result.length).toEqual(1);
         expect(result[0].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
+      });
+    });
+
+    describe('with an error', () => {
+      beforeEach(() => {
+        mockedFetch.mockResolvedValue(Promise.resolve({
+          json: () => Promise.resolve({ errors: ['Something went wrong'] }),
+        }));
+      });
+
+      it('doesn\'t contain any links', async () => {
+        const result = await (await GithubApiWrapper()).getTeamReviewRequested();
+        expect(result.length).toEqual(0);
       });
     });
   });

@@ -23,7 +23,6 @@ const GithubApiWrapper = async () => {
       const query = encodeURIComponent(`is:open is:pr team-review-requested:${team} archived:false`);
       const pullRequests = await makeApiRequest('/search/issues', `q=${query}`);
 
-      /* istanbul ignore next */
       if (!pullRequests.errors) combinedPullRequests = combinedPullRequests.concat(pullRequests.items);
     }
 
