@@ -3,7 +3,7 @@ import { PullRequestRecord } from '../static/types';
 import { pullRequestRecordFactory } from '../../../__test__/mocks/factories';
 
 global.chrome = {
-  action: {
+  browserAction: {
     setBadgeText: jest.fn(),
     setBadgeBackgroundColor: jest.fn(),
   },
@@ -31,11 +31,11 @@ describe('BadgeSetter', () => {
       });
 
       it('calls setBadgeText with the correct arguments', () => {
-        expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '0' });
+        expect(global.chrome.browserAction.setBadgeText).toHaveBeenCalledWith({ text: '0' });
       });
 
       it('calls setBadgeBackgroundColor with the correct arguments', () => {
-        expect(global.chrome.action.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#5cb85c' });
+        expect(global.chrome.browserAction.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#5cb85c' });
       });
     });
 
@@ -45,11 +45,11 @@ describe('BadgeSetter', () => {
       });
 
       it('calls setBadgeText with the correct arguments', () => {
-        expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '1' });
+        expect(global.chrome.browserAction.setBadgeText).toHaveBeenCalledWith({ text: '1' });
       });
 
       it('calls setBadgeBackgroundColor with the correct arguments', () => {
-        expect(global.chrome.action.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#f0ad4e' });
+        expect(global.chrome.browserAction.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#f0ad4e' });
       });
     });
 
@@ -59,11 +59,11 @@ describe('BadgeSetter', () => {
       });
 
       it('calls setBadgeText with the correct arguments', () => {
-        expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '5' });
+        expect(global.chrome.browserAction.setBadgeText).toHaveBeenCalledWith({ text: '5' });
       });
 
       it('calls setBadgeBackgroundColor with the correct arguments', () => {
-        expect(global.chrome.action.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#d9534f' });
+        expect(global.chrome.browserAction.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#d9534f' });
       });
 
       describe('with the missing assignee set to false', () => {
@@ -79,11 +79,11 @@ describe('BadgeSetter', () => {
         });
 
         it('calls setBadgeText with the correct arguments', () => {
-          expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '2' });
+          expect(global.chrome.browserAction.setBadgeText).toHaveBeenCalledWith({ text: '2' });
         });
 
         it('calls setBadgeBackgroundColor with the correct arguments', () => {
-          expect(global.chrome.action.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#d9534f' });
+          expect(global.chrome.browserAction.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#d9534f' });
         });
       });
     });
