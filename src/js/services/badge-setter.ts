@@ -4,8 +4,8 @@ const BadgeSetter = () => {
   const update = (record: PullRequestRecord, counter: CounterConfig): void => {
     const count = calculateTotalPullRequests(record, counter);
 
-    chrome.action.setBadgeText({ text: count.toString() });
-    chrome.action.setBadgeBackgroundColor({ color: calculateBackgroundColor(count) });
+    chrome.browserAction.setBadgeText({ text: count.toString() });
+    chrome.browserAction.setBadgeBackgroundColor({ color: calculateBackgroundColor(count) });
   };
 
   const calculateTotalPullRequests = (record: PullRequestRecord, counter: CounterConfig): number => {
@@ -31,8 +31,8 @@ const BadgeSetter = () => {
   };
 
   const clear = (): void => {
-    chrome.action.setBadgeText({ text: '0' });
-    chrome.action.setBadgeBackgroundColor({ color: calculateBackgroundColor(0) });
+    chrome.browserAction.setBadgeText({ text: '0' });
+    chrome.browserAction.setBadgeBackgroundColor({ color: calculateBackgroundColor(0) });
   };
 
   return { update, clear };

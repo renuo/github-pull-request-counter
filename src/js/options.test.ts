@@ -40,7 +40,7 @@ global.chrome = {
       set: jest.fn(),
     },
   },
-  action: {
+  browserAction: {
     setBadgeText: jest.fn(),
     setBadgeBackgroundColor: jest.fn(),
   },

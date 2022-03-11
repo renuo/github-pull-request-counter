@@ -26,7 +26,7 @@ global.chrome = {
       set: jest.fn(),
     },
   },
-  action: {
+  browserAction: {
     setBadgeText: jest.fn(),
     setBadgeBackgroundColor: jest.fn(),
   },
@@ -49,11 +49,11 @@ describe('ServiceWorker', () => {
     });
 
     it('calls setBadgeText with the correct arguments', () => {
-      expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '8' }); // Because allAssigned is false by default
+      expect(global.chrome.browserAction.setBadgeText).toHaveBeenCalledWith({ text: '8' }); // Because allAssigned is false by default
     });
 
     it('calls setBadgeBackgroundColor with the correct arguments', () => {
-      expect(global.chrome.action.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#d9534f' });
+      expect(global.chrome.browserAction.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#d9534f' });
     });
 
     describe('without an access token', () => {
@@ -72,11 +72,11 @@ describe('ServiceWorker', () => {
       });
 
       it('calls setBadgeText with the correct arguments', () => {
-        expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '0' });
+        expect(global.chrome.browserAction.setBadgeText).toHaveBeenCalledWith({ text: '0' });
       });
 
       it('calls setBadgeBackgroundColor with the correct arguments', () => {
-        expect(global.chrome.action.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#5cb85c' });
+        expect(global.chrome.browserAction.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#5cb85c' });
       });
     });
 
