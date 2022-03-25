@@ -4,6 +4,12 @@ A chrome extension to remove mental load when working with pull requests.
 It has been published in the [Chrome Web Store](https://chrome.google.com/webstore/detail/github-pull-request-count/eeejbcmnmgogpkgeinlbchoafjjbegmi)
 to be installed with one click.
 
+## Firefox port
+
+There is work in progress for a Firefox port of the extension in the
+[master-firefox](https://github.com/renuo/github-pull-request-counter/tree/master-firefox)
+branch.
+
 ## Manual setup
 
 ```sh
