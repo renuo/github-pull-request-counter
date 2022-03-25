@@ -55,7 +55,7 @@ const HTMLGenerator = () => {
     const p1 = document.createElement('p');
     const p2 = document.createElement('p');
     p1.textContent = 'Seems like you are a good coworker :)';
-    const link = `<a href="chrome-extension://${extensionID}/options.html" target="_blank" class="link-in-text">options&nbsp;</a>`;
+    const link = '<a href="options.html" target="_blank" class="link-in-text">options&nbsp;</a>';
     p2.innerHTML = `Or you configured the extension wrong. Have a look the ${link}  to verify your configuration.`;
     noContentDiv.appendChild(p1);
     noContentDiv.appendChild(p2);
