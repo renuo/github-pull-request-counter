@@ -1,5 +1,5 @@
 import { CounterConfig, PullRequest, PullRequestRecord, PullRequestRecordKey } from '../static/types';
-import { recordKeysTranslations, extensionID } from '../static/constants';
+import { recordKeysTranslations } from '../static/constants';
 
 const HTMLGenerator = () => {
   const generate = (record: PullRequestRecord, counter: CounterConfig): HTMLDivElement => {
