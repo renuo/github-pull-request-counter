@@ -18,6 +18,15 @@ cd github-pull-request-counter
 bin/setup
 ```
 
+### M1
+
+For people using a macbook with the m1 chip:
+
+    brew install chromium
+
+    export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+    export PUPPETEER_EXECUTABLE_PATH=`which chromium`
+
 ## Build
 ```sh
 yarn build            # develop
