@@ -22,10 +22,12 @@ bin/setup
 
 For people using a macbook with the m1 chip:
 
+```sh
 brew install chromium
 
 export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 export PUPPETEER_EXECUTABLE_PATH=`which chromium`
+```
 
 ## Build
 ```sh
