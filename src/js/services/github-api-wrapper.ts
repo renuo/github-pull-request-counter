@@ -53,7 +53,7 @@ const GithubApiWrapper = async () => {
   };
 
   const getMissingAssignee = async (): Promise<PullRequest[]> => {
-    const query = encodeURIComponent(`is:open is:pr author:${userName} archived:false`);
+    const query = encodeURIComponent(`is:open is:pr author:${userName} draft:false archived:false`);
     let response = await makeApiRequest('/search/issues', `q=${query}`);
     response = response.items.filter((s: PullRequest) => !s.assignee);
 
