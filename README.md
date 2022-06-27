@@ -75,6 +75,6 @@ This is already done for this project.
 
 ## Copyright
 
-Coypright 2021 [Renuo AG](https://www.renuo.ch/), published under the MIT license.
+Coypright 2021-2022 [Renuo AG](https://www.renuo.ch/), published under the MIT license.
 
 
