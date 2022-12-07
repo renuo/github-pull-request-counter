@@ -441,7 +441,7 @@ describe('GithubApiWrapper', () => {
       beforeEach(() => MockDate.set('2021-07-08'));
       afterEach(() => MockDate.reset());
 
-      it('has the correct order', async () => {
+      it('has the correct order (newest first)', async () => {
         const result = await (await GithubApiWrapper()).getAllAssigned();
 
         expect(result[0].createdAt).toEqual('2021-06-25T14:17:00Z');
