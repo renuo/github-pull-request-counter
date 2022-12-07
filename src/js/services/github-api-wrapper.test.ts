@@ -441,12 +441,12 @@ describe('GithubApiWrapper', () => {
       beforeEach(() => MockDate.set('2021-07-08'));
       afterEach(() => MockDate.reset());
 
-      it('has the correct order (oldest first)', async () => {
+      it('has the correct order', async () => {
         const result = await (await GithubApiWrapper()).getAllAssigned();
 
-        expect(result[0].createdAt).toEqual('2021-04-15T14:17:00Z');
+        expect(result[0].createdAt).toEqual('2021-06-25T14:17:00Z');
         expect(result[1].createdAt).toEqual('2021-05-20T14:17:00Z');
-        expect(result[2].createdAt).toEqual('2021-06-25T14:17:00Z');
+        expect(result[2].createdAt).toEqual('2021-04-15T14:17:00Z');
       });
 
       describe('with a maximum age of 10 days', () => {
