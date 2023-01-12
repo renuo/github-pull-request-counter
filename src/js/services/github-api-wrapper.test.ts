@@ -126,6 +126,29 @@ describe('GithubApiWrapper', () => {
         expect(result.length).toEqual(0);
       });
     });
+
+    describe('with a pull request in draft', () => {
+      beforeAll(() => {
+        const pullRequest1 = mockListOfPullRequests(1, { assignee: undefined,  created_at: '2021-05-20T14:17:00Z', "draft": true });
+  
+        beforeEach(() => {
+          mockedFetch.mockResolvedValue(Promise.resolve({
+            json: () => Promise.resolve({ total_count: 1, items:[pullRequest1] }),
+          }));
+        });
+      });
+
+      it('does not show that pr in the team list', async () => {
+        const result = await (await GithubApiWrapper()).getTeamReviewRequested();
+        expect(result.length).toEqual(0);
+      });
+
+      it('shows that pr in my personal list', async () => {
+        const result = await (await GithubApiWrapper()).getAllAssigned();
+        expect(result.length).toEqual(1);
+        expect(result[0]).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
+      });
+    });
   });
 
   describe('#getNoReviewRequested', () => {
