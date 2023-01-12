@@ -128,14 +128,12 @@ describe('GithubApiWrapper', () => {
     });
 
     describe('with a pull request in draft', () => {
-      beforeAll(() => {
+      beforeEach(() => {
         const pullRequest1 = mockListOfPullRequests(1, { assignee: undefined,  created_at: '2021-05-20T14:17:00Z', "draft": true });
   
-        beforeEach(() => {
-          mockedFetch.mockResolvedValue(Promise.resolve({
-            json: () => Promise.resolve({ total_count: 1, items:[pullRequest1] }),
-          }));
-        });
+        mockedFetch.mockResolvedValue(Promise.resolve({
+          json: () => Promise.resolve({ total_count: 1, items:[pullRequest1] }),
+        }));
       });
 
       it('does not show that pr in the team list', async () => {
