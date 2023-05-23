@@ -18,9 +18,9 @@ cd github-pull-request-counter
 bin/setup
 ```
 
-### M1
+### M1 / M2
 
-For people using a macbook with the m1 chip:
+For people using a macbook with the Apple arm chip:
 
 ```sh
 brew install chromium
@@ -75,6 +75,6 @@ This is already done for this project.
 
 ## Copyright
 
-Coypright 2021-2022 [Renuo AG](https://www.renuo.ch/), published under the MIT license.
+Coypright 2021-2023 [Renuo AG](https://www.renuo.ch/), published under the MIT license.
 
 
