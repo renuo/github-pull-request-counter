@@ -13,6 +13,7 @@ const Options = () => {
     loadScopeToDOM();
     loadTeamsToDOM();
     loadAccessTokenToDOM();
+    loadIgnoredPrsToDOM();
     document.getElementById('options-save')!.addEventListener('click', saveButtonClickHandler);
   };
 
@@ -43,12 +44,17 @@ const Options = () => {
     }
   };
 
+  const loadIgnoredPrsToDOM = async () => {
+    (document.getElementById('ignored-prs') as HTMLInputElement).value = await settings.loadIgnoredPrs();
+  };
+
   const saveButtonClickHandler = async () => {
     storeCounterFromDOM();
     storeMaximumAgeFromDOM();
     storeScopeFromDOM();
     storeTeamsFromDOM();
     storeAccessTokenFromDom();
+    storeIgnoredPrsFromDOM();
     alert('Your settings have been saved and your pull requests will be updated shortly!');
     await ServiceWorker().fetchAndStoreData();
   };
@@ -91,6 +97,11 @@ const Options = () => {
     if (accessToken !== displayedAccessToken) {
       settings.storeAccessToken(accessToken);
     }
+  };
+
+  const storeIgnoredPrsFromDOM = () => {
+    const ignoredPrs = (document.getElementById('ignored-prs') as HTMLInputElement).value;
+    settings.storeIgnoredPrs(ignoredPrs);
   };
 
   return { init, saveButtonClickHandler };

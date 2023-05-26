@@ -11,7 +11,7 @@ global.chrome = {
   },
 } as any;
 
-describe('StorageSerialzer', () => {
+describe('PullRequestStorageAccessor', () => {
   const storage = PullRequestStorageAccessor();
   const setMock = global.chrome.storage.local.set;
   let pullRequests: PullRequestRecord;
