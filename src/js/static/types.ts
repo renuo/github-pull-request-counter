@@ -4,10 +4,7 @@ export interface Issue {
   title: string;
   number: number;
   created_at: string;
-  pull_request: {
-    url: string,
-    html_url: string,
-  };
+  pull_request: Pick<PullRequest, 'url' | 'html_url'>;
 }
 
 export interface PullRequest {
@@ -22,7 +19,14 @@ export interface PullRequest {
   html_url: string;
 }
 
-export type PullRequestRecordKey = 'reviewRequested' | 'teamReviewRequested' | 'noReviewRequested' | 'allReviewsDone' | 'missingAssignee' | 'allAssigned';
 export type PullRequestRecord = Record<PullRequestRecordKey, PullRequest[]>;
+export enum PullRequestRecordKey {
+  reviewRequested = 'reviewRequested',
+  teamReviewRequested = 'teamReviewRequested',
+  noReviewRequested = 'noReviewRequested',
+  allReviewsDone = 'allReviewsDone',
+  missingAssignee = 'missingAssignee',
+  allAssigned = 'allAssigned',
+}
 
 export type CounterConfig = Record<PullRequestRecordKey, boolean>;

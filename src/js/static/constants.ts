@@ -1,12 +1,3 @@
-export const recordKeys = [
-  'reviewRequested',
-  'teamReviewRequested',
-  'noReviewRequested',
-  'allReviewsDone',
-  'missingAssignee',
-  'allAssigned',
-];
-
 export const recordKeysTranslations: { [key: string]: string } = {
   reviewRequested: 'I must review',
   teamReviewRequested: 'My team must review',
