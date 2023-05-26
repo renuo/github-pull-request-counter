@@ -67,6 +67,15 @@
     <input type="text" id="teams" class="text-input" placeholder="Team1, Team2, Team3, ..."></input>
 
     <div class="heading-1">
+      <h2>Ignored PRs</h2>
+      <p>
+        Below you can enter a comma seperated list of PRs you would like to ignore. Redundant PRs will be removed from
+        the list automatically.
+      </p>
+    </div>
+    <input type="text" id="ignored-prs" class="text-input" placeholder="owner/repo#1, owner/repo#2, owner/repo#3, ...">
+
+    <div class="heading-1">
       <h2>Access Token</h2>
       <p>Generate a personal access token from
         <a href="https://github.com/settings/tokens/new?description=github-pull-requests-counter&scopes=repo"
