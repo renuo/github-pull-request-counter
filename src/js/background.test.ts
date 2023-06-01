@@ -56,6 +56,23 @@ describe('ServiceWorker', () => {
       expect(global.chrome.action.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#d9534f' });
     });
 
+    describe('with ignored prs', () => {
+      beforeEach(async () => {
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+          'counter': undefined,
+          'accessToken': 'secret',
+          ignored: 'renuo/github-pull-request-counter#2',
+        }));
+
+        await serviceWorker.fetchAndStoreData();
+      });
+
+      it('calls setBadgeText with the correct arguments', () => {
+        expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '8' });
+        expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '4' });
+      });
+    });
+
     describe('without an access token', () => {
       beforeAll(() => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({

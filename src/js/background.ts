@@ -49,10 +49,23 @@ const ServiceWorker = () => {
       allAssigned: recordEntries[5],
     };
 
+    await filterIgnoredPrs(record);
+
     const counter = await SettingsStorageAccessor().loadCounterConfig();
     BadgeSetter().update(record, counter);
 
     storage.storePullRequests(record);
+  };
+
+  const filterIgnoredPrs = async (record: PullRequestRecord) => {
+    const ignoredPrs = await PullRequestStorageAccessor().syncIgnoredPrs(record);
+    Object.keys(record).forEach((key) => {
+      record[key as keyof PullRequestRecord] = record[key as keyof PullRequestRecord].filter((pr) => {
+        return !ignoredPrs.some((ignoredPr) => {
+          return ignoredPr.ownerAndName === pr.ownerAndName && ignoredPr.number === pr.number;
+        });
+      });
+    });
   };
 
   const startPolling = async () => {
