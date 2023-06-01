@@ -157,4 +157,73 @@ describe('SettingsStorageAccessor', () => {
       });
     });
   });
+
+  describe('loadIgnoredPrs', () => {
+    it('loads the correct data', async () => {
+      const prs = 'renuo/test#1,github/test#2';
+
+      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+        'ignored': prs,
+      }));
+
+      const result = await settings.loadIgnoredPrs();
+      expect(result).toEqual(prs);
+    });
+
+    describe('with nothing in the storage', () => {
+      it('returns the default values', async () => {
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({}));
+
+        const result = await settings.loadIgnoredPrs();
+        expect(result).toEqual('');
+      });
+    });
+  });
+
+  describe('storeIgnoredPrs', () => {
+    it('calls get with the correct arguments', () => {
+      const prs = 'renuo/test#1,github/test#2';
+
+      settings.storeIgnoredPrs(prs);
+      expect(set).toHaveBeenCalledWith({ ignored: prs });
+    });
+  });
+
+  describe('removeIgnoredPr', () => {
+    it('removes the pr', async () => {
+      const prs = 'renuo/test#1,github/test#2';
+
+      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+        'ignored': prs,
+      }));
+
+      await settings.removeIgnoredPr('renuo/test#1');
+
+      expect(set).toHaveBeenCalledWith({ ignored: 'github/test#2' });
+    });
+
+    describe('with a single ignored PR', () => {
+      it('removes the pr', async () => {
+        const prs = 'renuo/test#1';
+
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+          'ignored': prs,
+        }));
+
+        await settings.removeIgnoredPr('renuo/test#1');
+
+        expect(set).toHaveBeenCalledWith({ ignored: '' });
+      });
+    });
+
+    describe('with nothing in the storage', () => {
+      it('does not set new values', async () => {
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({}));
+
+        await settings.removeIgnoredPr('renuo/test#1');
+
+        expect(set).not.toHaveBeenCalled();
+      });
+    });
+  });
 });
