@@ -215,15 +215,5 @@ describe('SettingsStorageAccessor', () => {
         expect(set).toHaveBeenCalledWith({ ignored: '' });
       });
     });
-
-    describe('with nothing in the storage', () => {
-      it('does not set new values', async () => {
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({}));
-
-        await settings.removeIgnoredPr('renuo/test#1');
-
-        expect(set).not.toHaveBeenCalled();
-      });
-    });
   });
 });

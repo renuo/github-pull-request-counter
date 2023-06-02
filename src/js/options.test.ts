@@ -97,6 +97,7 @@ describe('Options', () => {
           'maximumAge': '555',
           'accessToken': 'secret',
           'scope': 'renuo',
+          'ignored': 'renuo/test#1',
         }));
       });
 

@@ -33,8 +33,6 @@ const SettingsStorageAccessor = () => {
 
   const removeIgnoredPr = async (pr: string) => {
     const ignoredPrs = await loadIgnoredPrs();
-    if (!ignoredPrs) return;
-
     const newIgnoredPrs = ignoredPrs.split(',').filter((p) => p !== pr).join(',');
     storeIgnoredPrs(newIgnoredPrs);
   };
