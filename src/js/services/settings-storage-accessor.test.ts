@@ -215,5 +215,19 @@ describe('SettingsStorageAccessor', () => {
         expect(set).toHaveBeenCalledWith({ ignored: '' });
       });
     });
+
+    describe('when the prs contain spaces', () => {
+      it('removes the pr', async () => {
+        const prs = 'renuo/test#1, github/test#2';
+
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+          'ignored': prs,
+        }));
+
+        await settings.removeIgnoredPr('github/test#2');
+
+        expect(set).toHaveBeenCalledWith({ ignored: 'renuo/test#1' });
+      });
+    });
   });
 });
