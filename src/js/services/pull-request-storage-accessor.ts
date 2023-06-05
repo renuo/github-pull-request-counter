@@ -1,4 +1,6 @@
-import { PullRequestRecord, PullRequest, PullRequestRecordKey } from '../static/types';
+import { IgnoredPr, PullRequest, PullRequestRecord, PullRequestRecordKey } from '../static/types';
+import SettingsStorageAccessor from './settings-storage-accessor';
+import { containsPullRequest, parsePullRequest } from '../static/utils';
 
 const PullRequestStorageAccessor = () => {
   const storePullRequests = (pullRequests: PullRequestRecord): void => {
@@ -30,6 +32,26 @@ const PullRequestStorageAccessor = () => {
     return data[key] ? JSON.parse(data[key]) : [];
   };
 
+  const syncIgnoredPrs = async (record: PullRequestRecord): Promise<Partial<PullRequest>[]> => {
+    const ignoredPrsString = await SettingsStorageAccessor().loadIgnoredPrs();
+    if (!ignoredPrsString.length) {
+      return [];
+    }
+
+    const ignoredPrs = ignoredPrsString.split(',').map(parsePullRequest);
+    const allPrs = Object.values(record).flat();
+
+    return ignoredPrs.filter(pr => {
+      const isPresent = containsPullRequest(allPrs, pr);
+
+      if (!isPresent) {
+        SettingsStorageAccessor().removeIgnoredPr(`${pr.ownerAndName}#${pr.number}`);
+      }
+
+      return isPresent;
+    });
+  };
+
   const clearPullRequests = (): void => {
     storePullRequests({
       noReviewRequested: [],
@@ -41,7 +63,7 @@ const PullRequestStorageAccessor = () => {
     });
   };
 
-  return { storePullRequests, loadPullRequests, clearPullRequests };
+  return { storePullRequests, loadPullRequests, clearPullRequests, syncIgnoredPrs, parsePullRequest };
 };
 
 export default PullRequestStorageAccessor;

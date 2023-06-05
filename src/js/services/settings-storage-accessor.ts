@@ -27,6 +27,16 @@ const SettingsStorageAccessor = () => {
 
   const loadTeams = async (): Promise<string> => (await load('teams')) || '';
 
+  const storeIgnoredPrs = (list: string): void => store('ignored', list);
+
+  const loadIgnoredPrs = async (): Promise<string> => (await load('ignored')) || '';
+
+  const removeIgnoredPr = async (pr: string) => {
+    const ignoredPrs = await loadIgnoredPrs();
+    const newIgnoredPrs = ignoredPrs.split(',').filter((p) => p.trim() !== pr).join(',');
+    storeIgnoredPrs(newIgnoredPrs);
+  };
+
   const storeMaximumAge = (value: number): void => {
     store('maximumAge', value.toString());
   };
@@ -51,7 +61,7 @@ const SettingsStorageAccessor = () => {
 
   return {
     storeCounterConfig, loadCounterConfig, storeScope, loadScope, storeTeams, loadTeams, storeMaximumAge, loadMaximumAge,
-    storeAccessToken, loadAccessToken,
+    storeAccessToken, loadAccessToken, loadIgnoredPrs, storeIgnoredPrs, removeIgnoredPr,
   };
 };
 

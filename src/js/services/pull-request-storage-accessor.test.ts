@@ -11,7 +11,7 @@ global.chrome = {
   },
 } as any;
 
-describe('StorageSerialzer', () => {
+describe('PullRequestStorageAccessor', () => {
   const storage = PullRequestStorageAccessor();
   const setMock = global.chrome.storage.local.set;
   let pullRequests: PullRequestRecord;
@@ -144,6 +144,79 @@ describe('StorageSerialzer', () => {
       it('loads the correct data', () => {
         expect(global.chrome.storage.local.get).toBeCalledTimes(6);
         expect(result).toEqual(pullRequests);
+      });
+    });
+  });
+
+  describe('#syncIgnoredPrs', () => {
+    beforeEach(() => {
+      pullRequests = pullRequestRecordFactory({ reviewRequestedCount: 1 });
+    });
+
+    describe('with no ignored PRs', () => {
+        beforeEach(() => {
+            global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
+                callback({
+                    'reviewRequested': [JSON.stringify([pullRequestFactory(0)])],
+                    'ignored': [],
+                });
+            });
+        });
+
+        it('does nothing', async () => {
+            const result = await storage.syncIgnoredPrs(pullRequests);
+            expect(result).toEqual([]);
+        });
+    });
+
+    describe('with one ignored PR', () => {
+        beforeEach(() => {
+            global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
+                callback({
+                    'reviewRequested': [JSON.stringify([pullRequestFactory(0)])],
+                    'ignored': 'renuo/github-pull-request-counter#0',
+                });
+            });
+        });
+
+        it('returns the ignored PR', async () => {
+            const result = await storage.syncIgnoredPrs(pullRequests);
+            expect(result).toEqual([{ number: 0, ownerAndName: 'renuo/github-pull-request-counter' }]);
+        });
+    });
+
+    describe('with multiple ignored PRs', () => {
+      beforeEach(() => {
+        pullRequests = pullRequestRecordFactory({ reviewRequestedCount: 2 });
+        pullRequests.reviewRequested[1].number = 1;
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
+          callback({
+            'reviewRequested': [JSON.stringify([pullRequestFactory(0)]), JSON.stringify([pullRequestFactory(1)])],
+            'ignored': 'renuo/github-pull-request-counter#0,renuo/github-pull-request-counter#1',
+          });
+        });
+      });
+
+      it('returns the ignored PRs', async () => {
+        const result = await storage.syncIgnoredPrs(pullRequests);
+        expect(result).toEqual([{ number: 0, ownerAndName: 'renuo/github-pull-request-counter' }, { number: 1, ownerAndName: 'renuo/github-pull-request-counter' }]);
+      });
+    });
+
+    describe('with redundant ignored PRs', () => {
+      beforeEach(() => {
+        pullRequests = pullRequestRecordFactory({ reviewRequestedCount: 1 });
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
+          callback({
+            'reviewRequested': [JSON.stringify([pullRequestFactory(0)])],
+            'ignored': 'renuo/github-pull-request-counter#0,renuo/github-pull-request-counter#1',
+          });
+        });
+      });
+
+      it('returns only a single PR', async () => {
+        const result = await storage.syncIgnoredPrs(pullRequests);
+        expect(result).toEqual([{ number: 0, ownerAndName: 'renuo/github-pull-request-counter' }]);
       });
     });
   });

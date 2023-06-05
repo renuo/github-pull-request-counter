@@ -36,6 +36,7 @@ global.chrome = {
         'maximumAge': '555',
         'accessToken': 'secret',
         'scope': 'renuo',
+        'ignored': 'renuo/test#1',
       })),
       set: jest.fn(),
     },
@@ -74,6 +75,10 @@ describe('Options', () => {
       expect((document.getElementById('account-names') as HTMLInputElement).value).toEqual('renuo');
     });
 
+    it('loads the ignored PRs correctly', () => {
+      expect((document.getElementById('ignored-prs') as HTMLInputElement).value).toEqual('renuo/test#1');
+    });
+
     it('loads the access token correctly', () => {
       expect((document.getElementById('access-token') as HTMLInputElement).value).toEqual(displayedAccessToken);
     });
@@ -92,6 +97,7 @@ describe('Options', () => {
           'maximumAge': '555',
           'accessToken': 'secret',
           'scope': 'renuo',
+          'ignored': 'renuo/test#1',
         }));
       });
 
@@ -120,6 +126,11 @@ describe('Options', () => {
     it('stores the scope correctly', async () => {
       await options.saveButtonClickHandler();
       expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ scope: 'renuo' });
+    });
+
+    it('stores the ignored PRs correctly', async () => {
+      await options.saveButtonClickHandler();
+      expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ ignored: 'renuo/test#1' });
     });
 
     it('stores the access token correctly', async () => {

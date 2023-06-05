@@ -4,6 +4,7 @@ import BadgeSetter from './services/badge-setter';
 import SettingsStorageAccessor from './services/settings-storage-accessor';
 import { noAccessTokenError, tooManyRequestsError } from './static/constants';
 import { PullRequestRecord, PullRequest } from './static/types';
+import { containsPullRequest } from './static/utils';
 
 const pollingInterval = 1;
 
@@ -49,10 +50,21 @@ const ServiceWorker = () => {
       allAssigned: recordEntries[5],
     };
 
+    await filterIgnoredPrs(record);
+
     const counter = await SettingsStorageAccessor().loadCounterConfig();
     BadgeSetter().update(record, counter);
 
     storage.storePullRequests(record);
+  };
+
+  const filterIgnoredPrs = async (record: PullRequestRecord) => {
+    const ignoredPrs = await PullRequestStorageAccessor().syncIgnoredPrs(record);
+    Object.keys(record).forEach((key) => {
+      record[key as keyof PullRequestRecord] = record[key as keyof PullRequestRecord].filter((pr) => {
+        return !containsPullRequest(ignoredPrs, pr);
+      });
+    });
   };
 
   const startPolling = async () => {
