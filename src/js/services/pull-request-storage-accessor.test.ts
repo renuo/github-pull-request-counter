@@ -220,10 +220,4 @@ describe('PullRequestStorageAccessor', () => {
       });
     });
   });
-
-  describe('#parsePullRequest', () => {
-    it('parses the PR correctly', () => {
-      expect(storage.parsePullRequest('owner/repo#12')).toEqual({ number: 12, ownerAndName: 'owner/repo' });
-    });
-  });
 });

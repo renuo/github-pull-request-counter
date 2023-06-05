@@ -4,6 +4,7 @@ import BadgeSetter from './services/badge-setter';
 import SettingsStorageAccessor from './services/settings-storage-accessor';
 import { noAccessTokenError, tooManyRequestsError } from './static/constants';
 import { PullRequestRecord, PullRequest } from './static/types';
+import { containsPullRequest } from './static/utils';
 
 const pollingInterval = 1;
 
@@ -61,9 +62,7 @@ const ServiceWorker = () => {
     const ignoredPrs = await PullRequestStorageAccessor().syncIgnoredPrs(record);
     Object.keys(record).forEach((key) => {
       record[key as keyof PullRequestRecord] = record[key as keyof PullRequestRecord].filter((pr) => {
-        return !ignoredPrs.some((ignoredPr) => {
-          return ignoredPr.ownerAndName === pr.ownerAndName && ignoredPr.number === pr.number;
-        });
+        return !containsPullRequest(ignoredPrs, pr);
       });
     });
   };

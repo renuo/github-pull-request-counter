@@ -30,3 +30,4 @@ export enum PullRequestRecordKey {
 }
 
 export type CounterConfig = Record<PullRequestRecordKey, boolean>;
+export type IgnoredPr = Pick<PullRequest, 'ownerAndName' | 'number'>;

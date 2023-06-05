@@ -1,5 +1,6 @@
-import { PullRequest, PullRequestRecord, PullRequestRecordKey } from '../static/types';
+import { IgnoredPr, PullRequest, PullRequestRecord, PullRequestRecordKey } from '../static/types';
 import SettingsStorageAccessor from './settings-storage-accessor';
+import { containsPullRequest, parsePullRequest } from '../static/utils';
 
 const PullRequestStorageAccessor = () => {
   const storePullRequests = (pullRequests: PullRequestRecord): void => {
@@ -41,9 +42,7 @@ const PullRequestStorageAccessor = () => {
     const allPrs = Object.values(record).flat();
 
     return ignoredPrs.filter(pr => {
-      const isPresent = allPrs.some(
-          recordPr => recordPr.ownerAndName === pr.ownerAndName && recordPr.number === pr.number,
-      );
+      const isPresent = containsPullRequest(allPrs, pr);
 
       if (!isPresent) {
         SettingsStorageAccessor().removeIgnoredPr(`${pr.ownerAndName}#${pr.number}`);
@@ -51,14 +50,6 @@ const PullRequestStorageAccessor = () => {
 
       return isPresent;
     });
-  };
-
-  const parsePullRequest = (element: string): Partial<PullRequest> => {
-    const [ownerAndName, prNumber] = element.split('#');
-    return {
-      ownerAndName,
-      number: parseInt(prNumber, 10),
-    };
   };
 
   const clearPullRequests = (): void => {
