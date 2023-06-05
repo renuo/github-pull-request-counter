@@ -15,6 +15,7 @@ blocks:
         commands:
           - checkout
           - cache restore
+          - nvm use
       jobs:
         - name: Upload to Chrome Web Store
           commands:
