@@ -10,7 +10,7 @@ export const mockListOfPullRequests = (count: number, params?: { assignee: strin
         title: 'PR Title',
         assignee: params?.assignee,
         number: i+1,
-        created_at: params?.created_at || '2021-07-06T14:17:00Z',
+        created_at: params?.created_at || Date.now(),
         pull_request: {
           url: `https://api.github.com/repos/renuo/github-pull-request-counter/pulls/${i+1}`,
           html_url: `https://github.com/renuo/github-pull-request-counter/pull/${i+1}`,
