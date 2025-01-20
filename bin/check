@@ -9,4 +9,4 @@ if [ ! $? -eq 0 ]; then
 fi
 
 echo "Executing jest"
-yarn test
+npm run test

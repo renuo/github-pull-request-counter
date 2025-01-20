@@ -33,8 +33,8 @@ export PUPPETEER_EXECUTABLE_PATH=`which chromium`
 ## Build
 
 ```sh
-yarn build            # develop
-yarn build-production # production
+npm run build            # develop
+npm run build-production # production
 ```
 
 ## Add to chrome

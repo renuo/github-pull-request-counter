@@ -1,7 +1,6 @@
 {
   "extends": [
-    "tslint:latest",
-    "tslint-eslint-rules"
+    "tslint:latest"
   ],
   "rules": {
     "arrow-parens": false,
@@ -26,7 +25,6 @@
     "no-object-literal-type-assertion": false,
     "no-shadowed-variable": false,
     "no-submodule-imports": false,
-    "object-curly-spacing": "always",
     "object-literal-sort-keys": false,
     "quotemark": [
       true,

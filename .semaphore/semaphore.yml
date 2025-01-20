@@ -19,7 +19,7 @@ blocks:
             - checkout
             - cache restore
             - nvm install
-            - yarn install --cache-folder ~/.cache/yarn
+            - npm install
             - cache store
   - name: Test
     dependencies: ['cache']
