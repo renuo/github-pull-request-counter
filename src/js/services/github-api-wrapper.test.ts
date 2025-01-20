@@ -428,9 +428,9 @@ describe('GithubApiWrapper', () => {
     });
 
     describe('filterByMaximumAge', () => {
-      const pullRequest1 = mockListOfPullRequests(1, { assignee: undefined, created_at: '2021-05-20T14:17:00Z' });
-      const pullRequest2 = mockListOfPullRequests(1, { assignee: undefined, created_at: '2021-06-25T14:17:00Z' });
-      const pullRequest3 = mockListOfPullRequests(1, { assignee: undefined, created_at: '2021-04-15T14:17:00Z' });
+      const pullRequest1 = mockListOfPullRequests(1, { assignee: undefined, created_at: Date.parse('2021-05-20T14:17:00Z') });
+      const pullRequest2 = mockListOfPullRequests(1, { assignee: undefined, created_at: Date.parse('2021-06-25T14:17:00Z') });
+      const pullRequest3 = mockListOfPullRequests(1, { assignee: undefined, created_at: Date.parse('2021-04-15T14:17:00Z') });
 
       beforeEach(() => {
         mockedFetch.mockResolvedValue(Promise.resolve({
@@ -444,9 +444,9 @@ describe('GithubApiWrapper', () => {
       it('has the correct order (newest first)', async () => {
         const result = await (await GithubApiWrapper()).getAllAssigned();
 
-        expect(result[0].createdAt).toEqual('2021-06-25T14:17:00Z');
-        expect(result[1].createdAt).toEqual('2021-05-20T14:17:00Z');
-        expect(result[2].createdAt).toEqual('2021-04-15T14:17:00Z');
+        expect(result[0].createdAt).toEqual(Date.parse('2021-06-25T14:17:00Z'));
+        expect(result[1].createdAt).toEqual(Date.parse('2021-05-20T14:17:00Z'));
+        expect(result[2].createdAt).toEqual(Date.parse('2021-04-15T14:17:00Z'));
       });
 
       describe('with a maximum age of 10 days', () => {

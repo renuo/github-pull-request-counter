@@ -1,93 +1,93 @@
 <head>
-  <title>GitHub Pull Request Counter</title>
+    <title>GitHub Pull Request Counter</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css">
 </head>
-<div class="options">
-  <p class="title">Options</p>
-  <div class="group-container">
-    <div class="header">
-      <h1>GitHub Pull Request Counter </h1>
-      <p>developed by <a id='link-to-renuo' href="https://www.renuo.ch/" target="_blank">Renuo</a></p>
+
+<body>
+<main>
+    <div>
+        <h1>GitHub Pull Request Counter</h1>
+        <p>developed by <a id='link-to-renuo' href="https://www.renuo.ch/" target="_blank">Renuo</a></p>
     </div>
     <div class="heading-1">
-      <h2>Counter</h2>
-      <p>Customize which required actions increase the counter.</p>
+        <h2>Counter</h2>
+        <p>Customize which required actions increase the counter.</p>
     </div>
 
-    <div class="hover-label-container">
-      <input class="pointer" type="checkbox" id="review-requested" name="review-requested">
-      <label class="pointer" for="review-requested">I must review</label>
-      <label class="hover-label">Someone requested a review from you!</label>
-    </div>
-    <div class="hover-label-container">
-      <input class="pointer" type="checkbox" id="team-review-requested" name="team-review-requested">
-      <label class="pointer" for="team-review-requested">Team reviews</label>
-      <label class="hover-label">Someone requested a review from one of your teams!</label>
-    </div>
-    <div class="hover-label-container">
-      <input class="pointer" type="checkbox" id="no-review-requested" name="no-review-requested">
-      <label class="pointer" for="no-review-requested">No review requested</label>
-      <label class="hover-label">Your pull request doesn't have any reviews requested!</label>
-    </div>
-    <div class="hover-label-container">
-      <input class="pointer" type="checkbox" id="all-reviews-done" name="all-reviews-done">
-      <label class="pointer" for="all-reviews-done">All reviews done</label>
-      <label class="hover-label">All of you requested reviewers have reviewed your pull request!</label>
-    </div>
-    <div class="hover-label-container">
-      <input class="pointer" type="checkbox" id="missing-assignee" name="missing-assignee">
-      <label class="pointer" for="missing-assignee">Missing Assignee</label>
-      <label class="hover-label">Your pull request doesn't have an assignee!</label>
-    </div>
-    <div class="hover-label-container">
-      <input class="pointer" type="checkbox" id="all-assigned" name="all-assigned">
-      <label class="pointer" for="all-assigned">Assigned to me</label>
-      <label class="hover-label">You are assigned to this pull request!</label>
-    </div>
+    <label for="review-requested">
+        <input type="checkbox" id="review-requested" name="review-requested">
+        I must review <sub>(Someone requested a review from you)</sub>
+    </label>
+    <label for="team-review-requested">
+        <input type="checkbox" id="team-review-requested" name="team-review-requested">
+        Team reviews <sub>(Someone requested a review from one of your teams)</sub>
+    </label>
+    <label for="no-review-requested">
+        <input type="checkbox" id="no-review-requested" name="no-review-requested">
+        No review requested <sub>(Your pull request doesn't have any reviews requested)</sub>
+    </label>
+    <label for="all-reviews-done">
+        <input type="checkbox" id="all-reviews-done" name="all-reviews-done">
+        All reviews done <sub>(All of you requested reviewers have reviewed your pull request)</sub>
+    </label>
+    <label for="missing-assignee">
+        <input type="checkbox" id="missing-assignee" name="missing-assignee">
+        Missing Assignee <sub>(Your pull request doesn't have an assignee)</sub>
+    </label>
+    <label for="all-assigned">
+        <input type="checkbox" id="all-assigned" name="all-assigned">
+        Assigned to me <sub>(You are assigned to this pull request)</sub>
+    </label>
 
     <div class="heading-1">
-      <h2>Maximum Age</h2>
-      <p>Customize the maximum age of pull requests (in days). It does not apply to "I must review" and "My team must
-        review."</p>
+        <h2>Maximum Age</h2>
+        <p>Customize the maximum age of pull requests (in days). It does not apply to "I must review" and "My team
+            must
+            review."</p>
     </div>
     <input type="number" id="maximum-age" class="text-input"></input>
 
     <div class="heading-1">
-      <h2>Scope</h2>
-      <p>Enter a comma seperated list of GitHub account names from which the extension should fetch. (case insensitive)
-      </p>
+        <h2>Scope</h2>
+        <p>Enter a comma seperated list of GitHub account names from which the extension should fetch. (case
+            insensitive)
+        </p>
     </div>
     <input type="text" id="account-names" class="text-input" placeholder="User1, User2, User3, ..."></input>
 
     <div class="heading-1">
-      <h2>Teams</h2>
-      <p>Enter a comma seperated list of GitHub teams of which the team review requests you would like to be displayed
-        seperatly. If a team is not present here it's review requests will be displayed in "I must review".
-      </p>
+        <h2>Teams</h2>
+        <p>Enter a comma seperated list of GitHub teams of which the team review requests you would like to be
+            displayed
+            seperatly. If a team is not present here it's review requests will be displayed in "I must review".
+        </p>
     </div>
     <textarea id="teams" class="text-input" placeholder="Team1, Team2, Team3, ..." rows="5"></textarea>
 
     <div class="heading-1">
-      <h2>Ignored PRs</h2>
-      <p>
-        Below you can enter a comma seperated list of PRs you would like to ignore. Redundant PRs will be removed from
-        the list automatically.
-      </p>
+        <h2>Ignored PRs</h2>
+        <p>
+            Below you can enter a comma seperated list of PRs you would like to ignore. Redundant PRs will be
+            removed from
+            the list automatically.
+        </p>
     </div>
-    <input type="text" id="ignored-prs" class="text-input" placeholder="owner/repo#1,owner/repo#2,owner/repo#3, ...">
+    <input type="text" id="ignored-prs" class="text-input"
+           placeholder="owner/repo#1,owner/repo#2,owner/repo#3, ...">
 
     <div class="heading-1">
-      <h2>Access Token</h2>
-      <p>Generate a personal access token from
-        <a href="https://github.com/settings/tokens/new?description=github-pull-requests-counter&scopes=repo"
-          target="_blank" class="link-in-text">here</a>
-        . Leave the permissions as is and copy the token in the text box below.
-      </p>
+        <h2>Access Token</h2>
+        <p>Generate a personal access token from
+            <a href="https://github.com/settings/tokens/new?description=github-pull-requests-counter&scopes=repo"
+               target="_blank" class="link-in-text">here</a>
+            . Leave the permissions as is and copy the token in the text box below.
+        </p>
     </div>
     <input type="password" id="access-token" class="text-input"
-      placeholder="ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"></input>
+           placeholder="ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"></input>
 
     <div>
-      <button id="options-save" class="blue-button">Save</button>
+        <button id="options-save">Save</button>
     </div>
-  </div>
-</div>
+</main>
+</body>

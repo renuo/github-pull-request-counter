@@ -5,7 +5,7 @@ export const pullRequestFactory = (index: number): PullRequest => ({
   title: 'PullRequest-Title',
   assignee: undefined,
   number: index,
-  createdAt: '2021-07-06T14:17:00Z',
+  createdAt: Date.parse('2021-07-06T14:17:00Z'),
   ageInDays: 100.5,
   ownerAndName: 'renuo/github-pull-request-counter',
   url: `https://api.github.com/repos/renuo/github-pull-request-counter/pulls/${index + 1}`,

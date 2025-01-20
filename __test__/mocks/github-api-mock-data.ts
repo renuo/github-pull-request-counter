@@ -1,6 +1,6 @@
 import { Issue } from '../../src/js/static/types';
 
-export const mockListOfPullRequests = (count: number, params?: { assignee: string | undefined, created_at: string | undefined}) => {
+export const mockListOfPullRequests = (count: number, params?: { assignee: string | undefined, created_at: number | undefined}) => {
   const createIssues = (count: number): Issue[] => {
     const items = [];
 

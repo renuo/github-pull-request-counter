@@ -3,7 +3,7 @@ export interface Issue {
   assignee: string | undefined;
   title: string;
   number: number;
-  created_at: string;
+  created_at: number;
   pull_request: Pick<PullRequest, 'url' | 'html_url'>;
 }
 
@@ -13,7 +13,7 @@ export interface PullRequest {
   title: string;
   number: number;
   ownerAndName: string;
-  createdAt: string;
+  createdAt: number;
   ageInDays: number;
   url: string;
   html_url: string;

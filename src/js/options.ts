@@ -2,7 +2,6 @@ import { CounterConfig } from './static/types';
 import SettingsStorageAccessor from './services/settings-storage-accessor';
 import ServiceWorker from './background';
 import { displayedAccessToken } from './static/constants';
-import '../css/options.scss';
 
 const Options = () => {
   const settings = SettingsStorageAccessor();
