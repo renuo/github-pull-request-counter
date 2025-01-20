@@ -1,7 +1,8 @@
 # Github Pull Request Counter
 
 A chrome extension to remove mental load when working with pull requests.
-It has been published in the [Chrome Web Store](https://chrome.google.com/webstore/detail/github-pull-request-count/eeejbcmnmgogpkgeinlbchoafjjbegmi)
+It has been published in
+the [Chrome Web Store](https://chrome.google.com/webstore/detail/github-pull-request-count/eeejbcmnmgogpkgeinlbchoafjjbegmi)
 to be installed with one click.
 
 ## Firefox port
@@ -30,18 +31,21 @@ export PUPPETEER_EXECUTABLE_PATH=`which chromium`
 ```
 
 ## Build
+
 ```sh
 yarn build            # develop
 yarn build-production # production
 ```
 
 ## Add to chrome
+
 * Visit `chrome://extensions/`.
 * Enable _"Developer mode"_ in the top right corner.
 * Click _"Load unpacked"_ in the top left corner.
 * Navigate to the root of this repository and select `dist` it.
 
-_Note: If you have the extension already installed through the webstore you won't be able to add the development version. Either remove it or create a new chrome profile to get around the issue._
+_Note: If you have the extension already installed through the webstore you won't be able to add the development
+version. Either remove it or create a new chrome profile to get around the issue._
 
 ## Tests
 
@@ -56,7 +60,11 @@ bin/fastcheck
 ```
 
 ## Deployment
-Commits on master will automatically try to upload to the chrome web store, though they will be rejected if the version is not greater than the previous one. To make a version bump go to `src/manifest.json` and increase `version`. Uploaded builds are not automatically published. To accomplish this go to the [Chrome Web Store Develop Dashboard](https://chrome.google.com/u/0/webstore/devconsole/465f37d5-ddb2-42c9-afcc-37265e67af35/eeejbcmnmgogpkgeinlbchoafjjbegmi/edit?hl=en).
+
+Commits on master will automatically try to upload to the chrome web store, though they will be rejected if the version
+is not greater than the previous one. To make a version bump go to `src/manifest.json` and increase `version`. Uploaded
+builds are not automatically published. To accomplish this go to
+the [Chrome Web Store Develop Dashboard](https://chrome.google.com/u/0/webstore/devconsole/465f37d5-ddb2-42c9-afcc-37265e67af35/eeejbcmnmgogpkgeinlbchoafjjbegmi/edit?hl=en).
 
 ## Create a permanent development ID
 
@@ -64,17 +72,24 @@ This is already done for this project.
 
 * Do the steps described under "**Add to chrome**"
 * Click "Pack extension" and then "Remove"
-* Chrome made 2 new files in the parent directory of the dist folder. Drag and drop `dist.srx` into `chrome://extensions/` and install it. Copy the id displayed under `ID:`.
-* Head to the the User Data Directory. For mac: `~/Library/Application\ Support/Google/Chrome`. For other: https://chromium.googlesource.com/chromium/src/+/master/docs/user_data_dir.md
-* From the User Data Directory open `Default/Extensions/_<extensionId>_/_<versionString>_/manifest.json`. `_<extensionId>_` is equal to the ID gained in step 3. `_<versionString>_` is just `0.0.0`.
+* Chrome made 2 new files in the parent directory of the dist folder. Drag and drop `dist.srx` into
+  `chrome://extensions/` and install it. Copy the id displayed under `ID:`.
+* Head to the the User Data Directory. For mac: `~/Library/Application\ Support/Google/Chrome`. For
+  other: https://chromium.googlesource.com/chromium/src/+/master/docs/user_data_dir.md
+* From the User Data Directory open `Default/Extensions/_<extensionId>_/_<versionString>_/manifest.json`.
+  `_<extensionId>_` is equal to the ID gained in step 3. `_<versionString>_` is just `0.0.0`.
 * Copy the key from `"key:"` and paste it into your manifest.json: `"key: <key>"`
 
 ## Issues
-* When running the tests chromium might ask you: "_Do you want to allow the application Chromium.app to accept incoming network connections?_". You can remove this by running `sudo codesign --force --deep --sign - ./node_modules/puppeteer/.local-chromium/mac-*/chrome-mac/Chromium.app`. This will create a valid certificate. Sudo is necessary. [Source](https://github.com/puppeteer/puppeteer/issues/4752)
+
+* When running the tests chromium might ask you: "_Do you want to allow the application Chromium.app to accept incoming
+  network connections?_". You can remove this by running
+  `sudo codesign --force --deep --sign - ./node_modules/puppeteer/.local-chromium/mac-*/chrome-mac/Chromium.app`. This
+  will create a valid certificate. Sudo is necessary. [Source](https://github.com/puppeteer/puppeteer/issues/4752)
 * Chromium can't be run in headless when testing extensions. [Source](https://github.com/puppeteer/puppeteer/issues/659)
 
 ## Copyright
 
-Copyright 2021-2023 [Renuo AG](https://www.renuo.ch/), published under the MIT license.
+Copyright [Renuo AG](https://www.renuo.ch/), published under the MIT license.
 
 
