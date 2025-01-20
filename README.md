@@ -61,7 +61,7 @@ bin/fastcheck
 
 ## Deployment
 
-Commits on master will automatically try to upload to the chrome web store, though they will be rejected if the version
+Commits on main will automatically try to upload to the chrome web store, though they will be rejected if the version
 is not greater than the previous one. To make a version bump go to `src/manifest.json` and increase `version`. Uploaded
 builds are not automatically published. To accomplish this go to
 the [Chrome Web Store Develop Dashboard](https://chrome.google.com/u/0/webstore/devconsole/465f37d5-ddb2-42c9-afcc-37265e67af35/eeejbcmnmgogpkgeinlbchoafjjbegmi/edit?hl=en).
