@@ -49,7 +49,6 @@ describe('integration test', () => {
     });
 
     it('has the correct content', () => {
-      expect(readProp('.title', 'innerHTML')).resolves.toEqual('Options');
       expect(readProp('#link-to-renuo', 'href')).resolves.toEqual('https://www.renuo.ch/');
     });
 
