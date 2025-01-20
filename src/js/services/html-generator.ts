@@ -10,7 +10,7 @@ const HTMLGenerator = () => {
       if (record[key as PullRequestRecordKey].length === 0) continue;
       const lessRelevant = !counter[key as PullRequestRecordKey];
 
-      const titleP = document.createElement('p');
+      const titleP = document.createElement('h5');
       titleP.textContent = recordKeysTranslations[key];
       titleP.classList.add('title');
       if (lessRelevant) titleP.classList.add('less-relevant-group');
