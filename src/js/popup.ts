@@ -1,3 +1,5 @@
+import '../css/colors.css';
+import '../css/shared.css';
 import '../css/popup.css';
 import PullRequestStorageAccessor from './services/pull-request-storage-accessor';
 import HTMLGenerator from './services/html-generator';
