@@ -1,0 +1,16 @@
+@import url('./colors.css');
+@import url('./shared.css');
+
+.heading-1 {
+  margin-top: 2rem;
+}
+
+.text-input {
+  width: 100%;
+}
+
+.link-in-text {
+  font-size: inherit;
+  margin-right: 0;
+  overflow: visible;
+}
