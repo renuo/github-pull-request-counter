@@ -95,7 +95,9 @@ const GithubApiWrapper = async () => {
       createdAt: issue.created_at,
       ageInDays: getDifferenceInDays(new Date(issue.created_at)),
       url: issue.pull_request.url,
-      html_url: issue.pull_request.html_url,
+      repositoryUrl: issue.pull_request.html_url.split('/pull')[0],
+      htmlUrl: issue.pull_request.html_url,
+      author: issue.user.login,
     }));
 
     const sorted = sortByDate(pullRequests);

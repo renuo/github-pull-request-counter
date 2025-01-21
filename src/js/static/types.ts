@@ -4,7 +4,13 @@ export interface Issue {
   title: string;
   number: number;
   created_at: number;
-  pull_request: Pick<PullRequest, 'url' | 'html_url'>;
+  pull_request: {
+    url: string,
+    html_url: string,
+  };
+  user: {
+    login: string;
+  };
 }
 
 export interface PullRequest {
@@ -16,7 +22,9 @@ export interface PullRequest {
   createdAt: number;
   ageInDays: number;
   url: string;
-  html_url: string;
+  repositoryUrl: string;
+  htmlUrl: string;
+  author: string;
 }
 
 export type PullRequestRecord = Record<PullRequestRecordKey, PullRequest[]>;

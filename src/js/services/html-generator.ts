@@ -38,9 +38,19 @@ const HTMLGenerator = () => {
 
     for (const PullRequest of pullRequests) {
       const pullRequestDiv = document.createElement('div');
+      const firstRow = document.createElement('div');
+      const secondRow = document.createElement('div');
+      pullRequestDiv.appendChild(firstRow);
+      pullRequestDiv.appendChild(secondRow);
 
-      pullRequestDiv.appendChild(generateLink(PullRequest));
-      pullRequestDiv.appendChild(generateSubDescription(PullRequest));
+      const repoUrl = document.createElement('a');
+      repoUrl.appendChild(document.createTextNode(PullRequest.ownerAndName));
+      repoUrl.href = PullRequest.repositoryUrl;
+      repoUrl.target = '_blank';
+      firstRow.appendChild(repoUrl);
+
+      firstRow.appendChild(generatePullRequestLink(PullRequest));
+      secondRow.appendChild(generateSubDescription(PullRequest));
 
       pullRequestDiv.classList.add('link-container');
       groupLevelDiv.appendChild(pullRequestDiv);
@@ -62,22 +72,18 @@ const HTMLGenerator = () => {
     return noContentDiv;
   };
 
-  const generateLink = (PullRequest: PullRequest) => {
+  const generatePullRequestLink = (PullRequest: PullRequest) => {
     const link = document.createElement('a');
     link.appendChild(document.createTextNode(PullRequest.title));
-    link.href = PullRequest.html_url;
+    link.href = PullRequest.htmlUrl;
     link.target = '_blank';
     return link;
   };
 
   const generateSubDescription = (PullRequest: PullRequest) => {
     const subDescriptionP = document.createElement('p');
-    subDescriptionP.textContent = PullRequest.ownerAndName;
     subDescriptionP.classList.add('subdescription');
-    const numberB = document.createElement('b');
-    numberB.textContent = ` #${PullRequest.number}`;
-    subDescriptionP.appendChild(numberB);
-    subDescriptionP.appendChild(document.createTextNode(` (${Math.floor(PullRequest.ageInDays)} days ago)`));
+    subDescriptionP.appendChild(document.createTextNode(`#${PullRequest.number} opened ${Math.floor(PullRequest.ageInDays)} days ago by ${PullRequest.author}`));
     return subDescriptionP;
   };
 

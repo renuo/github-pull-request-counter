@@ -9,7 +9,9 @@ export const pullRequestFactory = (index: number): PullRequest => ({
   ageInDays: 100.5,
   ownerAndName: 'renuo/github-pull-request-counter',
   url: `https://api.github.com/repos/renuo/github-pull-request-counter/pulls/${index + 1}`,
-  html_url: `https://github.com/renuo/github-pull-request-counter/pull/${index + 1}`,
+  repositoryUrl: 'https://api.github.com/repos/renuo/github-pull-request-counter',
+  htmlUrl: `https://github.com/renuo/github-pull-request-counter/pull/${index + 1}`,
+  author: 'coorasse',
 });
 
 const createPullRequests = (count: number): PullRequest[] => {

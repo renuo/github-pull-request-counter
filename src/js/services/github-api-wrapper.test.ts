@@ -49,7 +49,7 @@ describe('GithubApiWrapper', () => {
       it('has the correct link', async () => {
         const result = await (await GithubApiWrapper()).getReviewRequested();
         expect(result.length).toEqual(1);
-        expect(result[0].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
+        expect(result[0].htmlUrl).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
       });
     });
 
@@ -59,7 +59,7 @@ describe('GithubApiWrapper', () => {
       it('has the correct links', async () => {
         const result = await (await GithubApiWrapper()).getReviewRequested();
         expect(result.length).toEqual(3);
-        expect(result[2].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
+        expect(result[2].htmlUrl).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
       });
     });
 
@@ -110,7 +110,7 @@ describe('GithubApiWrapper', () => {
       it('has the correct link', async () => {
         const result = await (await GithubApiWrapper()).getTeamReviewRequested();
         expect(result.length).toEqual(1);
-        expect(result[0].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
+        expect(result[0].htmlUrl).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
       });
     });
 
@@ -160,7 +160,7 @@ describe('GithubApiWrapper', () => {
       it('has the correct link', async () => {
         const result = await (await GithubApiWrapper()).getNoReviewRequested();
         expect(result.length).toEqual(1);
-        expect(result[0].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
+        expect(result[0].htmlUrl).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
       });
     });
 
@@ -170,7 +170,7 @@ describe('GithubApiWrapper', () => {
       it('has the correct links', async () => {
         const result = await (await GithubApiWrapper()).getNoReviewRequested();
         expect(result.length).toEqual(3);
-        expect(result[2].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
+        expect(result[2].htmlUrl).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
       });
 
       describe('with a requested review from a user', () => {
@@ -287,7 +287,7 @@ describe('GithubApiWrapper', () => {
       it('has the correct link', async () => {
         const result = await (await GithubApiWrapper()).getAllReviewsDone();
         expect(result.length).toEqual(1);
-        expect(result[0].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
+        expect(result[0].htmlUrl).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
       });
     });
 
@@ -297,7 +297,7 @@ describe('GithubApiWrapper', () => {
       it('has the correct links', async () => {
         const result = await (await GithubApiWrapper()).getAllReviewsDone();
         expect(result.length).toEqual(3);
-        expect(result[2].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
+        expect(result[2].htmlUrl).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
       });
 
       describe('with a requested review from a user', () => {
@@ -355,7 +355,7 @@ describe('GithubApiWrapper', () => {
       it('has the correct link', async () => {
         const result = await (await GithubApiWrapper()).getMissingAssignee();
         expect(result.length).toEqual(1);
-        expect(result[0].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
+        expect(result[0].htmlUrl).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
       });
 
       describe('with an assignee', () => {
@@ -375,7 +375,7 @@ describe('GithubApiWrapper', () => {
       it('has the correct links', async () => {
         const result = await (await GithubApiWrapper()).getMissingAssignee();
         expect(result.length).toEqual(3);
-        expect(result[2].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
+        expect(result[2].htmlUrl).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
       });
 
       describe('with an assignee', () => {
@@ -413,7 +413,7 @@ describe('GithubApiWrapper', () => {
       it('has the correct link', async () => {
         const result = await (await GithubApiWrapper()).getAllAssigned();
         expect(result.length).toEqual(1);
-        expect(result[0].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
+        expect(result[0].htmlUrl).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
       });
     });
 
@@ -423,7 +423,7 @@ describe('GithubApiWrapper', () => {
       it('has the correct links', async () => {
         const result = await (await GithubApiWrapper()).getAllAssigned();
         expect(result.length).toEqual(3);
-        expect(result[2].html_url).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
+        expect(result[2].htmlUrl).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
       });
     });
 
