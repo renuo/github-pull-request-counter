@@ -68,7 +68,6 @@ const setup = async () => {
       }
       const startTime = Date.now();
       let lastTargetCount = 0;
-      
       while (Date.now() - startTime < timeout) {
         try {
           const targets = await browser.targets();
@@ -205,7 +204,7 @@ const teardown = async () => {
           await Promise.all(
             contexts
               .filter(context => context !== currentBrowser.defaultBrowserContext())
-              .map(context => context.close().catch(() => { /* ignore context close errors */ }))
+              .map(context => context.close().catch(() => { /* ignore context close errors */ })),
           ).catch(err => {
             /* tslint:disable-next-line:no-console */
             console.error('Error closing browser contexts:', err);
