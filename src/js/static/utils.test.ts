@@ -1,4 +1,4 @@
-import { containsPullRequest, parsePullRequest } from './utils';
+import { containsPullRequest, parsePullRequest } from './utils.js';
 import { PullRequest } from './types';
 
 describe('utils', () => {

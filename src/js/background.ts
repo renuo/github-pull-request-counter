@@ -4,7 +4,7 @@ import BadgeSetter from './services/badge-setter';
 import SettingsStorageAccessor from './services/settings-storage-accessor';
 import { noAccessTokenError, tooManyRequestsError } from './static/constants';
 import { PullRequestRecord, PullRequest } from './static/types';
-import { containsPullRequest } from './static/utils';
+import { containsPullRequest } from './static/utils.js';
 
 const pollingInterval = 1;
 
