@@ -21,13 +21,22 @@ const setup = async () => {
   const extensionPath = path.join(__dirname, '../../dist');
 
   const isHeadless = process.env.PUPPETEER_HEADLESS?.toLowerCase() !== 'false';
+  const isCI = process.env.CI === 'true';
+
+  const args = [
+    `--disable-extensions-except=${extensionPath}`,
+    ...(isCI ? [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu'
+    ] : [])
+  ];
 
   browser = await puppeteer.launch({
     headless: isHeadless,
     ignoreHTTPSErrors: true,
-    args: [
-      `--disable-extensions-except=${extensionPath}`,
-    ],
+    args,
   });
 
   page = await browser.newPage();
