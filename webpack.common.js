@@ -21,13 +21,7 @@ exports.common = {
         test: /\.css$/i,
         use: [
           "style-loader",
-          {
-            loader: "css-loader",
-            options: {
-              url: true,
-              import: true
-            }
-          }
+          "css-loader"
         ]
       }
     ],
