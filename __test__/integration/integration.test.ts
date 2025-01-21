@@ -20,8 +20,10 @@ const readProp = (query: string, prop: string, index = 0) => (
 const setup = async () => {
   const extensionPath = path.join(__dirname, '../../dist');
 
+  const isHeadless = process.env.PUPPETEER_HEADLESS?.toLowerCase() !== 'false';
+
   browser = await puppeteer.launch({
-    headless: false,
+    headless: isHeadless,
     ignoreHTTPSErrors: true,
     args: [
       `--disable-extensions-except=${extensionPath}`,
