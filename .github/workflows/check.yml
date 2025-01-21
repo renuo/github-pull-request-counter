@@ -19,9 +19,21 @@ jobs:
         node-version: '16'
         cache: 'npm'
     
-    - name: Install Chrome dependencies
+    - name: Cache Snap packages
+      uses: actions/cache@v3
+      id: snap-cache
+      with:
+        path: |
+          /var/cache/snapd
+          /var/lib/snapd
+        key: ${{ runner.os }}-snap-${{ hashFiles('.github/workflows/check.yml') }}
+        restore-keys: |
+          ${{ runner.os }}-snap-
+
+    - name: Install Chromium and Xvfb
       run: |
-        sudo apt-get install -qq chromium-browser xvfb > /dev/null
+        sudo snap install chromium
+        sudo apt-get install -qq xvfb > /dev/null
 
     - name: Install dependencies
       run: |
@@ -30,7 +42,7 @@ jobs:
     
     - name: Run checks
       env:
-        PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium-browser
+        PUPPETEER_EXECUTABLE_PATH: /snap/bin/chromium
         PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
         DISPLAY: ':99.0'
         CI: 'true'
