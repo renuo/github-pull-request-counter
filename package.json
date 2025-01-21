@@ -13,7 +13,7 @@
     "test": "npm run build-testing; jest",
     "lint": "tslint -c tslint.json 'src/**/*.ts' '__test__/**/*.ts'",
     "fix": "tslint -c tslint.json 'src/**/*.ts' '__test__/**/*.ts' --fix",
-    "css-lint": "stylelint \"src/css/**/*.css\""
+    "css-lint": "stylelint \"src/css/**/*.css\" --config .stylelintrc"
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.0",
