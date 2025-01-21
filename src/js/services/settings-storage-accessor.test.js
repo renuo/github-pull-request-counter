@@ -1,4 +1,4 @@
-import SettingsStorageAccessor from './settings-storage-accessor';
+import SettingsStorageAccessor from './settings-storage-accessor.js';
 
 global.chrome = {
   storage: {

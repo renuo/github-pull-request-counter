@@ -1,17 +1,17 @@
-import BadgeSetter from './badge-setter';
-import { PullRequestRecord } from '../static/types';
-import { pullRequestRecordFactory } from '../../../__test__/mocks/factories';
+import BadgeSetter from './badge-setter.js';
+import { pullRequestRecordFactory } from '../../../__test__/mocks/factories.js';
 
 global.chrome = {
   action: {
     setBadgeText: jest.fn(),
     setBadgeBackgroundColor: jest.fn(),
   },
-} as any;
+};
 
 describe('BadgeSetter', () => {
   describe('update', () => {
-    let record: PullRequestRecord;
+    /** @type {import('../static/types').PullRequestRecord} */
+    let record;
     let counter = {
       'reviewRequested': true,
       'teamReviewRequested': true,

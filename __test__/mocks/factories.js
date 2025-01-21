@@ -1,6 +1,9 @@
-import { PullRequest, PullRequestRecord } from '../../src/js/static/types';
+/**
+ * @typedef {import('../../src/js/static/types').PullRequest} PullRequest
+ * @typedef {import('../../src/js/static/types').PullRequestRecord} PullRequestRecord
+ */
 
-export const pullRequestFactory = (index: number): PullRequest => ({
+export const pullRequestFactory = (index) => ({
   id: index,
   title: 'PullRequest-Title',
   assignee: undefined,
@@ -14,21 +17,27 @@ export const pullRequestFactory = (index: number): PullRequest => ({
   author: 'coorasse',
 });
 
-const createPullRequests = (count: number): PullRequest[] => {
-  const pullRequests: PullRequest[] = [];
+const createPullRequests = (count) => {
+  const pullRequests = [];
   Array.from(Array(count)).forEach(() => pullRequests.push(pullRequestFactory(0)));
   return pullRequests;
 };
 
-type FactoryConfiguration = {
-  reviewRequestedCount?: number,
-  teamReviewRequestedCount?: number,
-  noReviewRequestedCount?: number,
-  allReviewsDoneCount?: number,
-  missingAssigneeCount?: number,
-  allAssignedCount?: number,
-};
-export const pullRequestRecordFactory = (props?: FactoryConfiguration): PullRequestRecord => ({
+/**
+ * @typedef {Object} FactoryConfiguration
+ * @property {number} [reviewRequestedCount]
+ * @property {number} [teamReviewRequestedCount]
+ * @property {number} [noReviewRequestedCount]
+ * @property {number} [allReviewsDoneCount]
+ * @property {number} [missingAssigneeCount]
+ * @property {number} [allAssignedCount]
+ */
+
+/**
+ * @param {FactoryConfiguration} [props]
+ * @returns {PullRequestRecord}
+ */
+export const pullRequestRecordFactory = (props) => ({
   'reviewRequested': createPullRequests(props?.reviewRequestedCount || 0),
   'teamReviewRequested': createPullRequests(props?.teamReviewRequestedCount || 0),
   'noReviewRequested': createPullRequests(props?.noReviewRequestedCount || 0),

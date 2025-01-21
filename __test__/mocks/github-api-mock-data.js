@@ -1,7 +1,18 @@
-import { Issue } from '../../src/js/static/types';
+/**
+ * @typedef {import('../../src/js/static/types').Issue} Issue
+ */
 
-export const mockListOfPullRequests = (count: number, params?: { assignee: string | undefined, created_at: number | undefined}) => {
-  const createIssues = (count: number): Issue[] => {
+/**
+ * @param {number} count
+ * @param {{ assignee?: string, created_at?: number }} [params]
+ * @returns {Promise<{ total_count: number, items: Issue[] }>}
+ */
+export const mockListOfPullRequests = (count, params) => {
+  /**
+   * @param {number} count
+   * @returns {Issue[]}
+   */
+  const createIssues = (count) => {
     const items = [];
 
     for (let i = 0; i < count; i++) {
@@ -31,10 +42,20 @@ export const mockListOfPullRequests = (count: number, params?: { assignee: strin
   };
 };
 
-export const mockRequestedReviewers = (usersCount: number, teamsCount: number) => {
-  const createRandomID = (): number => Math.floor(Math.random() * 100);
+/**
+ * @param {number} usersCount
+ * @param {number} teamsCount
+ * @returns {{ users: Array<{id: number}>, teams: Array<{id: number}> }}
+ */
+export const mockRequestedReviewers = (usersCount, teamsCount) => {
+  /** @returns {number} */
+  const createRandomID = () => Math.floor(Math.random() * 100);
 
-  const createReviewers = (count: number) => {
+  /**
+   * @param {number} count
+   * @returns {Array<{id: number}>}
+   */
+  const createReviewers = (count) => {
     const reviewer = [];
     for (let i = 0; i < count; i++) {
       reviewer.push({ id: createRandomID() });
@@ -48,13 +69,19 @@ export const mockRequestedReviewers = (usersCount: number, teamsCount: number) =
   };
 };
 
-interface GlobalMockParams {
-  pullRequestCount?: number;
-  openUserRequestCount?: number;
-  openTeamRequestCount?: number;
-}
+/**
+ * @typedef {Object} GlobalMockParams
+ * @property {number} [pullRequestCount]
+ * @property {number} [openUserRequestCount]
+ * @property {number} [openTeamRequestCount]
+ */
 
-export const globalMock = (url: string, params?: GlobalMockParams) => {
+/**
+ * @param {string} url
+ * @param {GlobalMockParams} [params]
+ * @returns {Promise<{ json: () => Promise<any> }>}
+ */
+export const globalMock = (url, params) => {
   if (url.includes('/requested_reviewers')) {
     return Promise.resolve({
       json: () => Promise.resolve(mockRequestedReviewers(params?.openUserRequestCount || 0, params?.openTeamRequestCount || 0)),

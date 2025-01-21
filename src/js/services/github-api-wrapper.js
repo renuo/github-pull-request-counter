@@ -3,6 +3,7 @@ import { globalMock } from '../../../__test__/mocks/github-api-mock-data.js';
 import { noAccessTokenError, tooManyRequestsError } from '../static/constants.js';
 
 const GithubApiWrapper = async () => {
+  /** @returns {Promise<import('../static/types').PullRequest[]>} */
   const getReviewRequested = async () => {
     const query = encodeURIComponent(`is:open is:pr review-requested:${userName} archived:false`);
     const pullRequests = await makeApiRequest('/search/issues', `q=${query}`);
@@ -12,11 +13,13 @@ const GithubApiWrapper = async () => {
     return processedPullRequests.filter((pr) => !teamPullRequestUrls.includes(pr.url));
   };
 
+  /** @returns {Promise<import('../static/types').PullRequest[]>} */
   const getTeamReviewRequested = async () => {
     const teams = await SettingsStorageAccessor().loadTeams();
     if (teams === '') return [];
 
-    let combinedPullRequests: Issue[] = [];
+    /** @type {import('../static/types').Issue[]} */
+    let combinedPullRequests = [];
 
     for (const team of teams.replace(/ /g, '').split(',')) {
       const query = encodeURIComponent(`is:open is:pr team-review-requested:${team} archived:false`);
@@ -28,37 +31,50 @@ const GithubApiWrapper = async () => {
     return processDataIntoPullRequests(combinedPullRequests, false);
   };
 
+  /** @returns {Promise<import('../static/types').PullRequest[]>} */
   const getNoReviewRequested = async () => {
     return processDataIntoPullRequests(await searchMyIssues('review:none'));
   };
 
+  /** @returns {Promise<import('../static/types').PullRequest[]>} */
   const getAllReviewsDone = async () => {
     return processDataIntoPullRequests(await searchMyIssues('-review:none'));
   };
 
+  /**
+   * @param {string} reviewModifier
+   * @returns {Promise<import('../static/types').Issue[]>}
+   */
   const searchMyIssues = async (reviewModifier) => {
     const query = encodeURIComponent(`is:pr assignee:${userName} archived:false is:open ${reviewModifier}`);
     const response = await makeApiRequest('/search/issues', `q=${query}`);
 
-    return asyncFilterIssues(response.items, async (PullRequest: Issue) => {
+    return asyncFilterIssues(response.items, /** @param {import('../static/types').Issue} PullRequest */ async (PullRequest) => {
       const requestedReviewers = (await makeRequest(`${PullRequest.pull_request.url}/requested_reviewers`));
       return requestedReviewers.users.length + requestedReviewers.teams.length === 0;
     });
   };
 
+  /**
+   * @param {import('../static/types').Issue[]} pullRequests
+   * @param {(issue: import('../static/types').Issue) => Promise<boolean>} filter
+   * @returns {Promise<import('../static/types').Issue[]>}
+   */
   const asyncFilterIssues = async (pullRequests, filter) => {
     const response = await Promise.all(pullRequests.map(filter));
     return pullRequests.filter((_item, index) => response[index]);
   };
 
+  /** @returns {Promise<import('../static/types').PullRequest[]>} */
   const getMissingAssignee = async () => {
     const query = encodeURIComponent(`is:open is:pr author:${userName} draft:false archived:false`);
     let response = await makeApiRequest('/search/issues', `q=${query}`);
-    response = response.items.filter((s: PullRequest) => !s.assignee);
+    response = response.items.filter(/** @param {import('../static/types').PullRequest} s */ (s) => !s.assignee);
 
     return processDataIntoPullRequests(response);
   };
 
+  /** @returns {Promise<import('../static/types').PullRequest[]>} */
   const getAllAssigned = async () => {
     const query = encodeURIComponent(`is:open is:pr assignee:${userName} archived:false`);
     const response = await makeApiRequest('/search/issues', `q=${query}`);
@@ -68,6 +84,11 @@ const GithubApiWrapper = async () => {
 
   const makeApiRequest = async (path, params) => makeRequest(`https://api.github.com${path}`, params);
 
+  /**
+   * @param {string} path
+   * @param {string} [params]
+   * @returns {Promise<any>}
+   */
   const makeRequest = async (path, params) => {
     // TODO: Find cleaner solution to mock the API during integration tests.
     /* istanbul ignore next */
@@ -83,6 +104,11 @@ const GithubApiWrapper = async () => {
     else return response.json();
   };
 
+  /**
+   * @param {import('../static/types').Issue[]} issues
+   * @param {boolean} [shouldFilterByMaximumAge=true]
+   * @returns {Promise<import('../static/types').PullRequest[]>}
+   */
   const processDataIntoPullRequests = async (issues, shouldFilterByMaximumAge = true) => {
     issues = await filterByScope(issues);
     const pullRequests = issues.map(issue => ({
@@ -103,6 +129,10 @@ const GithubApiWrapper = async () => {
     return shouldFilterByMaximumAge ? filterByMaximumAge(sorted) : sorted;
   };
 
+  /**
+   * @param {import('../static/types').Issue[]} issues
+   * @returns {Promise<import('../static/types').Issue[]>}
+   */
   const filterByScope = async (issues) => {
     const scope = await SettingsStorageAccessor().loadScope();
     if (scope === '') return issues;
@@ -113,6 +143,10 @@ const GithubApiWrapper = async () => {
     ));
   };
 
+  /**
+   * @param {import('../static/types').PullRequest[]} pullRequests
+   * @returns {import('../static/types').PullRequest[]}
+   */
   const sortByDate = (pullRequests) =>
     pullRequests.sort((pullRequest1, pullRequest2) => (
       new Date(pullRequest2.createdAt).getTime() - new Date(pullRequest1.createdAt).getTime()
@@ -120,12 +154,20 @@ const GithubApiWrapper = async () => {
 
   const readOwnerAndNameFromUrl = (url) => url.replace('https://api.github.com/repos/', '').split('/pulls/')[0];
 
+  /**
+   * @param {import('../static/types').PullRequest[]} pullRequests
+   * @returns {Promise<import('../static/types').PullRequest[]>}
+   */
   const filterByMaximumAge = async (pullRequests) => {
     const maximumAge = await SettingsStorageAccessor().loadMaximumAge();
 
     return pullRequests.filter(pullRequest => pullRequest.ageInDays < maximumAge);
   };
 
+  /**
+   * @param {Date} date2
+   * @returns {number}
+   */
   const getDifferenceInDays = (date2) => (Date.now() - date2.getTime()) / 86_400_000; // 1000 * 3600 * 24
 
   const accessToken = await SettingsStorageAccessor().loadAccessToken();

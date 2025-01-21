@@ -1,5 +1,5 @@
-import { containsPullRequest, parsePullRequest } from './utils';
-import { PullRequest } from './types';
+import { containsPullRequest, parsePullRequest } from './utils.js';
+// Types imported via JSDoc
 
 describe('utils', () => {
     describe('containsPullRequest', () => {
@@ -13,7 +13,8 @@ describe('utils', () => {
         });
 
         describe('with no PRs', () => {
-            const prs: Partial<PullRequest>[] = [];
+            /** @type {Partial<import('./types').PullRequest>[]} */
+            const prs = [];
 
             it('checks whether the PR exists', () => {
                 expect(containsPullRequest(prs, { ownerAndName: 'owner/repo', number: 12 })).toBe(false);
