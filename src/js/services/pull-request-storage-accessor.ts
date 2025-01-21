@@ -1,6 +1,6 @@
 import { IgnoredPr, PullRequest, PullRequestRecord, PullRequestRecordKey } from '../static/types';
 import SettingsStorageAccessor from './settings-storage-accessor';
-import { containsPullRequest, parsePullRequest } from '../static/utils';
+import { containsPullRequest, parsePullRequest } from '../static/utils.js';
 
 const PullRequestStorageAccessor = () => {
   const storePullRequests = (pullRequests: PullRequestRecord): void => {

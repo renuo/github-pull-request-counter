@@ -1,4 +1,4 @@
-import BadgeSetter from './badge-setter';
+import BadgeSetter from './badge-setter.js';
 import { PullRequestRecord } from '../static/types';
 import { pullRequestRecordFactory } from '../../../__test__/mocks/factories';
 
