@@ -1,0 +1,90 @@
+import BadgeSetter from '../../src/js/services/badge-setter.js';
+import { pullRequestRecordFactory } from '../mocks/factories.js';
+
+global.chrome = {
+  action: {
+    setBadgeText: jest.fn(),
+    setBadgeBackgroundColor: jest.fn(),
+  },
+};
+
+describe('BadgeSetter', () => {
+  describe('update', () => {
+    let record;
+    let counter = {
+      'reviewRequested': true,
+      'teamReviewRequested': true,
+      'noReviewRequested': true,
+      'allReviewsDone': true,
+      'missingAssignee': true,
+      'allAssigned': true,
+    };
+
+    beforeEach(() => {
+      BadgeSetter().update(record, counter);
+    });
+
+    describe('with an empty record', () => {
+      beforeAll(() => {
+        record = pullRequestRecordFactory();
+      });
+
+      it('calls setBadgeText with the correct arguments', () => {
+        expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '0' });
+      });
+
+      it('calls setBadgeBackgroundColor with the correct arguments', () => {
+        expect(global.chrome.action.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#5cb85c' });
+      });
+    });
+
+    describe('with one record entry', () => {
+      beforeAll(() => {
+        record = pullRequestRecordFactory({ reviewRequestedCount: 1 });
+      });
+
+      it('calls setBadgeText with the correct arguments', () => {
+        expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '1' });
+      });
+
+      it('calls setBadgeBackgroundColor with the correct arguments', () => {
+        expect(global.chrome.action.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#f0ad4e' });
+      });
+    });
+
+    describe('with two record entries and five pull requests', () => {
+      beforeAll(() => {
+        record = pullRequestRecordFactory({ noReviewRequestedCount: 2, missingAssigneeCount: 3 });
+      });
+
+      it('calls setBadgeText with the correct arguments', () => {
+        expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '5' });
+      });
+
+      it('calls setBadgeBackgroundColor with the correct arguments', () => {
+        expect(global.chrome.action.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#d9534f' });
+      });
+
+      describe('with the missing assignee set to false', () => {
+        beforeAll(() => {
+          counter = {
+            'reviewRequested': true,
+            'teamReviewRequested': true,
+            'noReviewRequested': true,
+            'allReviewsDone': true,
+            'missingAssignee': false,
+            'allAssigned': true,
+          };
+        });
+
+        it('calls setBadgeText with the correct arguments', () => {
+          expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '2' });
+        });
+
+        it('calls setBadgeBackgroundColor with the correct arguments', () => {
+          expect(global.chrome.action.setBadgeBackgroundColor).toHaveBeenCalledWith({ color: '#d9534f' });
+        });
+      });
+    });
+  });
+});
