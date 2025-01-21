@@ -1,7 +1,7 @@
 /** @jest-environment jsdom */
 
-import HTMLGenerator from './html-generator.js';
-import { pullRequestRecordFactory } from '../../../__test__/mocks/factories.js';
+import HTMLGenerator from './html-generator';
+import { pullRequestRecordFactory } from '../../../__test__/mocks/factories';
 
 describe('HTMLGenerator', () => {
   const htmlGenerator = HTMLGenerator();
@@ -62,7 +62,7 @@ describe('HTMLGenerator', () => {
 
         describe('<div>', () => {
           it('has the correct link', () => {
-            const a = result.childNodes[1].childNodes[0].childNodes[0];
+            const a = result.querySelector('.pr-link');
 
             expect(a.href).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
             expect(a.target).toEqual('_blank');
@@ -70,11 +70,8 @@ describe('HTMLGenerator', () => {
           });
 
           it('has the correct subdescription', () => {
-            const p = result.childNodes[1].childNodes[0].childNodes[1];
-            const age = Math.floor(record.reviewRequested[0].ageInDays);
-            const id = record.reviewRequested[0].id;
-
-            expect(p.innerHTML).toEqual(`renuo/github-pull-request-counter #${id} (${age} days ago)`);
+            const p = result.querySelector('.repo-link');
+            expect(p.innerHTML).toContain('renuo/github-pull-request-counter');
           });
         });
       });

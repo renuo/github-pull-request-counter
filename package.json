@@ -26,6 +26,7 @@
     "@types/node-fetch": "^2.5.10",
     "@types/puppeteer": "^7.0.4",
     "babel-jest": "^29.7.0",
+    "babel-loader": "^9.2.1",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "copy-webpack-plugin": "^8.1.1",
     "css-loader": "^5.2.4",
