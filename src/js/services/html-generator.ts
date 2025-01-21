@@ -45,7 +45,9 @@ const HTMLGenerator = () => {
 
       const repoUrl = document.createElement('a');
       repoUrl.appendChild(document.createTextNode(PullRequest.ownerAndName));
+      repoUrl.classList.add('repo-link');
       repoUrl.href = PullRequest.repositoryUrl;
+
       repoUrl.target = '_blank';
       firstRow.appendChild(repoUrl);
 
@@ -74,6 +76,7 @@ const HTMLGenerator = () => {
 
   const generatePullRequestLink = (PullRequest: PullRequest) => {
     const link = document.createElement('a');
+    link.classList.add('pr-link');
     link.appendChild(document.createTextNode(PullRequest.title));
     link.href = PullRequest.htmlUrl;
     link.target = '_blank';
