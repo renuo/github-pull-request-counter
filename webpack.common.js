@@ -18,11 +18,10 @@ exports.common = {
         exclude: /node_modules/
       },
       {
-        test: /\.s[ac]ss$/i,
+        test: /\.css$/i,
         use: [
           "style-loader",
-          "css-loader",
-          "sass-loader"
+          "css-loader"
         ]
       }
     ],

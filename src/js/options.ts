@@ -1,3 +1,6 @@
+import '../css/colors.css';
+import '../css/shared.css';
+import '../css/options.css';
 import { CounterConfig } from './static/types';
 import SettingsStorageAccessor from './services/settings-storage-accessor';
 import ServiceWorker from './background';

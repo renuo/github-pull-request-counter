@@ -15,9 +15,10 @@ a {
   text-overflow: ellipsis;
   white-space: nowrap;
 
-  &:hover {
-    text-decoration: underline;
-  }
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 .group-container {

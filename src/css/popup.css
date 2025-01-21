@@ -1,0 +1,28 @@
+.popup {
+  max-width: 500px;
+  min-width: 300px;
+}
+
+.popup .subdescription {
+  white-space: nowrap;
+  color: rgb(89 99 110);
+  margin-top: 0.2rem;
+  font-size: 0.7rem;
+}
+
+.popup p {
+  margin-bottom: 1px;
+  margin-top: 0;
+}
+
+.popup .link-container {
+  margin-bottom: 10px;
+}
+
+.popup .link-container:last-child {
+  margin-bottom: 0;
+}
+
+.popup .less-relevant-group {
+  opacity: .75;
+}
