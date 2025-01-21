@@ -17,7 +17,7 @@ const HTMLGenerator = () => {
       if (lessRelevant) titleP.classList.add('less-relevant-group');
       topLevelDiv.appendChild(titleP);
 
-      topLevelDiv.appendChild(generateLinkStructure(record[key as PullRequestRecordKey], lessRelevant));
+      topLevelDiv.appendChild(generateLinkStructure(record[key as keyof typeof PullRequestRecordKey], lessRelevant));
     }
 
     if (topLevelDiv.children.length === 0) {
