@@ -1,4 +1,4 @@
-import '../css/popup.scss';
+import '../css/popup.css';
 import PullRequestStorageAccessor from './services/pull-request-storage-accessor';
 import HTMLGenerator from './services/html-generator';
 import SettingsStorageAccessor from './services/settings-storage-accessor';

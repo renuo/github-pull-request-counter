@@ -12,7 +12,8 @@
     "build-testing": "webpack --config webpack.testing.js",
     "test": "npm run build-testing; jest",
     "lint": "tslint -c tslint.json 'src/**/*.ts' '__test__/**/*.ts'",
-    "fix": "tslint -c tslint.json 'src/**/*.ts' '__test__/**/*.ts' --fix"
+    "fix": "tslint -c tslint.json 'src/**/*.ts' '__test__/**/*.ts' --fix",
+    "css-lint": "stylelint \"src/css/**/*.css\""
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.0",
@@ -35,10 +36,10 @@
     "node-fetch": "^2.6.7",
     "puppeteer": "^9.1.1",
     "puppeteer-core": "^9.1.1",
-    "sass": "^1.32.11",
-    "sass-lint": "^1.13.1",
-    "sass-loader": "^11.0.1",
+
     "style-loader": "^2.0.0",
+    "stylelint": "^15.11.0",
+    "stylelint-config-standard": "^34.0.0",
     "ts-jest": "^26.5.5",
     "ts-loader": "^9.4.2",
     "tslint": "^6.1.3",
