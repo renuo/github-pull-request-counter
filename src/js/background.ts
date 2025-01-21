@@ -58,9 +58,7 @@ const ServiceWorker = () => {
     storage.storePullRequests(record);
   };
 
-  /**
-   * @param {Object.<string, Array>} record - Record of pull requests
-   */
+  // Record of pull requests
   const filterIgnoredPrs = async (record) => {
     const ignoredPrs = await PullRequestStorageAccessor().syncIgnoredPrs(record);
     Object.keys(record).forEach((key) => {
