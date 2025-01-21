@@ -13,11 +13,6 @@ exports.common = {
   module: {
     rules: [
       {
-        test: /\.ts?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/
-      },
-      {
         test: /\.s[ac]ss$/i,
         use: [
           "style-loader",
@@ -28,7 +23,7 @@ exports.common = {
     ],
   },
   resolve: {
-    extensions: ['.ts', '.js'],
+    extensions: ['.js'],
   },
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),

@@ -1,12 +1,6 @@
 module.exports = {
   preset: 'jest-puppeteer',
-  transform: {
-    '^.+\\.ts?$': 'ts-jest',
-  },
   globals: {
-    'ts-jest': {
-      diagnostics: false,
-    },
     'ENV': 'development',
   },
   "moduleNameMapper": {
@@ -14,7 +8,7 @@ module.exports = {
   },
   collectCoverage: true,
   collectCoverageFrom: [
-    "**/*ts",
+    "**/*.js",
     "!**/node_modules/**",
     "!**/dist/**",
     "!**/mocks/**",

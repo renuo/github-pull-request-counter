@@ -11,8 +11,8 @@
     "build-production": "webpack --config webpack.prod.js",
     "build-testing": "webpack --config webpack.testing.js",
     "test": "npm run build-testing; jest",
-    "lint": "tslint -c tslint.json 'src/**/*.ts' '__test__/**/*.ts'",
-    "fix": "tslint -c tslint.json 'src/**/*.ts' '__test__/**/*.ts' --fix"
+    "lint": "echo 'No TypeScript linting anymore'",
+    "fix": "echo 'No TypeScript linting anymore'"
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.0",
