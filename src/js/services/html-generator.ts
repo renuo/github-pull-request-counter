@@ -7,8 +7,8 @@ const HTMLGenerator = () => {
     topLevelDiv.classList.add('pull-requests-loaded');
 
     for (const key of Object.keys(record)) {
-      if (record[key as PullRequestRecordKey].length === 0) continue;
-      const lessRelevant = !counter[key as PullRequestRecordKey];
+      if (record[key as keyof typeof PullRequestRecordKey].length === 0) continue;
+      const lessRelevant = !counter[key as keyof typeof PullRequestRecordKey];
 
       const titleP = document.createElement('h5');
       // @ts-ignore

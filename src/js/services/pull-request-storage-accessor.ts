@@ -5,7 +5,7 @@ import { containsPullRequest, parsePullRequest } from '../static/utils.js';
 const PullRequestStorageAccessor = () => {
   const storePullRequests = (pullRequests: PullRequestRecord): void => {
     for (const key of Object.keys(pullRequests)) {
-      storePullRequest(key, pullRequests[key as PullRequestRecordKey]);
+      storePullRequest(key, pullRequests[key as keyof typeof PullRequestRecordKey]);
     }
   };
 
