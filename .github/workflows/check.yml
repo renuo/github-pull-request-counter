@@ -21,8 +21,7 @@ jobs:
     
     - name: Install Chrome dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y chromium-browser xvfb
+        sudo apt-get install -qq chromium-browser xvfb > /dev/null
 
     - name: Install dependencies
       run: |
