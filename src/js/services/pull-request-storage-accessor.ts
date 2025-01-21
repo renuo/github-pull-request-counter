@@ -1,4 +1,4 @@
-import { IgnoredPr, PullRequest, PullRequestRecord, PullRequestRecordKey } from '../static/types';
+import { IgnoredPr, PullRequest, PullRequestRecord, PullRequestRecordKey } from '../static/types.js';
 import SettingsStorageAccessor from './settings-storage-accessor';
 import { containsPullRequest, parsePullRequest } from '../static/utils.js';
 

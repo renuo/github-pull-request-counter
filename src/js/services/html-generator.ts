@@ -1,4 +1,4 @@
-import { CounterConfig, PullRequest, PullRequestRecord, PullRequestRecordKey } from '../static/types';
+import { CounterConfig, PullRequest, PullRequestRecord, PullRequestRecordKey } from '../static/types.js';
 import { recordKeysTranslations, extensionID } from '../static/constants';
 
 const HTMLGenerator = () => {
