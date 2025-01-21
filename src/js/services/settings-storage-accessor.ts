@@ -1,9 +1,22 @@
-import { CounterConfig } from '../static/types';
+import { PullRequestRecordKey } from '../static/types.js';
 
 const SettingsStorageAccessor = () => {
-  const storeCounterConfig = (counter: CounterConfig): void => store('counter', JSON.stringify(counter));
+  /**
+   * @param {{ [key: string]: boolean }} counter - Counter configuration
+   */
+  /** @type {(counter: { [key: string]: boolean }) => void} */
+  /**
+   * @param {{ [key: string]: boolean }} counter - Counter configuration object
+   * @returns {void}
+   */
+  /** @type {function({ [key: string]: boolean }): void} */
+  /** @param {{ [key: string]: boolean }} counter */
+  const storeCounterConfig = (counter) => store('counter', JSON.stringify(counter));
 
-  const loadCounterConfig = async (): Promise<CounterConfig> => {
+  /**
+   * @returns {Promise<{ [key: string]: boolean }>}
+   */
+  const loadCounterConfig = async () => {
     const counterJSON = await load('counter');
     if (counterJSON) {
       return JSON.parse(counterJSON);
@@ -19,38 +32,92 @@ const SettingsStorageAccessor = () => {
     }
   };
 
-  const storeScope = (list: string): void => store('scope', list);
+  /**
+   * @param {string} list - Scope list
+   */
+  /** @type {(list: string) => void} */
+  const storeScope = (list) => store('scope', list);
 
-  const loadScope = async (): Promise<string> => (await load('scope')) || '';
+  /** @type {() => Promise<string>} */
+  const loadScope = async () => (await load('scope')) || '';
 
-  const storeTeams = (list: string): void => store('teams', list);
+  /** @type {(list: string) => void} */
+  const storeTeams = (list) => store('teams', list);
 
-  const loadTeams = async (): Promise<string> => (await load('teams')) || '';
+  /** @type {() => Promise<string>} */
+  const loadTeams = async () => (await load('teams')) || '';
 
-  const storeIgnoredPrs = (list: string): void => store('ignored', list);
+  /** @type {(list: string) => void} */
+  const storeIgnoredPrs = (list) => store('ignored', list);
 
-  const loadIgnoredPrs = async (): Promise<string> => (await load('ignored')) || '';
+  /** @type {() => Promise<string>} */
+  const loadIgnoredPrs = async () => (await load('ignored')) || '';
 
-  const removeIgnoredPr = async (pr: string) => {
+  /** @type {(pr: string) => Promise<void>} */
+  /**
+   * @param {string} pr - Pull request identifier to remove
+   * @returns {Promise<void>}
+   */
+  /** @type {function(string): Promise<void>} */
+  /** @param {string} pr */
+  const removeIgnoredPr = async (pr) => {
     const ignoredPrs = await loadIgnoredPrs();
-    const newIgnoredPrs = ignoredPrs.split(',').filter((p) => p.trim() !== pr).join(',');
+    /** @type {(p: string) => boolean} */
+    /**
+     * @param {string} p
+     * @returns {boolean}
+     */
+  /** @type {function(string): boolean} */
+    const filterPr = (p) => {
+    return p.trim() !== pr;
+  };
+    const newIgnoredPrs = ignoredPrs.split(',').filter(filterPr).join(',');
     storeIgnoredPrs(newIgnoredPrs);
   };
 
-  const storeMaximumAge = (value: number): void => {
+  /**
+   * @param {number} value - Maximum age value
+   */
+  /** @param {number} value */
+  const storeMaximumAge = (value) => {
     store('maximumAge', value.toString());
   };
 
-  const loadMaximumAge = async (): Promise<number> => parseInt(await load('maximumAge') || '999', 10);
+  /**
+   * @returns {Promise<number>}
+   */
+  const loadMaximumAge = async () => parseInt(await load('maximumAge') || '999', 10);
 
-  const storeAccessToken = (accessToken: string): void => store('accessToken', accessToken);
+  /**
+   * @param {string} accessToken - GitHub access token
+   */
+  /** @param {string} accessToken */
+  const storeAccessToken = (accessToken) => store('accessToken', accessToken);
 
-  const loadAccessToken = async (): Promise<string> => (await load('accessToken')) || '';
+  /**
+   * @returns {Promise<string>}
+   */
+  const loadAccessToken = async () => (await load('accessToken')) || '';
 
-  const store = (key: string, value: string): void => chrome.storage.local.set({ [key]: value });
+  /**
+   * @param {string} key - Storage key
+   * @param {string} value - Storage value
+   */
+  /** @type {(key: string, value: string) => void} */
+  /** 
+   * @param {string} key 
+   * @param {string} value 
+   */
+  const store = (key, value) => chrome.storage.local.set({ [key]: value });
 
-  const load = async (key: string): Promise<string> => {
-    const data: { [key: string]: string } = await new Promise((resolve) => {
+  /**
+   * @param {string} key - Storage key
+   * @returns {Promise<string>}
+   */
+  /** @type {(key: string) => Promise<string>} */
+  const load = async (key) => {
+    /** @type {{ [key: string]: string }} */
+    const data = await new Promise((resolve) => {
       chrome.storage.local.get(key, (items) => {
         resolve(items);
       });

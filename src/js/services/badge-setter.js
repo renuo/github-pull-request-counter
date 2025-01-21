@@ -1,4 +1,9 @@
+/**
+ * @typedef {import('../static/types.js').PullRequest} PullRequest
+ */
+
 const BadgeSetter = () => {
+  /** @type {function(Object.<string, Array<PullRequest>>, Object.<string, boolean>): void} */
   const update = (record, counter) => {
     const count = calculateTotalPullRequests(record, counter);
 
@@ -6,6 +11,7 @@ const BadgeSetter = () => {
     chrome.action.setBadgeBackgroundColor({ color: calculateBackgroundColor(count) });
   };
 
+  /** @type {function(Object.<string, Array<PullRequest>>, Object.<string, boolean>): number} */
   const calculateTotalPullRequests = (record, counter) => {
     let total = 0;
 

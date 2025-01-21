@@ -1,23 +1,34 @@
-import { PullRequest, Issue } from '../static/types.js';
+import { PullRequestRecordKey } from '../static/types.js';
 import SettingsStorageAccessor from './settings-storage-accessor';
 import { globalMock } from '../../../__test__/mocks/github-api-mock-data';
 import { noAccessTokenError, tooManyRequestsError } from '../static/constants';
 
+/**
+ * @typedef {import('../static/types.js').PullRequest} PullRequest
+ */
+
 const GithubApiWrapper = async () => {
-  const getReviewRequested = async (): Promise<PullRequest[]> => {
+  /**
+   * @returns {Promise<PullRequest[]>}
+   */
+  const getReviewRequested = async () => {
     const query = encodeURIComponent(`is:open is:pr review-requested:${userName} archived:false`);
     const pullRequests = await makeApiRequest('/search/issues', `q=${query}`);
     const processedPullRequests = await processDataIntoPullRequests(pullRequests.items, false);
 
-    const teamPullRequestUrls = (await getTeamReviewRequested()).map(pr => pr.url);
-    return processedPullRequests.filter((pr) => !teamPullRequestUrls.includes(pr.url));
+    /** @type {string[]} */
+    const teamPullRequestUrls = (await getTeamReviewRequested()).map(/** @param {PullRequest} pr */ pr => pr.url);
+    return processedPullRequests.filter(/** @param {PullRequest} pr */ pr => !teamPullRequestUrls.includes(pr.url));
   };
 
-  const getTeamReviewRequested = async (): Promise<PullRequest[]> => {
+  /**
+   * @returns {Promise<Array<PullRequest>>}
+   */
+  const getTeamReviewRequested = async () => {
     const teams = await SettingsStorageAccessor().loadTeams();
     if (teams === '') return [];
 
-    let combinedPullRequests: Issue[] = [];
+    let combinedPullRequests = [];
 
     for (const team of teams.replace(/ /g, '').split(',')) {
       const query = encodeURIComponent(`is:open is:pr team-review-requested:${team} archived:false`);
@@ -29,47 +40,85 @@ const GithubApiWrapper = async () => {
     return processDataIntoPullRequests(combinedPullRequests, false);
   };
 
-  const getNoReviewRequested = async (): Promise<PullRequest[]> => {
+  /**
+   * @returns {Promise<Array<PullRequest>>}
+   */
+  const getNoReviewRequested = async () => {
     return processDataIntoPullRequests(await searchMyIssues('review:none'));
   };
 
-  const getAllReviewsDone = async (): Promise<PullRequest[]> => {
+  /**
+   * @returns {Promise<Array<PullRequest>>}
+   */
+  const getAllReviewsDone = async () => {
     return processDataIntoPullRequests(await searchMyIssues('-review:none'));
   };
 
-  const searchMyIssues = async (reviewModifier: string): Promise<Issue[]> => {
+  /**
+   * @param {string} reviewModifier - Review status modifier for the search query
+   * @returns {Promise<Array>}
+   */
+  const searchMyIssues = async (reviewModifier) => {
     const query = encodeURIComponent(`is:pr assignee:${userName} archived:false is:open ${reviewModifier}`);
     const response = await makeApiRequest('/search/issues', `q=${query}`);
 
-    return asyncFilterIssues(response.items, async (PullRequest: Issue) => {
+    return asyncFilterIssues(response.items, async (PullRequest) => {
       const requestedReviewers = (await makeRequest(`${PullRequest.pull_request.url}/requested_reviewers`));
       return requestedReviewers.users.length + requestedReviewers.teams.length === 0;
     });
   };
 
-  const asyncFilterIssues = async (pullRequests: Issue[], filter: (PullRequest: Issue) => Promise<boolean>) => {
+  /**
+   * @param {Array} pullRequests - Array of pull requests to filter
+   * @param {Function} filter - Filter function to apply
+   * @returns {Promise<Array>}
+   */
+  /**
+   * @param {Array<Object>} pullRequests - Array of pull requests to filter
+   * @param {(pr: Object) => Promise<boolean>} filter - Filter function to apply
+   * @param {number} index - Index in the array
+   * @returns {Promise<Array>}
+   */
+  const asyncFilterIssues = async (pullRequests, filter) => {
+    /** @type {boolean[]} */
     const response = await Promise.all(pullRequests.map(filter));
-    return pullRequests.filter((_item, index) => response[index]);
+    return pullRequests.filter((_, /** @type {number} */ index) => response[index]);
   };
 
-  const getMissingAssignee = async (): Promise<PullRequest[]> => {
+  /**
+   * @returns {Promise<Array<PullRequest>>}
+   */
+  const getMissingAssignee = async () => {
     const query = encodeURIComponent(`is:open is:pr author:${userName} draft:false archived:false`);
     let response = await makeApiRequest('/search/issues', `q=${query}`);
-    response = response.items.filter((s: PullRequest) => !s.assignee);
+    response = response.items.filter((s) => !s.assignee);
 
     return processDataIntoPullRequests(response);
   };
 
-  const getAllAssigned = async (): Promise<PullRequest[]> => {
+  /**
+   * @returns {Promise<Array<PullRequest>>}
+   */
+  const getAllAssigned = async () => {
     const query = encodeURIComponent(`is:open is:pr assignee:${userName} archived:false`);
     const response = await makeApiRequest('/search/issues', `q=${query}`);
 
     return processDataIntoPullRequests(response.items);
   };
 
-  const makeApiRequest = async (path: string, params?: string): Promise<any> => makeRequest(`https://api.github.com${path}`, params);
+  /**
+   * @param {string} path - API endpoint path
+   * @param {string} [params] - Optional query parameters
+   * @returns {Promise<any>}
+   */
+  const makeApiRequest = async (path, params) => makeRequest(`https://api.github.com${path}`, params);
 
-  const makeRequest = async (path: string, params?: string): Promise<any> => {
+  /**
+   * @param {string} path - Full API URL
+   * @param {string} [params] - Optional query parameters
+   * @returns {Promise<any>}
+   */
+  const makeRequest = async (path, params) => {
     // TODO: Find cleaner solution to mock the API during integration tests.
     /* istanbul ignore next */
     // @ts-ignore
@@ -84,7 +133,12 @@ const GithubApiWrapper = async () => {
     else return response.json();
   };
 
-  const processDataIntoPullRequests = async (issues: Issue[], shouldFilterByMaximumAge: boolean = true): Promise<PullRequest[]> => {
+  /**
+   * @param {Array<any>} issues - Array of GitHub API issue objects
+   * @param {boolean} [shouldFilterByMaximumAge=true] - Whether to filter by maximum age
+   * @returns {Promise<Array<PullRequest>>}
+   */
+  const processDataIntoPullRequests = async (issues, shouldFilterByMaximumAge = true) => {
     issues = await filterByScope(issues);
     const pullRequests = issues.map(issue => ({
       id: 12,
@@ -104,7 +158,11 @@ const GithubApiWrapper = async () => {
     return shouldFilterByMaximumAge ? filterByMaximumAge(sorted) : sorted;
   };
 
-  const filterByScope = async (issues: Issue[]): Promise<Issue[]> => {
+  /**
+   * @param {Array<any>} issues - Array of GitHub API issue objects
+   * @returns {Promise<Array<any>>}
+   */
+  const filterByScope = async (issues) => {
     const scope = await SettingsStorageAccessor().loadScope();
     if (scope === '') return issues;
 
@@ -114,20 +172,34 @@ const GithubApiWrapper = async () => {
     ));
   };
 
-  const sortByDate = (pullRequests: PullRequest[]) =>
-    pullRequests.sort((pullRequest1: PullRequest, pullRequest2: PullRequest) => (
+  /**
+   * @param {PullRequest[]} pullRequests - Array of pull requests to sort
+   * @returns {PullRequest[]}
+   */
+  /**
+   * @param {Array<PullRequest>} pullRequests - Array of pull requests to sort
+   * @param {PullRequest} pullRequest1 - First pull request to compare
+   * @param {PullRequest} pullRequest2 - Second pull request to compare
+   * @returns {Array<PullRequest>}
+   */
+  const sortByDate = (pullRequests) =>
+    pullRequests.sort((pullRequest1, pullRequest2) => (
       new Date(pullRequest2.createdAt).getTime() - new Date(pullRequest1.createdAt).getTime()
     ));
 
-  const readOwnerAndNameFromUrl = (url: string): string => url.replace('https://api.github.com/repos/', '').split('/pulls/')[0];
+  const readOwnerAndNameFromUrl = (url) => url.replace('https://api.github.com/repos/', '').split('/pulls/')[0];
 
-  const filterByMaximumAge = async (pullRequests: PullRequest[]): Promise<PullRequest[]> => {
+  const filterByMaximumAge = async (pullRequests) => {
     const maximumAge = await SettingsStorageAccessor().loadMaximumAge();
 
     return pullRequests.filter(pullRequest => pullRequest.ageInDays < maximumAge);
   };
 
-  const getDifferenceInDays = (date2: Date): number => (Date.now() - date2.getTime()) / 86_400_000; // 1000 * 3600 * 24
+  /**
+   * @param {Date} date2 - Date to compare with current time
+   * @returns {number} - Difference in days
+   */
+  const getDifferenceInDays = (date2) => (Date.now() - date2.getTime()) / 86_400_000; // 1000 * 3600 * 24
 
   const accessToken = await SettingsStorageAccessor().loadAccessToken();
   // TODO: Find cleaner solution to mock the API during integration tests.
