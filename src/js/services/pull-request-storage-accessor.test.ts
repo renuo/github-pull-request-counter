@@ -1,5 +1,6 @@
 import PullRequestStorageAccessor from './pull-request-storage-accessor';
 import { PullRequestRecord } from '../static/types';
+import { PullRequestRecordKey } from '../static/constants';
 import { pullRequestFactory, pullRequestRecordFactory } from '../../../__test__/mocks/factories';
 
 global.chrome = {
@@ -83,12 +84,12 @@ describe('PullRequestStorageAccessor', () => {
 
       it('loads empty arrays', () => {
         expect(result).toEqual({
-          reviewRequested: [],
-          teamReviewRequested: [],
-          noReviewRequested: [],
-          allReviewsDone: [],
-          missingAssignee: [],
-          allAssigned: [],
+          [PullRequestRecordKey.reviewRequested]: [],
+          [PullRequestRecordKey.teamReviewRequested]: [],
+          [PullRequestRecordKey.noReviewRequested]: [],
+          [PullRequestRecordKey.allReviewsDone]: [],
+          [PullRequestRecordKey.missingAssignee]: [],
+          [PullRequestRecordKey.allAssigned]: [],
         });
       });
     });
@@ -106,7 +107,7 @@ describe('PullRequestStorageAccessor', () => {
     describe('with one stored record', () => {
       beforeAll(() => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
-          callback({ 'reviewRequested': [JSON.stringify([pullRequestFactory(0)])] });
+          callback({ [PullRequestRecordKey.reviewRequested]: [JSON.stringify([pullRequestFactory(0)])] });
         });
 
         pullRequests = pullRequestRecordFactory({ reviewRequestedCount: 1 });
@@ -122,12 +123,12 @@ describe('PullRequestStorageAccessor', () => {
       beforeAll(() => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
           callback({
-            'reviewRequested': [JSON.stringify([pullRequestFactory(0)])],
-            'teamReviewRequested': [JSON.stringify([pullRequestFactory(0)])],
-            'noReviewRequested': [JSON.stringify([pullRequestFactory(0)])],
-            'allReviewsDone': [JSON.stringify([pullRequestFactory(0)])],
-            'missingAssignee': [JSON.stringify([pullRequestFactory(0)])],
-            'allAssigned': [JSON.stringify([pullRequestFactory(0)])],
+            [PullRequestRecordKey.reviewRequested]: [JSON.stringify([pullRequestFactory(0)])],
+            [PullRequestRecordKey.teamReviewRequested]: [JSON.stringify([pullRequestFactory(0)])],
+            [PullRequestRecordKey.noReviewRequested]: [JSON.stringify([pullRequestFactory(0)])],
+            [PullRequestRecordKey.allReviewsDone]: [JSON.stringify([pullRequestFactory(0)])],
+            [PullRequestRecordKey.missingAssignee]: [JSON.stringify([pullRequestFactory(0)])],
+            [PullRequestRecordKey.allAssigned]: [JSON.stringify([pullRequestFactory(0)])],
           });
         });
 

@@ -1,5 +1,6 @@
 import BadgeSetter from './badge-setter.js';
 import { PullRequestRecord } from '../static/types';
+import { PullRequestRecordKey } from '../static/constants';
 import { pullRequestRecordFactory } from '../../../__test__/mocks/factories';
 
 global.chrome = {

@@ -1,4 +1,5 @@
 import { CounterConfig } from '../static/types';
+import { PullRequestRecordKey } from '../static/constants';
 
 const SettingsStorageAccessor = () => {
   const storeCounterConfig = (counter: CounterConfig): void => store('counter', JSON.stringify(counter));
