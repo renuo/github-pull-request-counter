@@ -42,19 +42,15 @@ const setup = async () => {
     profileDir = getProfileDir();
     const extensionPath = path.join(__dirname, '../../dist');
     const pathToExtension = path.resolve(extensionPath);
-    
     // Set extension path for jest-puppeteer config
     process.env.EXTENSION_PATH = pathToExtension;
-    
     /* tslint:disable-next-line:no-console */
     console.log('Launching browser with profile:', profileDir);
-    
     // Use the global browser instance from jest-puppeteer
     browser = __BROWSER__;
     if (!browser) {
       throw new Error('Browser not initialized by jest-puppeteer');
     }
-    
     // Create a new incognito context
     const context = await browser.createIncognitoBrowserContext();
     page = await context.newPage();
@@ -78,23 +74,23 @@ const setup = async () => {
           const targets = await browser.targets();
           if (targets.length !== lastTargetCount) {
             /* tslint:disable-next-line:no-console */
-            console.log(`Found ${targets.length} targets:`, targets.map((target: puppeteer.Target) => ({ type: target.type(), url: target.url() })));
+            console.log(`Found ${targets.length} targets:`, targets.map((target: puppeteer.Target) => ({
+              type: target.type(),
+              url: target.url(),
+            })));
             lastTargetCount = targets.length;
           }
-          
           const target = targets.find(predicate);
           if (target) {
             /* tslint:disable-next-line:no-console */
             console.log('Target found:', { type: target.type(), url: target.url() });
             return target;
           }
-          
           // Log every 5 seconds if target not found
           if ((Date.now() - startTime) % 5000 < 1000) {
             /* tslint:disable-next-line:no-console */
             console.log(`Waiting for target... (${Math.round((Date.now() - startTime) / 1000)}s elapsed)`);
           }
-          
           await new Promise(resolve => setTimeout(resolve, 1000));
         } catch (error) {
           /* tslint:disable-next-line:no-console */
@@ -105,7 +101,7 @@ const setup = async () => {
       const availableTargets = await browser.targets();
       const targetInfo = availableTargets.map((target: puppeteer.Target) => ({
         type: target.type(),
-        url: target.url()
+        url: target.url(),
       }));
       throw new Error(`Target not found within ${timeout}ms. Available targets: ${JSON.stringify(targetInfo)}`);
     };
@@ -211,6 +207,7 @@ const teardown = async () => {
               .filter(context => context !== currentBrowser.defaultBrowserContext())
               .map(context => context.close().catch(() => { /* ignore context close errors */ }))
           ).catch(err => {
+            /* tslint:disable-next-line:no-console */
             console.error('Error closing browser contexts:', err);
           });
         }
