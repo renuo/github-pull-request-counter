@@ -1,0 +1,29 @@
+body {
+  background-color: var(--background-color);
+  color: var(--font-color);
+  margin: 10px;
+}
+
+a {
+  color: var(--link-blue);
+  display: inline-block;
+  font-size: 15px;
+  font-weight: bold;
+  max-width: 490px;
+  overflow: hidden;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+
+.link-in-text {
+  font-size: 12px;
+  margin-right: -3px;
+  overflow: visible;
+}

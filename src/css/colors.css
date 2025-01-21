@@ -1,0 +1,47 @@
+:root {
+  --background-color: #fff;
+  --hover-color: #000;
+  --link-blue: #1b18c0;
+  --font-color: #000;
+  --contrast-color: #fff;
+  
+  /* GitHub-like colors */
+  --border-color: #d0d7de;
+  --hover-bg: #f6f8fa;
+  --text-muted: rgb(87 96 106);
+  
+  /* Status colors */
+  --status-review-bg: #ddf4ff;
+  --status-review-text: #0969da;
+  --status-team-bg: #fff8c5;
+  --status-team-text: #9a6700;
+  --status-no-review-bg: #ffebe9;
+  --status-no-review-text: #cf222e;
+  --status-done-bg: #dafbe1;
+  --status-done-text: #1a7f37;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #1c2128;
+    --hover-color: #e2e2e2;
+    --link-blue: #539bf5;
+    --font-color: #fff;
+    --contrast-color: #000;
+    
+    /* GitHub-like colors */
+    --border-color: #30363d;
+    --hover-bg: #161b22;
+    --text-muted: rgb(139 148 158);
+    
+    /* Status colors */
+    --status-review-bg: #0c2d6b;
+    --status-review-text: #2f81f7;
+    --status-team-bg: #5a4a00;
+    --status-team-text: #d4a72c;
+    --status-no-review-bg: #67060c;
+    --status-no-review-text: #ff7b72;
+    --status-done-bg: #0f5323;
+    --status-done-text: #3fb950;
+  }
+}

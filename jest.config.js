@@ -1,23 +1,28 @@
-module.exports = {
+export default {
   preset: 'jest-puppeteer',
   transform: {
-    '^.+\\.ts?$': 'ts-jest',
+    '^.+\\.js$': ['babel-jest', {
+      presets: [['@babel/preset-env', { targets: { node: 'current' } }]],
+      plugins: ['@babel/plugin-transform-modules-commonjs']
+    }]
   },
   globals: {
-    'ts-jest': {
-      diagnostics: false,
-    },
-    'ENV': 'development',
+    ENV: 'testing',
   },
   "moduleNameMapper": {
     "^.+\\.(css|less|scss)$": "identity-obj-proxy"
   },
   collectCoverage: true,
   collectCoverageFrom: [
-    "**/*ts",
+    "src/js/**/*.js",
     "!**/node_modules/**",
     "!**/dist/**",
     "!**/mocks/**",
+    "!**/coverage/**",
+    "!jest.config.js",
+  ],
+  testPathIgnorePatterns: [
+    "/test/integration/"
   ],
   coverageThreshold: {
     "global": {
