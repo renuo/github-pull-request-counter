@@ -47,7 +47,7 @@ describe('HTMLGenerator', () => {
       });
 
       it('has the correct <div> as its second child', () => {
-        expect((result.childNodes[1] as HTMLDivElement).className).toEqual('group-container');
+        expect(result.childNodes[1].className).toEqual('group-container');
       });
 
       describe('second child', () => {
@@ -57,7 +57,7 @@ describe('HTMLGenerator', () => {
 
         describe('<div>', () => {
           it('has the correct link', () => {
-            const a = result.querySelector('.pr-link') as HTMLAnchorElement;
+            const a = result.querySelector('.pr-link');
 
             expect(a.href).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
             expect(a.target).toEqual('_blank');
@@ -65,7 +65,7 @@ describe('HTMLGenerator', () => {
           });
 
           it('has the correct subdescription', () => {
-            const p = result.querySelector('.repo-link') as HTMLParagraphElement;
+            const p = result.querySelector('.repo-link');
             expect(p.innerHTML).toContain('renuo/github-pull-request-counter');
           });
         });

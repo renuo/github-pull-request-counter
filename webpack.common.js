@@ -13,7 +13,7 @@ exports.common = {
   module: {
     rules: [
       {
-        test: /\.ts?$/,
+        test: /\.(ts|js)$/,
         use: 'ts-loader',
         exclude: /node_modules/
       },
