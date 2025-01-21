@@ -24,7 +24,10 @@
  * @property {string} author
  */
 
-/** @enum {string} */
+/**
+ * Constants for different types of pull request states
+ * @type {Object.<string, string>}
+ */
 export const PullRequestRecordKey = {
   reviewRequested: 'reviewRequested',
   teamReviewRequested: 'teamReviewRequested',
@@ -35,15 +38,19 @@ export const PullRequestRecordKey = {
 };
 
 /**
- * @typedef {Object.<keyof typeof PullRequestRecordKey, PullRequest[]>} PullRequestRecord
+ * @typedef {Object.<string, PullRequest[]>} PullRequestRecord
+ * @description Record mapping pull request states to arrays of pull requests
  */
 
 /**
- * @typedef {Object.<keyof typeof PullRequestRecordKey, boolean>} CounterConfig
+ * @typedef {Object.<string, boolean>} CounterConfig
+ * @description Configuration for which pull request states to count
  */
 
 /**
- * @typedef {Pick<PullRequest, 'ownerAndName'|'number'>} IgnoredPr
+ * @typedef {Object} IgnoredPr
+ * @property {string} ownerAndName - Repository owner and name
+ * @property {number} number - Pull request number
  */
 
 export default PullRequestRecordKey;

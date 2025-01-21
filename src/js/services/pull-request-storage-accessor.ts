@@ -1,19 +1,26 @@
-import { IgnoredPr, PullRequest, PullRequestRecord, PullRequestRecordKey } from '../static/types.js';
+import { PullRequestRecordKey } from '../static/types.js';
 import SettingsStorageAccessor from './settings-storage-accessor';
 import { containsPullRequest, parsePullRequest } from '../static/utils.js';
 
 const PullRequestStorageAccessor = () => {
-  const storePullRequests = (pullRequests: PullRequestRecord): void => {
+  /**
+   * @param {Object.<string, Array>} pullRequests - Record of pull requests
+   */
+  const storePullRequests = (pullRequests) => {
     for (const key of Object.keys(pullRequests)) {
-      storePullRequest(key, pullRequests[key as keyof typeof PullRequestRecordKey]);
+      storePullRequest(key, pullRequests[key]);
     }
   };
 
-  const storePullRequest = (key: string, pullRequest: PullRequest[]): void => {
+  /**
+   * @param {string} key - Key for storage
+   * @param {Array} pullRequest - Array of pull request objects
+   */
+  const storePullRequest = (key, pullRequest) => {
     chrome.storage.local.set({ [key]: JSON.stringify(pullRequest) });
   };
 
-  const loadPullRequests = async (): Promise<PullRequestRecord> => ({
+  const loadPullRequests = async () => ({
     reviewRequested: await loadPullRequest('reviewRequested'),
     teamReviewRequested: await loadPullRequest('teamReviewRequested'),
     noReviewRequested: await loadPullRequest('noReviewRequested'),
@@ -22,17 +29,32 @@ const PullRequestStorageAccessor = () => {
     allAssigned: await loadPullRequest('allAssigned'),
   });
 
-  const loadPullRequest = async (key: string): Promise<PullRequest[]> => {
-    const data: { [key: string]: string } = await new Promise((resolve) => {
+  /**
+   * @param {string} key - Key to load from storage
+   * @returns {Promise<Array>} Array of pull request objects
+   */
+  /**
+   * @param {string} key - Key to load from storage
+   * @returns {Promise<Array>} Array of pull request objects
+   */
+  const loadPullRequest = async (key) => {
+    /** @type {{ [key: string]: string }} */
+    const data = await new Promise((resolve) => {
       chrome.storage.local.get(key, (items) => {
         resolve(items);
       });
     });
 
-    return data[key] ? JSON.parse(data[key]) : [];
+    /** @type {string|undefined} */
+    const value = data[key];
+    return value ? JSON.parse(value) : [];
   };
 
-  const syncIgnoredPrs = async (record: PullRequestRecord): Promise<Partial<PullRequest>[]> => {
+  /**
+   * @param {Object.<string, Array>} record - Record of pull requests
+   * @returns {Promise<Array>} Array of ignored pull request objects
+   */
+  const syncIgnoredPrs = async (record) => {
     const ignoredPrsString = await SettingsStorageAccessor().loadIgnoredPrs();
     if (!ignoredPrsString.length) {
       return [];
@@ -52,7 +74,8 @@ const PullRequestStorageAccessor = () => {
     });
   };
 
-  const clearPullRequests = (): void => {
+  /** @returns {void} */
+  const clearPullRequests = () => {
     storePullRequests({
       noReviewRequested: [],
       teamReviewRequested: [],

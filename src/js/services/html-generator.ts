@@ -1,14 +1,20 @@
-import { CounterConfig, PullRequest, PullRequestRecord, PullRequestRecordKey } from '../static/types.js';
+import { PullRequestRecordKey } from '../static/types.js';
 import { recordKeysTranslations, extensionID } from '../static/constants';
 
 const HTMLGenerator = () => {
-  const generate = (record: PullRequestRecord, counter: CounterConfig): HTMLDivElement => {
+  /**
+   * @param {Object.<string, Array>} record - Record of pull requests
+   * @param {Object.<string, boolean>} counter - Counter configuration
+   * @returns {HTMLDivElement} Generated HTML element
+   */
+  /** @type {(record: Object.<string, Array>, counter: Object.<string, boolean>) => HTMLDivElement} */
+  const generate = (record, counter) => {
     const topLevelDiv = document.createElement('div');
     topLevelDiv.classList.add('pull-requests-loaded');
 
     for (const key of Object.keys(record)) {
-      if (record[key as keyof typeof PullRequestRecordKey].length === 0) continue;
-      const lessRelevant = !counter[key as keyof typeof PullRequestRecordKey];
+      if (record[key].length === 0) continue;
+      const lessRelevant = !counter[key];
 
       const titleP = document.createElement('h5');
       // @ts-ignore
@@ -17,7 +23,7 @@ const HTMLGenerator = () => {
       if (lessRelevant) titleP.classList.add('less-relevant-group');
       topLevelDiv.appendChild(titleP);
 
-      topLevelDiv.appendChild(generateLinkStructure(record[key as keyof typeof PullRequestRecordKey], lessRelevant));
+      topLevelDiv.appendChild(generateLinkStructure(record[key], lessRelevant));
     }
 
     if (topLevelDiv.children.length === 0) {
@@ -32,7 +38,13 @@ const HTMLGenerator = () => {
     return topLevelDiv;
   };
 
-  const generateLinkStructure = (pullRequests: PullRequest[], lessRelevant: boolean): HTMLDivElement => {
+  /**
+   * @param {Array} pullRequests - Array of pull request objects
+   * @param {boolean} lessRelevant - Whether the group is less relevant
+   * @returns {HTMLDivElement} Generated HTML element
+   */
+  /** @type {(pullRequests: Array, lessRelevant: boolean) => HTMLDivElement} */
+  const generateLinkStructure = (pullRequests, lessRelevant) => {
     const groupLevelDiv = document.createElement('div');
     groupLevelDiv.classList.add('group-container');
     if (lessRelevant) groupLevelDiv.classList.add('less-relevant-group');
@@ -63,7 +75,8 @@ const HTMLGenerator = () => {
     return groupLevelDiv;
   };
 
-  const generateNoContent = (): HTMLDivElement => {
+  /** @returns {HTMLDivElement} */
+  const generateNoContent = () => {
     const noContentDiv = document.createElement('div');
     noContentDiv.classList.add('group-container');
     const p1 = document.createElement('p');
@@ -76,7 +89,12 @@ const HTMLGenerator = () => {
     return noContentDiv;
   };
 
-  const generatePullRequestLink = (PullRequest: PullRequest) => {
+  /**
+   * @param {Object} PullRequest - Pull request object
+   * @returns {HTMLAnchorElement} Generated link element
+   */
+  /** @type {(PullRequest: Object) => HTMLAnchorElement} */
+  const generatePullRequestLink = (PullRequest) => {
     const link = document.createElement('a');
     link.classList.add('pr-link');
     link.appendChild(document.createTextNode(PullRequest.title));
@@ -85,7 +103,12 @@ const HTMLGenerator = () => {
     return link;
   };
 
-  const generateSubDescription = (PullRequest: PullRequest) => {
+  /**
+   * @param {Object} PullRequest - Pull request object
+   * @returns {HTMLParagraphElement} Generated description element
+   */
+  /** @type {(PullRequest: Object) => HTMLParagraphElement} */
+  const generateSubDescription = (PullRequest) => {
     const subDescriptionP = document.createElement('p');
     subDescriptionP.classList.add('subdescription');
     subDescriptionP.appendChild(document.createTextNode(`#${PullRequest.number} opened ${Math.floor(PullRequest.ageInDays)} days ago by ${PullRequest.author}`));
