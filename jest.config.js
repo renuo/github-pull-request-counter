@@ -2,6 +2,9 @@ module.exports = {
   preset: 'jest-puppeteer',
   transform: {
     '^.+\\.ts?$': 'ts-jest',
+    '^.+\\.js$': ['babel-jest', {
+      presets: [['@babel/preset-env', { targets: { node: 'current' } }]]
+    }]
   },
   globals: {
     'ts-jest': {
