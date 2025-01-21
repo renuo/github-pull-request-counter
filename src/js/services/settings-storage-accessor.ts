@@ -10,12 +10,12 @@ const SettingsStorageAccessor = () => {
       return JSON.parse(counterJSON);
     } else {
       return {
-        reviewRequested: true,
-        teamReviewRequested: true,
-        noReviewRequested: true,
-        allReviewsDone: true,
-        missingAssignee: true,
-        allAssigned: false,
+        [PullRequestRecordKey.reviewRequested]: true,
+        [PullRequestRecordKey.teamReviewRequested]: true,
+        [PullRequestRecordKey.noReviewRequested]: true,
+        [PullRequestRecordKey.allReviewsDone]: true,
+        [PullRequestRecordKey.missingAssignee]: true,
+        [PullRequestRecordKey.allAssigned]: false,
       };
     }
   };

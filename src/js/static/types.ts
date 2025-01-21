@@ -29,20 +29,14 @@ export interface PullRequest {
 
 import { PullRequestRecordKey } from './constants';
 
+type KeyType = typeof PullRequestRecordKey;
+type KeyValue = KeyType[keyof KeyType];
+
 export type PullRequestRecord = {
-  reviewRequested: PullRequest[];
-  teamReviewRequested: PullRequest[];
-  noReviewRequested: PullRequest[];
-  allReviewsDone: PullRequest[];
-  missingAssignee: PullRequest[];
-  allAssigned: PullRequest[];
+  [K in KeyValue]: PullRequest[];
 };
+
 export type CounterConfig = {
-  reviewRequested: boolean;
-  teamReviewRequested: boolean;
-  noReviewRequested: boolean;
-  allReviewsDone: boolean;
-  missingAssignee: boolean;
-  allAssigned: boolean;
+  [K in KeyValue]: boolean;
 };
 export type IgnoredPr = Pick<PullRequest, 'ownerAndName' | 'number'>;

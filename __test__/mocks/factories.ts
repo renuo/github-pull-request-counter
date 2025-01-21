@@ -1,4 +1,5 @@
 import { PullRequest, PullRequestRecord } from '../../src/js/static/types';
+import { PullRequestRecordKey } from '../../src/js/static/constants';
 
 export const pullRequestFactory = (index: number): PullRequest => ({
   id: index,
@@ -29,10 +30,10 @@ type FactoryConfiguration = {
   allAssignedCount?: number,
 };
 export const pullRequestRecordFactory = (props?: FactoryConfiguration): PullRequestRecord => ({
-  'reviewRequested': createPullRequests(props?.reviewRequestedCount || 0),
-  'teamReviewRequested': createPullRequests(props?.teamReviewRequestedCount || 0),
-  'noReviewRequested': createPullRequests(props?.noReviewRequestedCount || 0),
-  'allReviewsDone': createPullRequests(props?.allReviewsDoneCount || 0),
-  'missingAssignee': createPullRequests(props?.missingAssigneeCount || 0),
-  'allAssigned': createPullRequests(props?.allAssignedCount || 0),
+  [PullRequestRecordKey.reviewRequested]: createPullRequests(props?.reviewRequestedCount || 0),
+  [PullRequestRecordKey.teamReviewRequested]: createPullRequests(props?.teamReviewRequestedCount || 0),
+  [PullRequestRecordKey.noReviewRequested]: createPullRequests(props?.noReviewRequestedCount || 0),
+  [PullRequestRecordKey.allReviewsDone]: createPullRequests(props?.allReviewsDoneCount || 0),
+  [PullRequestRecordKey.missingAssignee]: createPullRequests(props?.missingAssigneeCount || 0),
+  [PullRequestRecordKey.allAssigned]: createPullRequests(props?.allAssignedCount || 0),
 });
