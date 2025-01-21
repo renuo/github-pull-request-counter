@@ -3,27 +3,16 @@ import SettingsStorageAccessor from './settings-storage-accessor';
 import { globalMock } from '../../../__test__/mocks/github-api-mock-data';
 import { noAccessTokenError, tooManyRequestsError } from '../static/constants';
 
-/**
- * @typedef {import('../static/types.js').PullRequest} PullRequest
- */
-
 const GithubApiWrapper = async () => {
-  /**
-   * @returns {Promise<PullRequest[]>}
-   */
   const getReviewRequested = async () => {
     const query = encodeURIComponent(`is:open is:pr review-requested:${userName} archived:false`);
     const pullRequests = await makeApiRequest('/search/issues', `q=${query}`);
     const processedPullRequests = await processDataIntoPullRequests(pullRequests.items, false);
 
-    /** @type {string[]} */
-    const teamPullRequestUrls = (await getTeamReviewRequested()).map(/** @param {PullRequest} pr */ pr => pr.url);
-    return processedPullRequests.filter(/** @param {PullRequest} pr */ pr => !teamPullRequestUrls.includes(pr.url));
+    const teamPullRequestUrls = (await getTeamReviewRequested()).map(pr => pr.url);
+    return processedPullRequests.filter(pr => !teamPullRequestUrls.includes(pr.url));
   };
 
-  /**
-   * @returns {Promise<Array<PullRequest>>}
-   */
   const getTeamReviewRequested = async () => {
     const teams = await SettingsStorageAccessor().loadTeams();
     if (teams === '') return [];
@@ -40,16 +29,10 @@ const GithubApiWrapper = async () => {
     return processDataIntoPullRequests(combinedPullRequests, false);
   };
 
-  /**
-   * @returns {Promise<Array<PullRequest>>}
-   */
   const getNoReviewRequested = async () => {
     return processDataIntoPullRequests(await searchMyIssues('review:none'));
   };
 
-  /**
-   * @returns {Promise<Array<PullRequest>>}
-   */
   const getAllReviewsDone = async () => {
     return processDataIntoPullRequests(await searchMyIssues('-review:none'));
   };
@@ -68,26 +51,12 @@ const GithubApiWrapper = async () => {
     });
   };
 
-  /**
-   * @param {Array} pullRequests - Array of pull requests to filter
-   * @param {Function} filter - Filter function to apply
-   * @returns {Promise<Array>}
-   */
-  /**
-   * @param {Array<Object>} pullRequests - Array of pull requests to filter
-   * @param {(pr: Object) => Promise<boolean>} filter - Filter function to apply
-   * @param {number} index - Index in the array
-   * @returns {Promise<Array>}
-   */
+  // Filter pull requests asynchronously using the provided filter function
   const asyncFilterIssues = async (pullRequests, filter) => {
-    /** @type {boolean[]} */
     const response = await Promise.all(pullRequests.map(filter));
-    return pullRequests.filter((_, /** @type {number} */ index) => response[index]);
+    return pullRequests.filter((_, index) => response[index]);
   };
 
-  /**
-   * @returns {Promise<Array<PullRequest>>}
-   */
   const getMissingAssignee = async () => {
     const query = encodeURIComponent(`is:open is:pr author:${userName} draft:false archived:false`);
     let response = await makeApiRequest('/search/issues', `q=${query}`);
@@ -96,9 +65,6 @@ const GithubApiWrapper = async () => {
     return processDataIntoPullRequests(response);
   };
 
-  /**
-   * @returns {Promise<Array<PullRequest>>}
-   */
   const getAllAssigned = async () => {
     const query = encodeURIComponent(`is:open is:pr assignee:${userName} archived:false`);
     const response = await makeApiRequest('/search/issues', `q=${query}`);

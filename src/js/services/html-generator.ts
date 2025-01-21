@@ -2,12 +2,7 @@ import { PullRequestRecordKey } from '../static/types.js';
 import { recordKeysTranslations, extensionID } from '../static/constants';
 
 const HTMLGenerator = () => {
-  /**
-   * @param {Object.<string, Array>} record - Record of pull requests
-   * @param {Object.<string, boolean>} counter - Counter configuration
-   * @returns {HTMLDivElement} Generated HTML element
-   */
-  /** @type {(record: Object.<string, Array>, counter: Object.<string, boolean>) => HTMLDivElement} */
+
   const generate = (record, counter) => {
     const topLevelDiv = document.createElement('div');
     topLevelDiv.classList.add('pull-requests-loaded');
@@ -38,12 +33,6 @@ const HTMLGenerator = () => {
     return topLevelDiv;
   };
 
-  /**
-   * @param {Array} pullRequests - Array of pull request objects
-   * @param {boolean} lessRelevant - Whether the group is less relevant
-   * @returns {HTMLDivElement} Generated HTML element
-   */
-  /** @type {(pullRequests: Array, lessRelevant: boolean) => HTMLDivElement} */
   const generateLinkStructure = (pullRequests, lessRelevant) => {
     const groupLevelDiv = document.createElement('div');
     groupLevelDiv.classList.add('group-container');
@@ -75,7 +64,6 @@ const HTMLGenerator = () => {
     return groupLevelDiv;
   };
 
-  /** @returns {HTMLDivElement} */
   const generateNoContent = () => {
     const noContentDiv = document.createElement('div');
     noContentDiv.classList.add('group-container');
@@ -89,11 +77,6 @@ const HTMLGenerator = () => {
     return noContentDiv;
   };
 
-  /**
-   * @param {Object} PullRequest - Pull request object
-   * @returns {HTMLAnchorElement} Generated link element
-   */
-  /** @type {(PullRequest: Object) => HTMLAnchorElement} */
   const generatePullRequestLink = (PullRequest) => {
     const link = document.createElement('a');
     link.classList.add('pr-link');
@@ -103,11 +86,6 @@ const HTMLGenerator = () => {
     return link;
   };
 
-  /**
-   * @param {Object} PullRequest - Pull request object
-   * @returns {HTMLParagraphElement} Generated description element
-   */
-  /** @type {(PullRequest: Object) => HTMLParagraphElement} */
   const generateSubDescription = (PullRequest) => {
     const subDescriptionP = document.createElement('p');
     subDescriptionP.classList.add('subdescription');
