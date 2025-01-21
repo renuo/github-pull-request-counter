@@ -24,6 +24,7 @@
  * @property {string} author
  */
 
+/** @enum {string} */
 export const PullRequestRecordKey = {
   reviewRequested: 'reviewRequested',
   teamReviewRequested: 'teamReviewRequested',
@@ -34,15 +35,15 @@ export const PullRequestRecordKey = {
 };
 
 /**
- * @typedef {Object.<string, PullRequest[]>} PullRequestRecord
+ * @typedef {Object.<keyof typeof PullRequestRecordKey, PullRequest[]>} PullRequestRecord
  */
 
 /**
- * @typedef {Object.<string, boolean>} CounterConfig
+ * @typedef {Object.<keyof typeof PullRequestRecordKey, boolean>} CounterConfig
  */
 
 /**
  * @typedef {Pick<PullRequest, 'ownerAndName'|'number'>} IgnoredPr
  */
 
-export { PullRequestRecordKey as default };
+export default PullRequestRecordKey;
