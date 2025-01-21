@@ -1,28 +1,6 @@
-/**
- * @typedef {Object} Issue
- * @property {number} id
- * @property {string} [assignee]
- * @property {string} title
- * @property {number} number
- * @property {number} created_at
- * @property {string} repository_url
- * @property {{ url: string, html_url: string }} pull_request
- * @property {{ login: string }} user
- */
-
-/**
- * Creates a mock list of pull requests
- * @param {number} count - Number of pull requests to mock
- * @param {{ assignee?: string, created_at?: number }} [params] - Optional parameters
- * @returns {{ total_count: number, items: Array<import('../../src/js/static/types.js').Issue> }}
- */
-/** @type {function(number, { assignee?: string, created_at?: number }): { total_count: number, items: Array<import('../../src/js/static/types.js').Issue> }} */
+// Creates a mock list of pull requests
 export const mockListOfPullRequests = (count, params) => {
-    /**
-     * @param {number} count
-     * @returns {Array<Issue>}
-     */
-  /** @type {function(number): Array<Issue>} */
+    // Creates an array of mock issues
   function createIssues(count) {
     const items = [];
 
@@ -53,21 +31,11 @@ export const mockListOfPullRequests = (count, params) => {
   };
 };
 
-/**
- * @param {number} usersCount - Number of user reviewers
- * @param {number} teamsCount - Number of team reviewers
- * @returns {Object} Mock reviewers object
- */
-/**
- * @param {number} usersCount - Number of user reviewers to create
- * @param {number} teamsCount - Number of team reviewers to create
- * @returns {{ users: Array<{id: number}>, teams: Array<{id: number}> }}
- */
+// Creates mock reviewer objects for users and teams
 export const mockRequestedReviewers = (usersCount, teamsCount) => {
-  /** @returns {number} */
+
   const createRandomID = () => Math.floor(Math.random() * 100);
 
-  /** @param {number} count */
   const createReviewers = (count) => {
     const reviewer = [];
     for (let i = 0; i < count; i++) {
@@ -82,18 +50,7 @@ export const mockRequestedReviewers = (usersCount, teamsCount) => {
   };
 };
 
-/**
- * @typedef {Object} GlobalMockParams
- * @property {number} [pullRequestCount] - Number of pull requests to mock
- * @property {number} [openUserRequestCount] - Number of open user requests
- * @property {number} [openTeamRequestCount] - Number of open team requests
- */
-
-/**
- * @param {string} url - URL to mock
- * @param {GlobalMockParams} [params] - Mock parameters
- * @returns {Promise<{ json: () => any }>}
- */
+// Mock API response for pull request data
 export const globalMock = (url, params) => {
   if (url.includes('/requested_reviewers')) {
     return Promise.resolve({
