@@ -29,6 +29,10 @@ export interface PullRequest {
 
 import { PullRequestRecordKey } from './constants';
 
-export type PullRequestRecord = Record<keyof typeof PullRequestRecordKey, PullRequest[]>;
-export type CounterConfig = Record<keyof typeof PullRequestRecordKey, boolean>;
+export type PullRequestRecord = {
+  [K in keyof typeof PullRequestRecordKey]: PullRequest[];
+};
+export type CounterConfig = {
+  [K in keyof typeof PullRequestRecordKey]: boolean;
+};
 export type IgnoredPr = Pick<PullRequest, 'ownerAndName' | 'number'>;
