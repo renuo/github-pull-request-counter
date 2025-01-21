@@ -1,4 +1,4 @@
-export const recordKeysTranslations: { [key: string]: string } = {
+export const recordKeysTranslations = {
   reviewRequested: 'I must review',
   teamReviewRequested: 'My team must review',
   noReviewRequested: 'No review requested',
