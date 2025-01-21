@@ -6,7 +6,7 @@ import { pullRequestFactory } from '../../__test__/mocks/factories';
 import Popup from './popup';
 import fs from 'fs';
 import path from 'path';
-import { PullRequestRecordKey } from './static/types';
+import { PullRequestRecordKey } from './static/constants';
 
 const pullRequestSample = [pullRequestFactory(0), pullRequestFactory(0)];
 const storageObject = Object.values(PullRequestRecordKey).reduce((obj, key) => {
