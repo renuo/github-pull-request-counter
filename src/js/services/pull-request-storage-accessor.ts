@@ -1,30 +1,30 @@
-import { IgnoredPr, PullRequest, PullRequestRecord } from '../static/types';
 import { PullRequestRecordKey } from '../static/constants';
 import SettingsStorageAccessor from './settings-storage-accessor';
 import { containsPullRequest, parsePullRequest } from '../static/utils.js';
+import { PullRequest, PullRequestRecord } from '../static/types';
 
 const PullRequestStorageAccessor = () => {
-  const storePullRequests = (pullRequests: PullRequestRecord): void => {
+  const storePullRequests = (pullRequests: PullRequestRecord) => {
     for (const key of Object.keys(pullRequests)) {
-      storePullRequest(key, pullRequests[key as keyof typeof PullRequestRecordKey]);
+      storePullRequest(PullRequestRecordKey[key as keyof typeof PullRequestRecordKey], pullRequests[key as keyof PullRequestRecord]);
     }
   };
 
-  const storePullRequest = (key: string, pullRequest: PullRequest[]): void => {
+  const storePullRequest = (key: string, pullRequest: PullRequest[]) => {
     chrome.storage.local.set({ [key]: JSON.stringify(pullRequest) });
   };
 
-  const loadPullRequests = async (): Promise<PullRequestRecord> => ({
-    reviewRequested: await loadPullRequest('reviewRequested'),
-    teamReviewRequested: await loadPullRequest('teamReviewRequested'),
-    noReviewRequested: await loadPullRequest('noReviewRequested'),
-    allReviewsDone: await loadPullRequest('allReviewsDone'),
-    missingAssignee: await loadPullRequest('missingAssignee'),
-    allAssigned: await loadPullRequest('allAssigned'),
+  const loadPullRequests = async () => ({
+    [PullRequestRecordKey.reviewRequested]: await loadPullRequest(PullRequestRecordKey.reviewRequested),
+    [PullRequestRecordKey.teamReviewRequested]: await loadPullRequest(PullRequestRecordKey.teamReviewRequested),
+    [PullRequestRecordKey.noReviewRequested]: await loadPullRequest(PullRequestRecordKey.noReviewRequested),
+    [PullRequestRecordKey.allReviewsDone]: await loadPullRequest(PullRequestRecordKey.allReviewsDone),
+    [PullRequestRecordKey.missingAssignee]: await loadPullRequest(PullRequestRecordKey.missingAssignee),
+    [PullRequestRecordKey.allAssigned]: await loadPullRequest(PullRequestRecordKey.allAssigned),
   });
 
   const loadPullRequest = async (key: string): Promise<PullRequest[]> => {
-    const data: { [key: string]: string } = await new Promise((resolve) => {
+    const data = await new Promise<{ [key: string]: string }>((resolve) => {
       chrome.storage.local.get(key, (items) => {
         resolve(items);
       });
@@ -53,15 +53,16 @@ const PullRequestStorageAccessor = () => {
     });
   };
 
-  const clearPullRequests = (): void => {
-    storePullRequests({
-      noReviewRequested: [],
-      teamReviewRequested: [],
-      allReviewsDone: [],
-      missingAssignee: [],
-      reviewRequested: [],
-      allAssigned: [],
-    });
+  const clearPullRequests = () => {
+    const emptyRecord: PullRequestRecord = {
+      [PullRequestRecordKey.noReviewRequested]: [] as PullRequest[],
+      [PullRequestRecordKey.teamReviewRequested]: [] as PullRequest[],
+      [PullRequestRecordKey.allReviewsDone]: [] as PullRequest[],
+      [PullRequestRecordKey.missingAssignee]: [] as PullRequest[],
+      [PullRequestRecordKey.reviewRequested]: [] as PullRequest[],
+      [PullRequestRecordKey.allAssigned]: [] as PullRequest[],
+    };
+    storePullRequests(emptyRecord);
   };
 
   return { storePullRequests, loadPullRequests, clearPullRequests, syncIgnoredPrs, parsePullRequest };

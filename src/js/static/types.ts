@@ -30,9 +30,19 @@ export interface PullRequest {
 import { PullRequestRecordKey } from './constants';
 
 export type PullRequestRecord = {
-  [K in keyof typeof PullRequestRecordKey]: PullRequest[];
+  reviewRequested: PullRequest[];
+  teamReviewRequested: PullRequest[];
+  noReviewRequested: PullRequest[];
+  allReviewsDone: PullRequest[];
+  missingAssignee: PullRequest[];
+  allAssigned: PullRequest[];
 };
 export type CounterConfig = {
-  [K in keyof typeof PullRequestRecordKey]: boolean;
+  reviewRequested: boolean;
+  teamReviewRequested: boolean;
+  noReviewRequested: boolean;
+  allReviewsDone: boolean;
+  missingAssignee: boolean;
+  allAssigned: boolean;
 };
 export type IgnoredPr = Pick<PullRequest, 'ownerAndName' | 'number'>;
