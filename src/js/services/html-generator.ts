@@ -39,6 +39,8 @@ const HTMLGenerator = () => {
 
     for (const PullRequest of pullRequests) {
       const pullRequestDiv = document.createElement('div');
+      pullRequestDiv.classList.add('link-container');
+
       const firstRow = document.createElement('div');
       const secondRow = document.createElement('div');
       pullRequestDiv.appendChild(firstRow);
@@ -55,7 +57,6 @@ const HTMLGenerator = () => {
       firstRow.appendChild(generatePullRequestLink(PullRequest));
       secondRow.appendChild(generateSubDescription(PullRequest));
 
-      pullRequestDiv.classList.add('link-container');
       groupLevelDiv.appendChild(pullRequestDiv);
     }
 

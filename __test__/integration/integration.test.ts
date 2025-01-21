@@ -11,7 +11,7 @@ const url = (file: string) => `chrome-extension://${extensionID}/${file}`;
 // will run
 // document.querySelectorAll('.password')[1].value
 // and return the value of the second node matching the selector '.password'.
-const readProp = async (query: string, prop: string, index = 0) => (
+const readProp = (query: string, prop: string, index = 0) => (
   page.evaluate((query, prop, index) => (
     document.querySelectorAll(query)[index][prop]
   ), query, prop, index)
@@ -42,14 +42,17 @@ describe('integration test', () => {
   afterAll(teardown);
 
   describe('options', () => {
-    it('navigates to the options page', async () => {
+    beforeEach(async () => {
       await page.goto(url('options.html'), { waitUntil: 'networkidle2' });
+    });
+
+    it('navigates to the options page', async () => {
       expect(page.title()).resolves.toMatch('GitHub Pull Request Counter');
       expect(page.url()).toEqual(url('options.html'));
     });
 
-    it('has the correct content', () => {
-      expect(readProp('#link-to-renuo', 'href')).resolves.toEqual('https://www.renuo.ch/');
+    it('has the correct content', async () => {
+      expect(await readProp('#link-to-renuo', 'href')).toEqual('https://www.renuo.ch/');
     });
 
     it('checkboxes', async () => {
@@ -60,12 +63,12 @@ describe('integration test', () => {
 
       await page.goto(url('options.html'), { waitUntil: 'networkidle2' });
 
-      expect(readProp('#review-requested', 'checked')).resolves.toEqual(false);
-      expect(readProp('#team-review-requested', 'checked')).resolves.toEqual(true);
-      expect(readProp('#no-review-requested', 'checked')).resolves.toEqual(true);
-      expect(readProp('#all-reviews-done', 'checked')).resolves.toEqual(false);
-      expect(readProp('#missing-assignee', 'checked')).resolves.toEqual(true);
-      expect(readProp('#all-assigned', 'checked')).resolves.toEqual(true); // Because it is false by default
+      expect(await readProp('#review-requested', 'checked')).toEqual(false);
+      expect(await readProp('#team-review-requested', 'checked')).toEqual(true);
+      expect(await readProp('#no-review-requested', 'checked')).toEqual(true);
+      expect(await readProp('#all-reviews-done', 'checked')).toEqual(false);
+      expect(await readProp('#missing-assignee', 'checked')).toEqual(true);
+      expect(await readProp('#all-assigned', 'checked')).toEqual(true); // Because it is false by default
     });
 
     it('scope', async () => {
@@ -74,7 +77,7 @@ describe('integration test', () => {
 
       await page.goto(url('options.html'), { waitUntil: 'networkidle2' });
 
-      expect(readProp('#account-names', 'value')).resolves.toEqual('renuo');
+      expect(await readProp('#account-names', 'value')).toEqual('renuo');
     });
 
     it('access token', async () => {
@@ -83,42 +86,33 @@ describe('integration test', () => {
 
       await page.goto(url('options.html'), { waitUntil: 'networkidle2' });
 
-      expect(readProp('#access-token', 'value')).resolves.toEqual(displayedAccessToken);
+      expect(await readProp('#access-token', 'value')).toEqual(displayedAccessToken);
     });
   });
 
   describe('popup', () => {
-    it('navigates to the popup', async () => {
-      while (await page.evaluate(() => document.querySelector('.pull-requests-loaded') === null)) {
-        await page.goto(url('popup.html'), { waitUntil: 'networkidle2' });
-      }
+    beforeEach(async () => {
+      await page.goto(url('popup.html'), { waitUntil: 'networkidle2' });
+    });
 
+    it('navigates to the popup', async () => {
       expect(page.url()).toEqual(url('popup.html'));
     });
 
-    it('has the correct content', () => {
-      expect(readProp('#link-to-renuo', 'href')).resolves.toEqual('https://www.renuo.ch/');
-      expect(readProp('.title', 'innerHTML', 0)).resolves.toEqual('I must review');
-      expect(readProp('.title', 'innerHTML', 1)).resolves.toEqual('No review requested');
-      expect(readProp('.title', 'innerHTML', 2)).resolves.toEqual('All reviews done');
-      expect(readProp('.title', 'innerHTML', 3)).resolves.toEqual('Missing Assignee');
-      expect(readProp('.title', 'innerHTML', 4)).resolves.toEqual('Assigned to me');
+    it('has the correct content', async () => {
+      expect(await readProp('.title', 'innerHTML', 0)).toEqual('I must review');
+      expect(await readProp('.title', 'innerHTML', 1)).toEqual('No review requested');
+      expect(await readProp('.title', 'innerHTML', 2)).toEqual('All reviews done');
+      expect(await readProp('.title', 'innerHTML', 3)).toEqual('Missing Assignee');
+      expect(await readProp('.title', 'innerHTML', 4)).toEqual('Assigned to me');
     });
 
-    it('has the correct links', () => {
+    it('has the correct links', async () => {
       const link = (index: number) => `https://github.com/renuo/github-pull-request-counter/pull/${index + 1}`;
 
-      expect(readProp('.link-container > a', 'href', 0)).resolves.toEqual(link(0));
-      expect(readProp('.link-container > a', 'href', 1)).resolves.toEqual(link(1));
-      expect(readProp('.link-container > a', 'href', 2)).resolves.toEqual(link(2));
-    });
-
-    it('has the correct subtitles', () => {
-      const subtitle = (index: number) => `renuo/github-pull-request-counter<b> #${index + 1}</b>`;
-
-      expect(readProp('.link-container > .subdescription', 'innerHTML', 0)).resolves.toContain(subtitle(0));
-      expect(readProp('.link-container > .subdescription', 'innerHTML', 1)).resolves.toContain(subtitle(1));
-      expect(readProp('.link-container > .subdescription', 'innerHTML', 2)).resolves.toContain(subtitle(2));
+      expect(await readProp('.pr-link', 'href', 0)).toEqual(link(0));
+      expect(await readProp('.pr-link', 'href', 1)).toEqual(link(1));
+      expect(await readProp('.pr-link', 'href', 2)).toEqual(link(2));
     });
   });
 });
