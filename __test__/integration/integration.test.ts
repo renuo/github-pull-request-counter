@@ -5,7 +5,7 @@ import path from 'path';
 let browser: puppeteer.Browser;
 let page: puppeteer.Page;
 
-const url = (file: string) => `chrome-extension://${extensionID}/${file}`;
+const url = (file: string): string => `chrome-extension://${extensionID}/${file}`;
 
 // readProp('.password', 'value', 1)
 // will run
@@ -17,7 +17,7 @@ const readProp = (query: string, prop: string, index = 0) => (
   ), query, prop, index)
 );
 
-const setup = async () => {
+const setup = async (): Promise<void> => {
   const extensionPath = path.join(__dirname, '../../dist');
 
   const isHeadless = process.env.PUPPETEER_HEADLESS?.toLowerCase() !== 'false';
@@ -41,10 +41,10 @@ const setup = async () => {
 
   page = await browser.newPage();
 
-  page.on('dialog', async dialog => dialog.dismiss());
+  page.on('dialog', async (dialog: puppeteer.Dialog) => dialog.dismiss());
 };
 
-const teardown = async () => {
+const teardown = async (): Promise<void> => {
   await browser.close();
 };
 
