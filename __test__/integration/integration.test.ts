@@ -29,8 +29,8 @@ const setup = async () => {
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
-      '--disable-gpu'
-    ] : [])
+      '--disable-gpu',
+    ] : []),
   ];
 
   browser = await puppeteer.launch({
