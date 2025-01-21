@@ -1,4 +1,4 @@
-import { PullRequest, PullRequestRecord } from '../../src/js/static/types';
+import { PullRequest, PullRequestRecord } from '../../src/js/static/types.js';
 
 export const pullRequestFactory = (index: number): PullRequest => ({
   id: index,
