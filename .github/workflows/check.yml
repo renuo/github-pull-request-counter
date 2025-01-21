@@ -34,6 +34,8 @@ jobs:
         PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium-browser
         PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
         DISPLAY: ':99.0'
+        CI: 'true'
+        PUPPETEER_HEADLESS: 'true'
       run: |
         Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
         chmod +x bin/check
