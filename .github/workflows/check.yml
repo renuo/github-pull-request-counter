@@ -1,0 +1,65 @@
+name: Run Checks
+
+on:
+  push:
+    branches: [ feature/v2 ]
+  pull_request:
+    branches: [ feature/v2 ]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+        cache: 'npm'
+    
+    - name: Set up Chrome cache directory
+      run: |
+        sudo mkdir -p /opt/chrome-cache
+        sudo chown -R $USER:$USER /opt/chrome-cache
+
+    - name: Cache Chrome binaries
+      uses: actions/cache@v3
+      id: chrome-cache
+      with:
+        path: /opt/chrome-cache
+        key: ${{ runner.os }}-chrome-bin-${{ hashFiles('.github/workflows/check.yml') }}
+        restore-keys: |
+          ${{ runner.os }}-chrome-bin-
+
+    - name: Install and cache Chrome dependencies
+      run: |
+        if [ ! -f "/opt/chrome-cache/chromium-browser" ] || [ ! -f "/opt/chrome-cache/xvfb-run" ]; then
+          echo "Cache miss - Installing Chrome dependencies..."
+          sudo apt-get install -qq chromium-browser xvfb > /dev/null
+          sudo cp /usr/bin/chromium-browser /opt/chrome-cache/
+          sudo cp /usr/bin/xvfb-run /opt/chrome-cache/
+        else
+          echo "Cache hit - Restoring Chrome dependencies..."
+        fi
+        sudo cp /opt/chrome-cache/chromium-browser /usr/bin/
+        sudo cp /opt/chrome-cache/xvfb-run /usr/bin/
+
+    - name: Install dependencies
+      run: |
+        npm install
+        npm install -g sass-lint
+    
+    - name: Run checks
+      env:
+        PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium-browser
+        PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
+        DISPLAY: ':99.0'
+        CI: 'true'
+        PUPPETEER_HEADLESS: 'true'
+      run: |
+        Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+        chmod +x bin/check
+        chmod +x bin/fastcheck
+        bin/check
