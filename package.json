@@ -13,7 +13,6 @@
     "test": "npm run build-testing; jest",
     "lint": "tslint -c tslint.json 'src/**/*.ts' '__test__/**/*.ts'",
     "fix": "tslint -c tslint.json 'src/**/*.ts' '__test__/**/*.ts' --fix",
-    "sass-lint": "stylelint \"src/css/**/*.css\" --config .stylelintrc",
     "css-lint": "stylelint \"src/css/**/*.css\" --config .stylelintrc"
   },
   "devDependencies": {
