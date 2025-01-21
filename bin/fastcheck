@@ -11,7 +11,7 @@ if [ ! $? -eq 0 ]; then
 fi
 
 echo "Executing stylelint"
-npm run sass-lint
+npm run css-lint
 if [ ! $? -eq 0 ]; then
   echo '\033[31mYou have CSS linting errors.\033[0m'
   exit 1
