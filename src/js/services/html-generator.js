@@ -1,4 +1,4 @@
-import { recordKeysTranslations, extensionID } from '../static/constants';
+import { recordKeysTranslations, extensionID, PullRequestRecordKey } from '../static/constants';
 
 const HTMLGenerator = () => {
   const generate = (record, counter) => {
@@ -15,7 +15,7 @@ const HTMLGenerator = () => {
       if (lessRelevant) titleP.classList.add('less-relevant-group');
       topLevelDiv.appendChild(titleP);
 
-      topLevelDiv.appendChild(generateLinkStructure(record[recordKey], lessRelevant, recordKey));
+      topLevelDiv.appendChild(generateLinkStructure(record[key], lessRelevant, key));
     }
 
     if (topLevelDiv.children.length === 0) {

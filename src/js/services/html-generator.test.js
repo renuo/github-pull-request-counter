@@ -85,11 +85,11 @@ describe('HTMLGenerator', () => {
         });
 
         it('the title has an additional class', () => {
-          expect((result.childNodes[0] as HTMLParagraphElement).classList.value).toEqual('title less-relevant-group');
+          expect(result.childNodes[0].classList.value).toEqual('title less-relevant-group');
         });
 
         it('the group container has an additional class', () => {
-          expect((result.childNodes[1] as HTMLDivElement).classList.value).toEqual('group-container less-relevant-group');
+          expect(result.childNodes[1].classList.value).toEqual('group-container less-relevant-group');
         });
       });
     });
