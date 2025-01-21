@@ -1,14 +1,14 @@
-import ServiceWorker from './background';
-import { globalMock } from '../../__test__/mocks/github-api-mock-data';
+import ServiceWorker from './background.js';
+import { globalMock } from '../../__test__/mocks/github-api-mock-data.js';
 import fetch from 'node-fetch';
 
 jest.mock('node-fetch');
-const mockedFetch = fetch as any;
+const mockedFetch = fetch;
 
 global.fetch = mockedFetch;
-global.btoa = (data: string) => Buffer.from(data).toString('base64');
+global.btoa = (data) => Buffer.from(data).toString('base64');
 
-mockedFetch.mockImplementation((url: string) => globalMock(url, { pullRequestCount: 2 }));
+mockedFetch.mockImplementation((url) => globalMock(url, { pullRequestCount: 2 }));
 
 global.chrome = {
   alarms: {
@@ -19,7 +19,7 @@ global.chrome = {
   },
   storage: {
     local: {
-      get: jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+      get: jest.fn().mockImplementation((_keys, callback) => callback({
         'counter': undefined,
         'accessToken': 'secret',
       })),
@@ -30,7 +30,7 @@ global.chrome = {
     setBadgeText: jest.fn(),
     setBadgeBackgroundColor: jest.fn(),
   },
-} as any;
+};
 
 describe('ServiceWorker', () => {
   const serviceWorker = ServiceWorker();

@@ -1,17 +1,17 @@
-import { extensionID, displayedAccessToken } from '../../src/js/static/constants';
+import { extensionID, displayedAccessToken } from '../../src/js/static/constants.js';
 import puppeteer from 'puppeteer';
 import path from 'path';
 
-let browser: puppeteer.Browser;
-let page: puppeteer.Page;
+let browser;
+let page;
 
-const url = (file: string) => `chrome-extension://${extensionID}/${file}`;
+const url = (file) => `chrome-extension://${extensionID}/${file}`;
 
 // readProp('.password', 'value', 1)
 // will run
 // document.querySelectorAll('.password')[1].value
 // and return the value of the second node matching the selector '.password'.
-const readProp = async (query: string, prop: string, index = 0) => (
+const readProp = async (query, prop, index = 0) => (
   page.evaluate((query, prop, index) => (
     document.querySelectorAll(query)[index][prop]
   ), query, prop, index)
@@ -21,11 +21,18 @@ const setup = async () => {
   const extensionPath = path.join(__dirname, '../../dist');
 
   browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     ignoreHTTPSErrors: true,
     args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--remote-debugging-port=9222',
+      '--remote-debugging-address=0.0.0.0',
       `--disable-extensions-except=${extensionPath}`,
     ],
+    pipe: true,
   });
 
   page = await browser.newPage();
@@ -106,7 +113,7 @@ describe('integration test', () => {
     });
 
     it('has the correct links', () => {
-      const link = (index: number) => `https://github.com/renuo/github-pull-request-counter/pull/${index + 1}`;
+      const link = (index) => `https://github.com/renuo/github-pull-request-counter/pull/${index + 1}`;
 
       expect(readProp('.link-container > a', 'href', 0)).resolves.toEqual(link(0));
       expect(readProp('.link-container > a', 'href', 1)).resolves.toEqual(link(1));
@@ -114,7 +121,7 @@ describe('integration test', () => {
     });
 
     it('has the correct subtitles', () => {
-      const subtitle = (index: number) => `renuo/github-pull-request-counter<b> #${index + 1}</b>`;
+      const subtitle = (index) => `renuo/github-pull-request-counter<b> #${index + 1}</b>`;
 
       expect(readProp('.link-container > .subdescription', 'innerHTML', 0)).resolves.toContain(subtitle(0));
       expect(readProp('.link-container > .subdescription', 'innerHTML', 1)).resolves.toContain(subtitle(1));

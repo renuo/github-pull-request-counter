@@ -2,20 +2,20 @@
  * @jest-environment jsdom
  */
 
-import Options from './options';
-import { globalMock } from '../../__test__/mocks/github-api-mock-data';
+import Options from './options.js';
+import { globalMock } from '../../__test__/mocks/github-api-mock-data.js';
 import fetch from 'node-fetch';
 import fs from 'fs';
 import path from 'path';
-import { displayedAccessToken } from './static/constants';
+import { displayedAccessToken } from './static/constants.js';
 
 jest.mock('node-fetch');
-const mockedFetch = fetch as any;
+const mockedFetch = fetch;
 
 global.fetch = mockedFetch;
-global.btoa = (data: string) => Buffer.from(data).toString('base64');
+global.btoa = (data) => Buffer.from(data).toString('base64');
 
-mockedFetch.mockImplementation((url: string) => globalMock(url, { pullRequestCount: 2 }));
+mockedFetch.mockImplementation((url) => globalMock(url, { pullRequestCount: 2 }));
 
 global.window.alert = jest.fn();
 

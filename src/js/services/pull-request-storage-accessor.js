@@ -1,19 +1,18 @@
-import { IgnoredPr, PullRequest, PullRequestRecord, PullRequestRecordKey } from '../static/types';
-import SettingsStorageAccessor from './settings-storage-accessor';
-import { containsPullRequest, parsePullRequest } from '../static/utils';
+import SettingsStorageAccessor from './settings-storage-accessor.js';
+import { containsPullRequest, parsePullRequest } from '../static/utils.js';
 
 const PullRequestStorageAccessor = () => {
-  const storePullRequests = (pullRequests: PullRequestRecord): void => {
+  const storePullRequests = (pullRequests) => {
     for (const key of Object.keys(pullRequests)) {
-      storePullRequest(key, pullRequests[key as PullRequestRecordKey]);
+      storePullRequest(key, pullRequests[key]);
     }
   };
 
-  const storePullRequest = (key: string, pullRequest: PullRequest[]): void => {
+  const storePullRequest = (key, pullRequest) => {
     chrome.storage.local.set({ [key]: JSON.stringify(pullRequest) });
   };
 
-  const loadPullRequests = async (): Promise<PullRequestRecord> => ({
+  const loadPullRequests = async () => ({
     reviewRequested: await loadPullRequest('reviewRequested'),
     teamReviewRequested: await loadPullRequest('teamReviewRequested'),
     noReviewRequested: await loadPullRequest('noReviewRequested'),
@@ -22,8 +21,8 @@ const PullRequestStorageAccessor = () => {
     allAssigned: await loadPullRequest('allAssigned'),
   });
 
-  const loadPullRequest = async (key: string): Promise<PullRequest[]> => {
-    const data: { [key: string]: string } = await new Promise((resolve) => {
+  const loadPullRequest = async (key) => {
+    const data = await new Promise((resolve) => {
       chrome.storage.local.get(key, (items) => {
         resolve(items);
       });
@@ -32,7 +31,7 @@ const PullRequestStorageAccessor = () => {
     return data[key] ? JSON.parse(data[key]) : [];
   };
 
-  const syncIgnoredPrs = async (record: PullRequestRecord): Promise<Partial<PullRequest>[]> => {
+  const syncIgnoredPrs = async (record) => {
     const ignoredPrsString = await SettingsStorageAccessor().loadIgnoredPrs();
     if (!ignoredPrsString.length) {
       return [];
@@ -52,7 +51,7 @@ const PullRequestStorageAccessor = () => {
     });
   };
 
-  const clearPullRequests = (): void => {
+  const clearPullRequests = () => {
     storePullRequests({
       noReviewRequested: [],
       teamReviewRequested: [],

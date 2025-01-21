@@ -2,24 +2,24 @@
  * @jest-environment jsdom
  */
 
-import { pullRequestFactory } from '../../__test__/mocks/factories';
-import Popup from './popup';
+import { pullRequestFactory } from '../../__test__/mocks/factories.js';
+import Popup from './popup.js';
 import fs from 'fs';
 import path from 'path';
-import { PullRequestRecordKey } from './static/types';
 
 const pullRequestSample = [pullRequestFactory(0), pullRequestFactory(0)];
-const storageObject = Object.values(PullRequestRecordKey).reduce((obj, key) => {
+const pullRequestKeys = ['reviewRequested', 'teamReviewRequested', 'noReviewRequested', 'allReviewsDone', 'missingAssignee', 'allAssigned'];
+const storageObject = pullRequestKeys.reduce((obj, key) => {
   return { ...obj, [key]: [JSON.stringify(pullRequestSample)] };
 }, {});
 
 global.chrome = {
   storage: {
     local: {
-      get: jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback(storageObject)),
+      get: jest.fn().mockImplementation((_keys, callback) => callback(storageObject)),
     },
   },
-} as any;
+};
 
 describe('popup', () => {
   const dom = fs.readFileSync(path.resolve(__dirname, '../popup.html')).toString();
