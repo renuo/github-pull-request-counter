@@ -1,18 +1,16 @@
-import { CounterConfig, PullRequest, PullRequestRecord, PullRequestRecordKey } from '../static/types';
 import { recordKeysTranslations, extensionID } from '../static/constants';
 
 const HTMLGenerator = () => {
-  const generate = (record: PullRequestRecord, counter: CounterConfig): HTMLDivElement => {
+  const generate = (record, counter) => {
     const topLevelDiv = document.createElement('div');
     topLevelDiv.classList.add('pull-requests-loaded');
 
     for (const key of Object.keys(record)) {
-      const recordKey = key as PullRequestRecordKey;
-      if (record[recordKey].length === 0) continue;
-      const lessRelevant = !counter[recordKey];
+      if (record[key].length === 0) continue;
+      const lessRelevant = !counter[key];
 
       const titleP = document.createElement('h5');
-      titleP.textContent = recordKeysTranslations[key as PullRequestRecordKey];
+      titleP.textContent = recordKeysTranslations[key];
       titleP.classList.add('title');
       if (lessRelevant) titleP.classList.add('less-relevant-group');
       topLevelDiv.appendChild(titleP);
@@ -32,7 +30,7 @@ const HTMLGenerator = () => {
     return topLevelDiv;
   };
 
-  const generateStatusBadge = (category: PullRequestRecordKey): HTMLSpanElement => {
+  const generateStatusBadge = (category) => {
     const badge = document.createElement('span');
     badge.classList.add('pr-status-badge');
 
@@ -67,7 +65,7 @@ const HTMLGenerator = () => {
     return badge;
   };
 
-  const generateLinkStructure = (pullRequests: PullRequest[], lessRelevant: boolean, category?: PullRequestRecordKey): HTMLDivElement => {
+  const generateLinkStructure = (pullRequests, lessRelevant, category) => {
     const groupLevelDiv = document.createElement('div');
     groupLevelDiv.classList.add('group-container');
     if (lessRelevant) groupLevelDiv.classList.add('less-relevant-group');
@@ -109,7 +107,7 @@ const HTMLGenerator = () => {
     return groupLevelDiv;
   };
 
-  const generateNoContent = (): HTMLDivElement => {
+  const generateNoContent = () => {
     const noContentDiv = document.createElement('div');
     noContentDiv.classList.add('group-container');
     const p1 = document.createElement('p');
@@ -122,7 +120,7 @@ const HTMLGenerator = () => {
     return noContentDiv;
   };
 
-  const generatePullRequestLink = (PullRequest: PullRequest): HTMLAnchorElement => {
+  const generatePullRequestLink = (PullRequest) => {
     const link = document.createElement('a');
     link.classList.add('pr-link');
     link.appendChild(document.createTextNode(PullRequest.title));
@@ -131,7 +129,7 @@ const HTMLGenerator = () => {
     return link;
   };
 
-  const formatTimeAgo = (ageInDays: number): string => {
+  const formatTimeAgo = (ageInDays) => {
     if (ageInDays < 1) return 'today';
     if (ageInDays < 2) return 'yesterday';
     if (ageInDays < 30) return `${Math.floor(ageInDays)} days ago`;
@@ -139,7 +137,7 @@ const HTMLGenerator = () => {
     return `${months} ${months === 1 ? 'month' : 'months'} ago`;
   };
 
-  const generateAssigneeInfo = (assignee: string | undefined): HTMLSpanElement | null => {
+  const generateAssigneeInfo = (assignee) => {
     if (!assignee) return null;
     const span = document.createElement('span');
     span.classList.add('pr-assignee');
@@ -147,7 +145,7 @@ const HTMLGenerator = () => {
     return span;
   };
 
-  const generateSubDescription = (PullRequest: PullRequest): HTMLParagraphElement => {
+  const generateSubDescription = (PullRequest) => {
     const subDescriptionP = document.createElement('p');
     subDescriptionP.classList.add('subdescription');
 

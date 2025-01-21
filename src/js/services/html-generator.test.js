@@ -3,7 +3,6 @@
  */
 
 import HTMLGenerator from './html-generator';
-import { CounterConfig, PullRequestRecord } from '../static/types';
 import { pullRequestRecordFactory } from '../../../__test__/mocks/factories';
 
 describe('HTMLGenerator', () => {
@@ -18,9 +17,9 @@ describe('HTMLGenerator', () => {
   };
 
   describe('#generate', () => {
-    let record: PullRequestRecord;
-    let counter: CounterConfig;
-    let result: HTMLDivElement;
+    let record;
+    let counter;
+    let result;
 
     beforeEach(() => {
       result = htmlGenerator.generate(record, counter);
