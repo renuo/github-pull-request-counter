@@ -5,17 +5,17 @@ const HTMLGenerator = () => {
     const topLevelDiv = document.createElement('div');
     topLevelDiv.classList.add('pull-requests-loaded');
 
-    for (const key of Object.keys(record)) {
-      if (record[key].length === 0) continue;
-      const lessRelevant = !counter[key];
+    for (const recordKey of Object.keys(record)) {
+      if (record[recordKey].length === 0) continue;
+      const lessRelevant = !counter[recordKey];
 
       const titleP = document.createElement('h5');
-      titleP.textContent = recordKeysTranslations[key];
+      titleP.textContent = recordKeysTranslations[recordKey];
       titleP.classList.add('title');
       if (lessRelevant) titleP.classList.add('less-relevant-group');
       topLevelDiv.appendChild(titleP);
 
-      topLevelDiv.appendChild(generateLinkStructure(record[key], lessRelevant, key));
+      topLevelDiv.appendChild(generateLinkStructure(record[recordKey], lessRelevant, recordKey));
     }
 
     if (topLevelDiv.children.length === 0) {
