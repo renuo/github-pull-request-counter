@@ -1,0 +1,31 @@
+name: Run Checks
+
+on:
+  push:
+    branches: [ feature/v2 ]
+  pull_request:
+    branches: [ feature/v2 ]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: |
+        npm install
+        npm install -g sass-lint
+    
+    - name: Run checks
+      run: |
+        chmod +x bin/check
+        chmod +x bin/fastcheck
+        bin/check
