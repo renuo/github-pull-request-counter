@@ -7,16 +7,17 @@ const HTMLGenerator = () => {
     topLevelDiv.classList.add('pull-requests-loaded');
 
     for (const key of Object.keys(record)) {
-      if (record[key as PullRequestRecordKey].length === 0) continue;
-      const lessRelevant = !counter[key as PullRequestRecordKey];
+      const recordKey = key as PullRequestRecordKey;
+      if (record[recordKey].length === 0) continue;
+      const lessRelevant = !counter[recordKey];
 
       const titleP = document.createElement('h5');
-      titleP.textContent = recordKeysTranslations[key];
+      titleP.textContent = recordKeysTranslations[key as PullRequestRecordKey];
       titleP.classList.add('title');
       if (lessRelevant) titleP.classList.add('less-relevant-group');
       topLevelDiv.appendChild(titleP);
 
-      topLevelDiv.appendChild(generateLinkStructure(record[key as PullRequestRecordKey], lessRelevant));
+      topLevelDiv.appendChild(generateLinkStructure(record[recordKey], lessRelevant, recordKey));
     }
 
     if (topLevelDiv.children.length === 0) {
@@ -31,30 +32,77 @@ const HTMLGenerator = () => {
     return topLevelDiv;
   };
 
-  const generateLinkStructure = (pullRequests: PullRequest[], lessRelevant: boolean): HTMLDivElement => {
+  const generateStatusBadge = (category: PullRequestRecordKey): HTMLSpanElement => {
+    const badge = document.createElement('span');
+    badge.classList.add('pr-status-badge');
+
+    let text = '';
+    switch(category) {
+      case PullRequestRecordKey.reviewRequested:
+        text = 'Review Requested';
+        badge.classList.add('status-review');
+        break;
+      case PullRequestRecordKey.teamReviewRequested:
+        text = 'Team Review';
+        badge.classList.add('status-team-review');
+        break;
+      case PullRequestRecordKey.noReviewRequested:
+        text = 'No Review';
+        badge.classList.add('status-no-review');
+        break;
+      case PullRequestRecordKey.allReviewsDone:
+        text = 'Reviews Done';
+        badge.classList.add('status-done');
+        break;
+      case PullRequestRecordKey.missingAssignee:
+        text = 'Needs Assignee';
+        badge.classList.add('status-missing');
+        break;
+      case PullRequestRecordKey.allAssigned:
+        text = 'Assigned';
+        badge.classList.add('status-assigned');
+        break;
+    }
+    badge.appendChild(document.createTextNode(text));
+    return badge;
+  };
+
+  const generateLinkStructure = (pullRequests: PullRequest[], lessRelevant: boolean, category?: PullRequestRecordKey): HTMLDivElement => {
     const groupLevelDiv = document.createElement('div');
     groupLevelDiv.classList.add('group-container');
     if (lessRelevant) groupLevelDiv.classList.add('less-relevant-group');
 
     for (const PullRequest of pullRequests) {
       const pullRequestDiv = document.createElement('div');
-      const firstRow = document.createElement('div');
-      const secondRow = document.createElement('div');
-      pullRequestDiv.appendChild(firstRow);
-      pullRequestDiv.appendChild(secondRow);
+      pullRequestDiv.classList.add('pr-card');
+      if (lessRelevant) pullRequestDiv.classList.add('less-relevant-group');
+
+      // Header row with repo and PR title
+      const headerRow = document.createElement('div');
+      headerRow.classList.add('pr-header');
 
       const repoUrl = document.createElement('a');
       repoUrl.appendChild(document.createTextNode(PullRequest.ownerAndName));
       repoUrl.classList.add('repo-link');
       repoUrl.href = PullRequest.repositoryUrl;
-
       repoUrl.target = '_blank';
-      firstRow.appendChild(repoUrl);
+      headerRow.appendChild(repoUrl);
 
-      firstRow.appendChild(generatePullRequestLink(PullRequest));
-      secondRow.appendChild(generateSubDescription(PullRequest));
+      const prLink = generatePullRequestLink(PullRequest);
+      headerRow.appendChild(prLink);
 
-      pullRequestDiv.classList.add('link-container');
+      // Metadata row
+      const metaRow = document.createElement('div');
+      metaRow.classList.add('pr-meta');
+
+      if (category) {
+        metaRow.appendChild(generateStatusBadge(category));
+      }
+
+      metaRow.appendChild(generateSubDescription(PullRequest));
+
+      pullRequestDiv.appendChild(headerRow);
+      pullRequestDiv.appendChild(metaRow);
       groupLevelDiv.appendChild(pullRequestDiv);
     }
 
@@ -74,7 +122,7 @@ const HTMLGenerator = () => {
     return noContentDiv;
   };
 
-  const generatePullRequestLink = (PullRequest: PullRequest) => {
+  const generatePullRequestLink = (PullRequest: PullRequest): HTMLAnchorElement => {
     const link = document.createElement('a');
     link.classList.add('pr-link');
     link.appendChild(document.createTextNode(PullRequest.title));
@@ -83,10 +131,36 @@ const HTMLGenerator = () => {
     return link;
   };
 
-  const generateSubDescription = (PullRequest: PullRequest) => {
+  const formatTimeAgo = (ageInDays: number): string => {
+    if (ageInDays < 1) return 'today';
+    if (ageInDays < 2) return 'yesterday';
+    if (ageInDays < 30) return `${Math.floor(ageInDays)} days ago`;
+    const months = Math.floor(ageInDays / 30);
+    return `${months} ${months === 1 ? 'month' : 'months'} ago`;
+  };
+
+  const generateAssigneeInfo = (assignee: string | undefined): HTMLSpanElement | null => {
+    if (!assignee) return null;
+    const span = document.createElement('span');
+    span.classList.add('pr-assignee');
+    span.appendChild(document.createTextNode(`• Assigned to ${assignee}`));
+    return span;
+  };
+
+  const generateSubDescription = (PullRequest: PullRequest): HTMLParagraphElement => {
     const subDescriptionP = document.createElement('p');
     subDescriptionP.classList.add('subdescription');
-    subDescriptionP.appendChild(document.createTextNode(`#${PullRequest.number} opened ${Math.floor(PullRequest.ageInDays)} days ago by ${PullRequest.author}`));
+
+    const timeText = formatTimeAgo(PullRequest.ageInDays);
+    const baseText = `#${PullRequest.number} opened ${timeText} by ${PullRequest.author}`;
+
+    subDescriptionP.appendChild(document.createTextNode(baseText));
+
+    const assigneeInfo = generateAssigneeInfo(PullRequest.assignee);
+    if (assigneeInfo) {
+      subDescriptionP.appendChild(assigneeInfo);
+    }
+
     return subDescriptionP;
   };
 
