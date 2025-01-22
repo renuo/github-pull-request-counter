@@ -41,16 +41,17 @@ const HTMLGenerator = () => {
       const container = document.createElement('div');
       container.classList.add('link-container');
 
+      const wrapper = document.createElement('div');
       const link = document.createElement('a');
-      link.textContent = PullRequest.title;
+      link.innerHTML = PullRequest.title;
       link.href = PullRequest.htmlUrl;
       link.target = '_blank';
-      container.appendChild(link);
+      wrapper.appendChild(link);
+      container.appendChild(wrapper);
 
       const subdescription = document.createElement('p');
       subdescription.classList.add('subdescription');
-      const subdescriptionText = `${PullRequest.ownerAndName}<b> #${PullRequest.number}</b> (${Math.floor(PullRequest.ageInDays)} days ago)`;
-      subdescription.innerHTML = subdescriptionText;
+      subdescription.innerHTML = `${PullRequest.ownerAndName}<b> #${PullRequest.number}</b> (${Math.floor(PullRequest.ageInDays)} days ago)`;
       container.appendChild(subdescription);
 
       groupLevelDiv.appendChild(container);
