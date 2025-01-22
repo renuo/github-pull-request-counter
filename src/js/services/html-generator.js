@@ -79,15 +79,18 @@ const HTMLGenerator = () => {
       const headerRow = document.createElement('div');
       headerRow.classList.add('pr-header');
 
-      const repoUrl = document.createElement('a');
-      repoUrl.appendChild(document.createTextNode(PullRequest.ownerAndName));
-      repoUrl.classList.add('repo-link');
-      repoUrl.href = PullRequest.repositoryUrl;
-      repoUrl.target = '_blank';
-      headerRow.appendChild(repoUrl);
+      const linkContainer = document.createElement('div');
+      linkContainer.classList.add('link-container');
 
       const prLink = generatePullRequestLink(PullRequest);
-      headerRow.appendChild(prLink);
+      linkContainer.appendChild(prLink);
+
+      const repoLink = document.createElement('p');
+      repoLink.classList.add('repo-link');
+      repoLink.innerHTML = PullRequest.ownerAndName;
+      linkContainer.appendChild(repoLink);
+
+      headerRow.appendChild(linkContainer);
 
       // Metadata row
       const metaRow = document.createElement('div');
@@ -149,10 +152,12 @@ const HTMLGenerator = () => {
     const subDescriptionP = document.createElement('p');
     subDescriptionP.classList.add('subdescription');
 
-    const timeText = formatTimeAgo(PullRequest.ageInDays);
-    const baseText = `#${PullRequest.number} opened ${timeText} by ${PullRequest.author}`;
+    const repoText = `${PullRequest.ownerAndName}<b> #${PullRequest.number}</b>`;
+    subDescriptionP.innerHTML = repoText;
 
-    subDescriptionP.appendChild(document.createTextNode(baseText));
+    const timeText = formatTimeAgo(PullRequest.ageInDays);
+    const authorText = ` • opened ${timeText} by ${PullRequest.author}`;
+    subDescriptionP.appendChild(document.createTextNode(authorText));
 
     const assigneeInfo = generateAssigneeInfo(PullRequest.assignee);
     if (assigneeInfo) {
