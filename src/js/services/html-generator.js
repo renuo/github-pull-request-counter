@@ -1,18 +1,7 @@
-/**
- * @typedef {import('../static/types').CounterConfig} CounterConfig
- * @typedef {import('../static/types').PullRequest} PullRequest
- * @typedef {import('../static/types').PullRequestRecord} PullRequestRecord
- * @typedef {import('../static/types').PullRequestRecordKey} PullRequestRecordKey
- */
-
 import { recordKeysTranslations, extensionID } from '../static/constants.js';
 
 const HTMLGenerator = () => {
-  /**
-   * @param {PullRequestRecord} record
-   * @param {CounterConfig} counter
-   * @returns {HTMLDivElement}
-   */
+
   const generate = (record, counter) => {
     const topLevelDiv = document.createElement('div');
     topLevelDiv.classList.add('pull-requests-loaded');
@@ -42,11 +31,7 @@ const HTMLGenerator = () => {
     return topLevelDiv;
   };
 
-  /**
-   * @param {PullRequest[]} pullRequests
-   * @param {boolean} lessRelevant
-   * @returns {HTMLDivElement}
-   */
+
   const generateLinkStructure = (pullRequests, lessRelevant) => {
     const groupLevelDiv = document.createElement('div');
     groupLevelDiv.classList.add('group-container');
@@ -75,9 +60,7 @@ const HTMLGenerator = () => {
     return groupLevelDiv;
   };
 
-  /**
-   * @returns {HTMLDivElement}
-   */
+
   const generateNoContent = () => {
     const noContentDiv = document.createElement('div');
     noContentDiv.classList.add('group-container');
@@ -91,10 +74,7 @@ const HTMLGenerator = () => {
     return noContentDiv;
   };
 
-  /**
-   * @param {PullRequest} PullRequest
-   * @returns {HTMLAnchorElement}
-   */
+
   const generatePullRequestLink = (PullRequest) => {
     const link = document.createElement('a');
     link.appendChild(document.createTextNode(PullRequest.title));
@@ -103,10 +83,7 @@ const HTMLGenerator = () => {
     return link;
   };
 
-  /**
-   * @param {PullRequest} PullRequest
-   * @returns {HTMLParagraphElement}
-   */
+
   const generateSubDescription = (PullRequest) => {
     const subDescriptionP = document.createElement('p');
     subDescriptionP.classList.add('subdescription');

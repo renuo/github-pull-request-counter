@@ -1,7 +1,5 @@
 /**
  * @jest-environment jsdom
- * @typedef {import('../static/types').CounterConfig} CounterConfig
- * @typedef {import('../static/types').PullRequestRecord} PullRequestRecord
  */
 
 import HTMLGenerator from './html-generator.js';
@@ -19,11 +17,8 @@ describe('HTMLGenerator', () => {
   };
 
   describe('#generate', () => {
-    /** @type {PullRequestRecord} */
     let record;
-    /** @type {CounterConfig} */
     let counter;
-    /** @type {HTMLDivElement} */
     let result;
 
     beforeEach(() => {

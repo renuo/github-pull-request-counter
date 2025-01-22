@@ -1,7 +1,3 @@
-/**
- * @typedef {import('../static/types').PullRequestRecord} PullRequestRecord
- */
-
 import BadgeSetter from './badge-setter.js';
 import { pullRequestRecordFactory } from '../../../__test__/mocks/factories.js';
 
@@ -14,7 +10,6 @@ global.chrome = {
 
 describe('BadgeSetter', () => {
   describe('update', () => {
-    /** @type {PullRequestRecord} */
     let record;
     let counter = {
       'reviewRequested': true,
