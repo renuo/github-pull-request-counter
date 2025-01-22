@@ -154,9 +154,9 @@ describe('integration test', () => {
 
     it('has the correct pull request links and metadata', async () => {
       const links = await page.$$eval('.pr-link', elements => 
-        elements.map(el => (el as HTMLAnchorElement).href)
+        elements.map(el => (el as HTMLAnchorElement).href),
       );
-      
+
       // Verify PR links are in ascending order
       expect(links[0]).toContain('/pull/1');
       expect(links[1]).toContain('/pull/2');
