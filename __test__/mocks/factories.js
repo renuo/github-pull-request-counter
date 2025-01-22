@@ -1,8 +1,3 @@
-/**
- * @typedef {import('../../src/js/static/types').PullRequest} PullRequest
- * @typedef {import('../../src/js/static/types').PullRequestRecord} PullRequestRecord
- */
-
 export const pullRequestFactory = (index) => ({
   id: index,
   title: 'PullRequest-Title',
@@ -23,20 +18,6 @@ const createPullRequests = (count) => {
   return pullRequests;
 };
 
-/**
- * @typedef {Object} FactoryConfiguration
- * @property {number} [reviewRequestedCount]
- * @property {number} [teamReviewRequestedCount]
- * @property {number} [noReviewRequestedCount]
- * @property {number} [allReviewsDoneCount]
- * @property {number} [missingAssigneeCount]
- * @property {number} [allAssignedCount]
- */
-
-/**
- * @param {FactoryConfiguration} [props]
- * @returns {PullRequestRecord}
- */
 export const pullRequestRecordFactory = (props) => ({
   'reviewRequested': createPullRequests(props?.reviewRequestedCount || 0),
   'teamReviewRequested': createPullRequests(props?.teamReviewRequestedCount || 0),

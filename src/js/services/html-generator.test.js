@@ -1,6 +1,4 @@
-/**
- * @jest-environment jsdom
- */
+// @jest-environment jsdom
 
 import HTMLGenerator from './html-generator.js';
 import { pullRequestRecordFactory } from '../../../__test__/mocks/factories.js';
