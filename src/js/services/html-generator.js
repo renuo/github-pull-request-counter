@@ -44,12 +44,6 @@ const HTMLGenerator = () => {
       pullRequestDiv.appendChild(firstRow);
       pullRequestDiv.appendChild(secondRow);
 
-      const repoUrl = document.createElement('a');
-      repoUrl.appendChild(document.createTextNode(PullRequest.ownerAndName));
-      repoUrl.href = PullRequest.repositoryUrl;
-      repoUrl.target = '_blank';
-      firstRow.appendChild(repoUrl);
-
       const prLink = document.createElement('a');
       prLink.appendChild(document.createTextNode(PullRequest.title));
       prLink.href = PullRequest.htmlUrl;
