@@ -58,6 +58,9 @@ describe('integration test', () => {
   describe('options', () => {
     beforeEach(async () => {
       await page.goto(url('options.html'), { waitUntil: 'networkidle2' });
+      // Wait for specific elements to be present
+      await page.waitForSelector('#link-to-renuo');
+      await page.waitForSelector('.pull-requests-loaded');
     });
 
     it('navigates to the options page', async () => {

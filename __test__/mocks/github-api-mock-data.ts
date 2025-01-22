@@ -4,17 +4,18 @@ export const mockListOfPullRequests = (count: number, params?: { assignee: strin
   const createIssues = (count: number): Issue[] => {
     const items = [];
 
-    for (let i = count - 1; i >= 0; i--) {
+    for (let i = 0; i < count; i++) {
+      const prNumber = count - i; // PR numbers start from count down to 1
       items.push({
         id: Math.floor(Math.random() * 100),
         title: 'PR Title',
         assignee: params?.assignee,
-        number: i+1,
+        number: prNumber,
         created_at: params?.created_at || Date.now(),
         repository_url: 'https://api.github.com/repos/renuo/github-pull-request-counter',
         pull_request: {
-          url: `https://api.github.com/repos/renuo/github-pull-request-counter/pulls/${i+1}`,
-          html_url: `https://github.com/renuo/github-pull-request-counter/pull/${i+1}`,
+          url: `https://api.github.com/repos/renuo/github-pull-request-counter/pulls/${prNumber}`,
+          html_url: `https://github.com/renuo/github-pull-request-counter/pull/${prNumber}`,
         },
         user: {
           login: 'coorasse',
