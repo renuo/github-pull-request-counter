@@ -4,7 +4,7 @@ export const mockListOfPullRequests = (count: number, params?: { assignee: strin
   const createIssues = (count: number): Issue[] => {
     const items = [];
 
-    for (let i = 0; i < count; i++) {
+    for (let i = count - 1; i >= 0; i--) {
       items.push({
         id: Math.floor(Math.random() * 100),
         title: 'PR Title',

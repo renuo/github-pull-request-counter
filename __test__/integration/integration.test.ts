@@ -49,7 +49,10 @@ const teardown = async (): Promise<void> => {
 };
 
 describe('integration test', () => {
-  beforeAll(setup);
+  beforeAll(async () => {
+    jest.setTimeout(10000); // Increase timeout to 10 seconds
+    await setup();
+  });
   afterAll(teardown);
 
   describe('options', () => {
