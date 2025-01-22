@@ -11,13 +11,13 @@ const url = (file: string) => `chrome-extension://${extensionID}/${file}`;
 // will run
 // document.querySelectorAll('.password')[1].value
 // and return the value of the second node matching the selector '.password'.
-const readProp = (query: string, prop: string, index = 0) => (
+const readProp = async (query: string, prop: string, index: number = 0): Promise<string> => (
   page.evaluate((query, prop, index) => (
     document.querySelectorAll(query)[index][prop]
   ), query, prop, index)
 );
 
-const setup = async () => {
+const setup = async (): Promise<void> => {
   const extensionPath = path.join(__dirname, '../../dist');
 
   const isHeadless = process.env.PUPPETEER_HEADLESS?.toLowerCase() !== 'false';
@@ -41,10 +41,10 @@ const setup = async () => {
 
   page = await browser.newPage();
 
-  page.on('dialog', async dialog => dialog.dismiss());
+  page.on('dialog', async (dialog: puppeteer.Dialog) => dialog.dismiss());
 };
 
-const teardown = async () => {
+const teardown = async (): Promise<void> => {
   await browser.close();
 };
 
