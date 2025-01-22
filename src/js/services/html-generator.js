@@ -38,21 +38,22 @@ const HTMLGenerator = () => {
     if (lessRelevant) groupLevelDiv.classList.add('less-relevant-group');
 
     for (const PullRequest of pullRequests) {
-      const linkContainer = document.createElement('div');
-      linkContainer.classList.add('link-container');
+      const container = document.createElement('div');
+      container.classList.add('link-container');
 
       const link = document.createElement('a');
       link.textContent = PullRequest.title;
       link.href = PullRequest.htmlUrl;
       link.target = '_blank';
+      container.appendChild(link);
 
       const subdescription = document.createElement('p');
       subdescription.classList.add('subdescription');
-      subdescription.innerHTML = `${PullRequest.ownerAndName}<b> #${PullRequest.id}</b> (${Math.floor(PullRequest.ageInDays)} days ago)`;
+      const subdescriptionText = `${PullRequest.ownerAndName}<b> #${PullRequest.number}</b> (${Math.floor(PullRequest.ageInDays)} days ago)`;
+      subdescription.innerHTML = subdescriptionText;
+      container.appendChild(subdescription);
 
-      linkContainer.appendChild(link);
-      linkContainer.appendChild(subdescription);
-      groupLevelDiv.appendChild(linkContainer);
+      groupLevelDiv.appendChild(container);
     }
 
     return groupLevelDiv;
