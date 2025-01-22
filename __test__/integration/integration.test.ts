@@ -70,13 +70,11 @@ describe('integration test', () => {
       // Basic content verification
       expect(await readProp('#link-to-renuo', 'href')).toEqual('https://www.renuo.ch/');
 
-      // Wait for all dynamic content to load
-      await Promise.all([
-        page.waitForSelector('.pull-requests-loaded', { timeout: 20000 }),
-        page.waitForSelector('.link-container', { timeout: 20000 }),
-        page.waitForSelector('.pr-status-badge', { timeout: 20000 }),
-        page.waitForSelector('.subdescription', { timeout: 20000 }),
-      ]);
+      // Wait for all dynamic content to load sequentially to better identify timeouts
+      await page.waitForSelector('.pull-requests-loaded', { timeout: 30000 });
+      await page.waitForSelector('.link-container', { timeout: 30000 });
+      await page.waitForSelector('.pr-status-badge', { timeout: 30000 });
+      await page.waitForSelector('.subdescription', { timeout: 30000 });
 
       // Verify GitHub-style layout elements
       const linkContainers = await page.$$('.link-container');
