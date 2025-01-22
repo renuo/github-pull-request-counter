@@ -46,6 +46,7 @@ const HTMLGenerator = () => {
       link.innerHTML = PullRequest.title;
       link.href = PullRequest.htmlUrl;
       link.target = '_blank';
+      link.classList.add('pr-link');
       wrapper.appendChild(link);
       container.appendChild(wrapper);
 
