@@ -64,7 +64,7 @@ describe('integration test', () => {
 
     it('has the correct content and styling', async () => {
       expect(await readProp('#link-to-renuo', 'href')).toEqual('https://www.renuo.ch/');
-      
+
       // Verify GitHub-style layout elements
       const linkContainers = await page.$$('.link-container');
       expect(linkContainers.length).toBeGreaterThan(0);
@@ -93,7 +93,7 @@ describe('integration test', () => {
         '#no-review-requested': true,
         '#all-reviews-done': false,
         '#missing-assignee': true,
-        '#all-assigned': true // Because it is false by default
+        '#all-assigned': true, // Because it is false by default
       };
 
       for (const [selector, expectedState] of Object.entries(checkboxStates)) {
