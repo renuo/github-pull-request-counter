@@ -50,8 +50,16 @@ const HTMLGenerator = () => {
       repoUrl.target = '_blank';
       firstRow.appendChild(repoUrl);
 
-      firstRow.appendChild(generatePullRequestLink(PullRequest));
-      secondRow.appendChild(generateSubDescription(PullRequest));
+      const prLink = document.createElement('a');
+      prLink.appendChild(document.createTextNode(PullRequest.title));
+      prLink.href = PullRequest.htmlUrl;
+      prLink.target = '_blank';
+      firstRow.appendChild(prLink);
+
+      const subDescription = document.createElement('p');
+      subDescription.classList.add('subdescription');
+      subDescription.innerHTML = `${PullRequest.ownerAndName}<b> #${PullRequest.number}</b> (${Math.floor(PullRequest.ageInDays)} days ago)`;
+      secondRow.appendChild(subDescription);
 
       pullRequestDiv.classList.add('link-container');
       groupLevelDiv.appendChild(pullRequestDiv);
