@@ -5,7 +5,7 @@ const HTMLGenerator = () => {
     const topLevelDiv = document.createElement('div');
     topLevelDiv.classList.add('pull-requests-loaded');
 
-    for (const key of Object.values(PullRequestRecordKey)) {
+    for (const key of Object.keys(record)) {
       if (!record[key] || record[key].length === 0) continue;
       const lessRelevant = !counter[key];
 
@@ -36,27 +36,27 @@ const HTMLGenerator = () => {
 
     let text = '';
     switch(category) {
-      case PullRequestRecordKey.reviewRequested:
+      case 'reviewRequested':
         text = 'Review Requested';
         badge.classList.add('status-review');
         break;
-      case PullRequestRecordKey.teamReviewRequested:
+      case 'teamReviewRequested':
         text = 'Team Review';
         badge.classList.add('status-team-review');
         break;
-      case PullRequestRecordKey.noReviewRequested:
+      case 'noReviewRequested':
         text = 'No Review';
         badge.classList.add('status-no-review');
         break;
-      case PullRequestRecordKey.allReviewsDone:
+      case 'allReviewsDone':
         text = 'Reviews Done';
         badge.classList.add('status-done');
         break;
-      case PullRequestRecordKey.missingAssignee:
+      case 'missingAssignee':
         text = 'Needs Assignee';
         badge.classList.add('status-missing');
         break;
-      case PullRequestRecordKey.allAssigned:
+      case 'allAssigned':
         text = 'Assigned';
         badge.classList.add('status-assigned');
         break;
