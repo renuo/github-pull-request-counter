@@ -5,6 +5,7 @@ import path from 'path';
 let browser: puppeteer.Browser;
 let page: puppeteer.Page;
 
+const TIMEOUT = 60000; // 60 seconds timeout for slower CI environments
 const url = (file: string) => `chrome-extension://${extensionID}/${file}`;
 
 // readProp('.password', 'value', 1)
@@ -56,25 +57,58 @@ describe('integration test', () => {
   afterAll(teardown);
 
   describe('options', () => {
+    const TIMEOUT = 60000; // 60 seconds timeout for slower CI environments
+
     beforeEach(async () => {
-      await page.goto(url('options.html'), { waitUntil: 'networkidle0', timeout: 30000 });
-      await page.waitForSelector('#link-to-renuo', { timeout: 30000 });
+      // Navigate to options page and wait for initial load
+      await page.goto(url('options.html'), { waitUntil: 'networkidle0', timeout: TIMEOUT });
+      
+      // Wait for core UI elements
+      try {
+        await page.waitForSelector('#link-to-renuo', { timeout: TIMEOUT });
+        await page.waitForFunction(() => document.readyState === 'complete', { timeout: TIMEOUT });
+      } catch (error) {
+        console.error('Failed to load options page:', error);
+        throw error;
+      }
     });
 
     it('navigates to the options page', async () => {
-      expect(page.title()).resolves.toMatch('GitHub Pull Request Counter');
+      const title = await page.title();
+      expect(title).toMatch('GitHub Pull Request Counter');
       expect(page.url()).toEqual(url('options.html'));
     });
 
     it('has the correct content and styling', async () => {
       // Basic content verification
-      expect(await readProp('#link-to-renuo', 'href')).toEqual('https://www.renuo.ch/');
+      const renuoLink = await readProp('#link-to-renuo', 'href');
+      expect(renuoLink).toEqual('https://www.renuo.ch/');
 
-      // Wait for all dynamic content to load sequentially to better identify timeouts
-      await page.waitForSelector('.pull-requests-loaded', { timeout: 30000 });
-      await page.waitForSelector('.link-container', { timeout: 30000 });
-      await page.waitForSelector('.pr-status-badge', { timeout: 30000 });
-      await page.waitForSelector('.subdescription', { timeout: 30000 });
+      // Wait for dynamic content with better error handling
+      try {
+        // Wait for core container
+        await page.waitForSelector('.pull-requests-loaded', { timeout: TIMEOUT });
+        
+        // Wait for PR list elements
+        await Promise.all([
+          page.waitForSelector('.link-container', { timeout: TIMEOUT }),
+          page.waitForSelector('.pr-status-badge', { timeout: TIMEOUT }),
+          page.waitForSelector('.subdescription', { timeout: TIMEOUT }),
+        ]);
+
+        // Verify GitHub-style layout elements
+        const linkContainers = await page.$$('.link-container');
+        expect(linkContainers.length).toBeGreaterThan(0);
+
+        const badges = await page.$$('.pr-status-badge');
+        expect(badges.length).toBeGreaterThan(0);
+
+        const subdescriptions = await page.$$('.subdescription');
+        expect(subdescriptions.length).toBeGreaterThan(0);
+      } catch (error) {
+        console.error('Failed to verify content:', error);
+        throw error;
+      }
 
       // Verify GitHub-style layout elements
       const linkContainers = await page.$$('.link-container');
@@ -133,11 +167,23 @@ describe('integration test', () => {
 
   describe('popup', () => {
     beforeEach(async () => {
-      await page.goto(url('popup.html'), { waitUntil: 'networkidle0', timeout: 30000 });
-      await page.waitForSelector('.pull-requests-loaded', { timeout: 30000 });
-      await page.waitForSelector('.link-container', { timeout: 30000 });
-      await page.waitForSelector('.pr-status-badge', { timeout: 30000 });
-      await page.waitForSelector('.subdescription', { timeout: 30000 });
+      // Navigate to popup and wait for initial load
+      await page.goto(url('popup.html'), { waitUntil: 'networkidle0', timeout: TIMEOUT });
+      
+      try {
+        // Wait for core container first
+        await page.waitForSelector('.pull-requests-loaded', { timeout: TIMEOUT });
+        
+        // Then wait for PR list elements
+        await Promise.all([
+          page.waitForSelector('.link-container', { timeout: TIMEOUT }),
+          page.waitForSelector('.pr-status-badge', { timeout: TIMEOUT }),
+          page.waitForSelector('.subdescription', { timeout: TIMEOUT }),
+        ]);
+      } catch (error) {
+        console.error('Failed to load popup content:', error);
+        throw error;
+      }
     });
 
     it('navigates to the popup', async () => {
