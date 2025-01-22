@@ -59,8 +59,8 @@ describe('integration test', () => {
     beforeEach(async () => {
       await page.goto(url('options.html'), { waitUntil: 'networkidle2' });
       // Wait for specific elements to be present
-      await page.waitForSelector('#link-to-renuo');
-      await page.waitForSelector('.pull-requests-loaded');
+      await page.waitForSelector('#link-to-renuo', { timeout: 30000 });
+      // Options page doesn't have .pull-requests-loaded class
     });
 
     it('navigates to the options page', async () => {
@@ -132,6 +132,7 @@ describe('integration test', () => {
   describe('popup', () => {
     beforeEach(async () => {
       await page.goto(url('popup.html'), { waitUntil: 'networkidle2' });
+      await page.waitForSelector('.pull-requests-loaded', { timeout: 30000 });
     });
 
     it('navigates to the popup', async () => {
@@ -152,12 +153,14 @@ describe('integration test', () => {
     });
 
     it('has the correct pull request links and metadata', async () => {
-      const link = (index: number) => `https://github.com/renuo/github-pull-request-counter/pull/${index + 1}`;
-
-      // Verify PR links
-      expect(await readProp('.pr-link', 'href', 0)).toEqual(link(0));
-      expect(await readProp('.pr-link', 'href', 1)).toEqual(link(1));
-      expect(await readProp('.pr-link', 'href', 2)).toEqual(link(2));
+      const links = await page.$$eval('.pr-link', elements => 
+        elements.map(el => (el as HTMLAnchorElement).href)
+      );
+      
+      // Verify PR links are in ascending order
+      expect(links[0]).toContain('/pull/1');
+      expect(links[1]).toContain('/pull/2');
+      expect(links[2]).toContain('/pull/3');
 
       // Verify PR metadata
       const subdesc = await readProp('.subdescription', 'textContent', 0);

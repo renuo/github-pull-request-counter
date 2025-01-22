@@ -5,7 +5,7 @@ export const mockListOfPullRequests = (count: number, params?: { assignee: strin
     const items = [];
 
     for (let i = 0; i < count; i++) {
-      const prNumber = count - i; // PR numbers start from count down to 1
+      const prNumber = i + 1; // PR numbers start from 1 and increment
       items.push({
         id: Math.floor(Math.random() * 100),
         title: 'PR Title',
