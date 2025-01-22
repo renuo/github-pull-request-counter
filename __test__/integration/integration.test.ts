@@ -5,6 +5,10 @@ import path from 'path';
 // Use configurable timeout for test environments
 const TIMEOUT = process.env.TEST_TIMEOUT ? parseInt(process.env.TEST_TIMEOUT, 10) : 120000;
 
+// Configure logging functions with tslint exceptions
+const logError = (msg: string): void => { /* tslint:disable-line:no-console */ console.error(msg); };
+const logInfo = (msg: string): void => { /* tslint:disable-line:no-console */ console.log(msg); };
+
 let browser: puppeteer.Browser;
 let page: puppeteer.Page;
 
@@ -55,11 +59,10 @@ describe('integration test', () => {
   beforeAll(async () => {
     jest.setTimeout(TIMEOUT); // Use consistent timeout value
     await setup();
-    
     // Add debug logging for CI troubleshooting
-    page.on('console', msg => console.log('Browser Console:', msg.text()));
-    page.on('pageerror', err => console.error('Browser Error:', err));
-    page.on('requestfailed', request => console.error('Failed Request:', request.url()));
+    page.on('console', msg => logInfo(`Browser Console: ${msg.text()}`));
+    page.on('pageerror', err => logError(`Browser Error: ${err}`));
+    page.on('requestfailed', request => logError(`Failed Request: ${request.url()}`));
   });
   afterAll(teardown);
 
@@ -67,13 +70,12 @@ describe('integration test', () => {
     beforeEach(async () => {
       // Navigate to options page and wait for initial load
       await page.goto(url('options.html'), { waitUntil: 'networkidle0', timeout: TIMEOUT });
-      
       // Wait for core UI elements
       try {
         await page.waitForSelector('#link-to-renuo', { timeout: TIMEOUT });
         await page.waitForFunction(() => document.readyState === 'complete', { timeout: TIMEOUT });
       } catch (error) {
-        console.error('Failed to load options page:', error);
+        logError(`Failed to load options page: ${error}`);
         throw error;
       }
     });
@@ -111,7 +113,7 @@ describe('integration test', () => {
         const subdescriptions = await page.$$('.subdescription');
         expect(subdescriptions.length).toBeGreaterThan(0);
       } catch (error) {
-        console.error('Failed to verify content:', error);
+        logError(`Failed to verify content: ${error}`);
         throw error;
       }
 
@@ -162,7 +164,7 @@ describe('integration test', () => {
           expect(await readProp(selector, 'checked')).toEqual(expectedState);
         }
       } catch (error) {
-        console.error('Failed to verify checkbox preferences:', error);
+        logError(`Failed to verify checkbox preferences: ${error}`);
         throw error;
       }
     });
@@ -183,7 +185,7 @@ describe('integration test', () => {
 
         expect(await readProp('#account-names', 'value')).toEqual('renuo');
       } catch (error) {
-        console.error('Failed to verify scope:', error);
+        logError(`Failed to verify scope: ${error}`);
         throw error;
       }
     });
@@ -204,7 +206,7 @@ describe('integration test', () => {
 
         expect(await readProp('#access-token', 'value')).toEqual(displayedAccessToken);
       } catch (error) {
-        console.error('Failed to verify access token:', error);
+        logError(`Failed to verify access token: ${error}`);
         throw error;
       }
     });
@@ -226,7 +228,7 @@ describe('integration test', () => {
           page.waitForSelector('.subdescription', { timeout: TIMEOUT }),
         ]);
       } catch (error) {
-        console.error('Failed to load popup content:', error);
+        logError(`Failed to load popup content: ${error}`);
         throw error;
       }
     });
