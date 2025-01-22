@@ -52,7 +52,7 @@ const HTMLGenerator = () => {
 
       const subDescription = document.createElement('p');
       subDescription.classList.add('subdescription');
-      subDescription.innerHTML = `${PullRequest.ownerAndName}<b> #${PullRequest.number}</b> (${Math.floor(PullRequest.ageInDays)} days ago)`;
+      subDescription.innerHTML = `${PullRequest.ownerAndName}<b> #${PullRequest.id}</b> (${Math.floor(PullRequest.ageInDays)} days ago)`;
       secondRow.appendChild(subDescription);
 
       pullRequestDiv.classList.add('link-container');
