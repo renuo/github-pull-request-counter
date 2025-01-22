@@ -38,25 +38,21 @@ const HTMLGenerator = () => {
     if (lessRelevant) groupLevelDiv.classList.add('less-relevant-group');
 
     for (const PullRequest of pullRequests) {
-      const pullRequestDiv = document.createElement('div');
-      const firstRow = document.createElement('div');
-      const secondRow = document.createElement('div');
-      pullRequestDiv.appendChild(firstRow);
-      pullRequestDiv.appendChild(secondRow);
+      const linkContainer = document.createElement('div');
+      linkContainer.classList.add('link-container');
 
-      const prLink = document.createElement('a');
-      prLink.appendChild(document.createTextNode(PullRequest.title));
-      prLink.href = PullRequest.htmlUrl;
-      prLink.target = '_blank';
-      firstRow.appendChild(prLink);
+      const link = document.createElement('a');
+      link.textContent = PullRequest.title;
+      link.href = PullRequest.htmlUrl;
+      link.target = '_blank';
 
-      const subDescription = document.createElement('p');
-      subDescription.classList.add('subdescription');
-      subDescription.innerHTML = `${PullRequest.ownerAndName}<b> #${PullRequest.id}</b> (${Math.floor(PullRequest.ageInDays)} days ago)`;
-      secondRow.appendChild(subDescription);
+      const subdescription = document.createElement('p');
+      subdescription.classList.add('subdescription');
+      subdescription.innerHTML = `${PullRequest.ownerAndName}<b> #${PullRequest.id}</b> (${Math.floor(PullRequest.ageInDays)} days ago)`;
 
-      pullRequestDiv.classList.add('link-container');
-      groupLevelDiv.appendChild(pullRequestDiv);
+      linkContainer.appendChild(link);
+      linkContainer.appendChild(subdescription);
+      groupLevelDiv.appendChild(linkContainer);
     }
 
     return groupLevelDiv;
@@ -77,21 +73,7 @@ const HTMLGenerator = () => {
   };
 
 
-  const generatePullRequestLink = (PullRequest) => {
-    const link = document.createElement('a');
-    link.appendChild(document.createTextNode(PullRequest.title));
-    link.href = PullRequest.htmlUrl;
-    link.target = '_blank';
-    return link;
-  };
-
-
-  const generateSubDescription = (PullRequest) => {
-    const subDescriptionP = document.createElement('p');
-    subDescriptionP.classList.add('subdescription');
-    subDescriptionP.appendChild(document.createTextNode(`#${PullRequest.number} opened ${Math.floor(PullRequest.ageInDays)} days ago by ${PullRequest.author}`));
-    return subDescriptionP;
-  };
+  // Helper functions removed as they're now inlined in generateLinkStructure
 
   return { generate };
 };
