@@ -8,7 +8,7 @@
   /* GitHub-like colors */
   --border-color: #d0d7de;
   --hover-bg: #f6f8fa;
-  --text-muted: rgb(87, 96, 106);
+  --text-muted: rgb(87 96 106);
   
   /* Status colors */
   --status-review-bg: #ddf4ff;
@@ -32,7 +32,7 @@
     /* GitHub-like colors */
     --border-color: #30363d;
     --hover-bg: #161b22;
-    --text-muted: rgb(139, 148, 158);
+    --text-muted: rgb(139 148 158);
     
     /* Status colors */
     --status-review-bg: #0c2d6b;
