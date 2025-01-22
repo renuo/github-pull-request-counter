@@ -62,7 +62,7 @@ describe('integration test', () => {
       await Promise.all([
         page.waitForSelector('#link-to-renuo', { timeout: 20000 }),
         page.waitForNavigation({ waitUntil: 'networkidle0', timeout: 20000 }),
-        page.waitForFunction(() => document.readyState === 'complete', { timeout: 20000 })
+        page.waitForFunction(() => document.readyState === 'complete', { timeout: 20000 }),
       ]);
     });
 
@@ -80,7 +80,7 @@ describe('integration test', () => {
         page.waitForSelector('.pull-requests-loaded', { timeout: 20000 }),
         page.waitForSelector('.link-container', { timeout: 20000 }),
         page.waitForSelector('.pr-status-badge', { timeout: 20000 }),
-        page.waitForSelector('.subdescription', { timeout: 20000 })
+        page.waitForSelector('.subdescription', { timeout: 20000 }),
       ]);
 
       // Verify GitHub-style layout elements
@@ -145,7 +145,7 @@ describe('integration test', () => {
         page.waitForSelector('.pull-requests-loaded', { timeout: 20000 }),
         page.waitForSelector('.link-container', { timeout: 20000 }),
         page.waitForSelector('.pr-status-badge', { timeout: 20000 }),
-        page.waitForSelector('.subdescription', { timeout: 20000 })
+        page.waitForSelector('.subdescription', { timeout: 20000 }),
       ]);
     });
 
