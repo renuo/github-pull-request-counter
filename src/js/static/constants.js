@@ -1,10 +1,19 @@
+export const PullRequestRecordKey = {
+  reviewRequested: 'reviewRequested',
+  teamReviewRequested: 'teamReviewRequested',
+  noReviewRequested: 'noReviewRequested',
+  allReviewsDone: 'allReviewsDone',
+  missingAssignee: 'missingAssignee',
+  allAssigned: 'allAssigned',
+};
+
 export const recordKeysTranslations = {
-  reviewRequested: 'I must review',
-  teamReviewRequested: 'My team must review',
-  noReviewRequested: 'No review requested',
-  allReviewsDone: 'All reviews done',
-  missingAssignee: 'Missing Assignee',
-  allAssigned: 'Assigned to me',
+  [PullRequestRecordKey.reviewRequested]: 'I must review',
+  [PullRequestRecordKey.teamReviewRequested]: 'My team must review',
+  [PullRequestRecordKey.noReviewRequested]: 'No review requested',
+  [PullRequestRecordKey.allReviewsDone]: 'All reviews done',
+  [PullRequestRecordKey.missingAssignee]: 'Missing Assignee',
+  [PullRequestRecordKey.allAssigned]: 'Assigned to me',
 };
 
 export const extensionID = 'eeejbcmnmgogpkgeinlbchoafjjbegmi';
