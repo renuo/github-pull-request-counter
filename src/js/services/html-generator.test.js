@@ -74,7 +74,7 @@ describe('HTMLGenerator', () => {
             const age = Math.floor(record.reviewRequested[0].ageInDays);
             const id = record.reviewRequested[0].id;
 
-            expect(p.innerHTML).toEqual(`renuo/github-pull-request-counter<b> #${id}</b> (${age} days ago)`);
+            expect(p.innerHTML).toEqual(`renuo/github-pull-request-counter #${id} (${age} days ago)`);
           });
         });
       });
