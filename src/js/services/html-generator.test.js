@@ -1,4 +1,4 @@
-// @jest-environment jsdom
+/** @jest-environment jsdom */
 
 import HTMLGenerator from './html-generator.js';
 import { pullRequestRecordFactory } from '../../../__test__/mocks/factories.js';
@@ -19,14 +19,17 @@ describe('HTMLGenerator', () => {
     let counter;
     let result;
 
-    beforeEach(() => {
-      result = htmlGenerator.generate(record, counter);
+    beforeAll(() => {
+      counter = defaultCounter;
     });
 
     describe('with an empty record', () => {
       beforeAll(() => {
-        counter = defaultCounter;
         record = pullRequestRecordFactory();
+      });
+
+      beforeEach(() => {
+        result = htmlGenerator.generate(record, counter);
       });
 
       it('outputs the backup element', () => {
@@ -38,6 +41,10 @@ describe('HTMLGenerator', () => {
     describe('with a single record entry', () => {
       beforeAll(() => {
         record = pullRequestRecordFactory({ reviewRequestedCount: 1 });
+      });
+
+      beforeEach(() => {
+        result = htmlGenerator.generate(record, counter);
       });
 
       it('has the correct <p> as its first child', () => {
@@ -98,6 +105,10 @@ describe('HTMLGenerator', () => {
     describe('with three record entries', () => {
       beforeAll(() => {
         record = pullRequestRecordFactory({ reviewRequestedCount: 1, noReviewRequestedCount: 2, allReviewsDoneCount: 3 });
+      });
+
+      beforeEach(() => {
+        result = htmlGenerator.generate(record, counter);
       });
 
       it('has six childNodes', () => {
