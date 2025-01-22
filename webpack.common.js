@@ -13,9 +13,12 @@ exports.common = {
   module: {
     rules: [
       {
-        test: /\.ts?$/,
+        test: /\.ts$/,
         use: 'ts-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
+        resolve: {
+          extensions: ['.ts', '.js']
+        }
       },
       {
         test: /\.css$/i,
@@ -28,6 +31,9 @@ exports.common = {
   },
   resolve: {
     extensions: ['.ts', '.js'],
+    extensionAlias: {
+      '.js': ['.ts', '.js']
+    }
   },
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),

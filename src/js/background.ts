@@ -2,8 +2,8 @@ import GithubApiWrapper from './services/github-api-wrapper';
 import PullRequestStorageAccessor from './services/pull-request-storage-accessor';
 import BadgeSetter from './services/badge-setter.js';
 import SettingsStorageAccessor from './services/settings-storage-accessor';
-import { noAccessTokenError, tooManyRequestsError } from './static/constants';
-import { PullRequestRecord, PullRequest } from './static/types';
+import { noAccessTokenError, tooManyRequestsError } from './static/constants.js';
+import { PullRequestRecord, PullRequest } from './static/types.js';
 import { containsPullRequest } from './static/utils.js';
 
 const pollingInterval = 1;
