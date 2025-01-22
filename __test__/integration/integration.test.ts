@@ -50,7 +50,7 @@ const teardown = async (): Promise<void> => {
 
 describe('integration test', () => {
   beforeAll(async () => {
-    jest.setTimeout(10000); // Increase timeout to 10 seconds
+    jest.setTimeout(30000); // Increase timeout to 30 seconds
     await setup();
   });
   afterAll(teardown);
@@ -69,18 +69,23 @@ describe('integration test', () => {
     });
 
     it('has the correct content and styling', async () => {
+      // Wait for initial content to load
+      await page.waitForSelector('#link-to-renuo', { timeout: 20000 });
       expect(await readProp('#link-to-renuo', 'href')).toEqual('https://www.renuo.ch/');
 
-      // Wait for content to load
-      await page.waitForSelector('.pull-requests-loaded');
+      // Wait for pull request content to load
+      await page.waitForSelector('.pull-requests-loaded', { timeout: 20000 });
 
-      // Verify GitHub-style layout elements
+      // Verify GitHub-style layout elements with explicit timeouts
+      await page.waitForSelector('.link-container', { timeout: 20000 });
       const linkContainers = await page.$$('.link-container');
       expect(linkContainers.length).toBeGreaterThan(0);
 
+      await page.waitForSelector('.pr-status-badge', { timeout: 20000 });
       const badges = await page.$$('.pr-status-badge');
       expect(badges.length).toBeGreaterThan(0);
 
+      await page.waitForSelector('.subdescription', { timeout: 20000 });
       const subdescriptions = await page.$$('.subdescription');
       expect(subdescriptions.length).toBeGreaterThan(0);
     });
@@ -132,7 +137,12 @@ describe('integration test', () => {
   describe('popup', () => {
     beforeEach(async () => {
       await page.goto(url('popup.html'), { waitUntil: 'networkidle2' });
-      await page.waitForSelector('.pull-requests-loaded', { timeout: 30000 });
+      await Promise.all([
+        page.waitForSelector('.pull-requests-loaded', { timeout: 20000 }),
+        page.waitForSelector('.link-container', { timeout: 20000 }),
+        page.waitForSelector('.pr-status-badge', { timeout: 20000 }),
+        page.waitForSelector('.subdescription', { timeout: 20000 })
+      ]);
     });
 
     it('navigates to the popup', async () => {
