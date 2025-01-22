@@ -58,9 +58,12 @@ describe('integration test', () => {
   describe('options', () => {
     beforeEach(async () => {
       await page.goto(url('options.html'), { waitUntil: 'networkidle2' });
-      // Wait for specific elements to be present
-      await page.waitForSelector('#link-to-renuo', { timeout: 30000 });
-      // Options page doesn't have .pull-requests-loaded class
+      // Wait for initial content and navigation to complete
+      await Promise.all([
+        page.waitForSelector('#link-to-renuo', { timeout: 20000 }),
+        page.waitForNavigation({ waitUntil: 'networkidle0', timeout: 20000 }),
+        page.waitForFunction(() => document.readyState === 'complete', { timeout: 20000 })
+      ]);
     });
 
     it('navigates to the options page', async () => {
@@ -69,23 +72,24 @@ describe('integration test', () => {
     });
 
     it('has the correct content and styling', async () => {
-      // Wait for initial content to load
-      await page.waitForSelector('#link-to-renuo', { timeout: 20000 });
+      // Basic content verification
       expect(await readProp('#link-to-renuo', 'href')).toEqual('https://www.renuo.ch/');
 
-      // Wait for pull request content to load
-      await page.waitForSelector('.pull-requests-loaded', { timeout: 20000 });
+      // Wait for all dynamic content to load
+      await Promise.all([
+        page.waitForSelector('.pull-requests-loaded', { timeout: 20000 }),
+        page.waitForSelector('.link-container', { timeout: 20000 }),
+        page.waitForSelector('.pr-status-badge', { timeout: 20000 }),
+        page.waitForSelector('.subdescription', { timeout: 20000 })
+      ]);
 
-      // Verify GitHub-style layout elements with explicit timeouts
-      await page.waitForSelector('.link-container', { timeout: 20000 });
+      // Verify GitHub-style layout elements
       const linkContainers = await page.$$('.link-container');
       expect(linkContainers.length).toBeGreaterThan(0);
 
-      await page.waitForSelector('.pr-status-badge', { timeout: 20000 });
       const badges = await page.$$('.pr-status-badge');
       expect(badges.length).toBeGreaterThan(0);
 
-      await page.waitForSelector('.subdescription', { timeout: 20000 });
       const subdescriptions = await page.$$('.subdescription');
       expect(subdescriptions.length).toBeGreaterThan(0);
     });
