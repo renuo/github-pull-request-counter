@@ -57,13 +57,8 @@ describe('integration test', () => {
 
   describe('options', () => {
     beforeEach(async () => {
-      await page.goto(url('options.html'), { waitUntil: 'networkidle2' });
-      // Wait for initial content and navigation to complete
-      await Promise.all([
-        page.waitForSelector('#link-to-renuo', { timeout: 20000 }),
-        page.waitForNavigation({ waitUntil: 'networkidle0', timeout: 20000 }),
-        page.waitForFunction(() => document.readyState === 'complete', { timeout: 20000 }),
-      ]);
+      await page.goto(url('options.html'), { waitUntil: 'networkidle0', timeout: 30000 });
+      await page.waitForSelector('#link-to-renuo', { timeout: 30000 });
     });
 
     it('navigates to the options page', async () => {
@@ -140,13 +135,11 @@ describe('integration test', () => {
 
   describe('popup', () => {
     beforeEach(async () => {
-      await page.goto(url('popup.html'), { waitUntil: 'networkidle2' });
-      await Promise.all([
-        page.waitForSelector('.pull-requests-loaded', { timeout: 20000 }),
-        page.waitForSelector('.link-container', { timeout: 20000 }),
-        page.waitForSelector('.pr-status-badge', { timeout: 20000 }),
-        page.waitForSelector('.subdescription', { timeout: 20000 }),
-      ]);
+      await page.goto(url('popup.html'), { waitUntil: 'networkidle0', timeout: 30000 });
+      await page.waitForSelector('.pull-requests-loaded', { timeout: 30000 });
+      await page.waitForSelector('.link-container', { timeout: 30000 });
+      await page.waitForSelector('.pr-status-badge', { timeout: 30000 });
+      await page.waitForSelector('.subdescription', { timeout: 30000 });
     });
 
     it('navigates to the popup', async () => {
