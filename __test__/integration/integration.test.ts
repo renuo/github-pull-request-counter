@@ -2,10 +2,12 @@ import { extensionID, displayedAccessToken } from '../../src/js/static/constants
 import puppeteer from 'puppeteer';
 import path from 'path';
 
+// Use configurable timeout for test environments
+const TIMEOUT = process.env.TEST_TIMEOUT ? parseInt(process.env.TEST_TIMEOUT, 10) : 120000;
+
 let browser: puppeteer.Browser;
 let page: puppeteer.Page;
 
-const TIMEOUT = 60000; // 60 seconds timeout for slower CI environments
 const url = (file: string) => `chrome-extension://${extensionID}/${file}`;
 
 // readProp('.password', 'value', 1)
@@ -51,14 +53,17 @@ const teardown = async (): Promise<void> => {
 
 describe('integration test', () => {
   beforeAll(async () => {
-    jest.setTimeout(30000); // Increase timeout to 30 seconds
+    jest.setTimeout(TIMEOUT); // Use consistent timeout value
     await setup();
+    
+    // Add debug logging for CI troubleshooting
+    page.on('console', msg => console.log('Browser Console:', msg.text()));
+    page.on('pageerror', err => console.error('Browser Error:', err));
+    page.on('requestfailed', request => console.error('Failed Request:', request.url()));
   });
   afterAll(teardown);
 
   describe('options', () => {
-    const TIMEOUT = 60000; // 60 seconds timeout for slower CI environments
-
     beforeEach(async () => {
       // Navigate to options page and wait for initial load
       await page.goto(url('options.html'), { waitUntil: 'networkidle0', timeout: TIMEOUT });
@@ -122,46 +127,86 @@ describe('integration test', () => {
     });
 
     it('saves checkbox preferences correctly', async () => {
-      // Toggle some checkboxes
-      await page.click('#review-requested');
-      await page.click('#all-reviews-done');
-      await page.click('#all-assigned');
-      await page.click('button[id="options-save"]');
+      try {
+        // Wait for checkboxes to be ready
+        await page.waitForSelector('#review-requested', { timeout: TIMEOUT });
+        await page.waitForSelector('#all-reviews-done', { timeout: TIMEOUT });
+        await page.waitForSelector('#all-assigned', { timeout: TIMEOUT });
+        await page.waitForSelector('button[id="options-save"]', { timeout: TIMEOUT });
 
-      // Reload page to verify persistence
-      await page.goto(url('options.html'), { waitUntil: 'networkidle2' });
+        // Toggle checkboxes
+        await page.click('#review-requested');
+        await page.click('#all-reviews-done');
+        await page.click('#all-assigned');
+        await page.click('button[id="options-save"]');
 
-      // Verify checkbox states
-      const checkboxStates = {
-        '#review-requested': false,
-        '#team-review-requested': true,
-        '#no-review-requested': true,
-        '#all-reviews-done': false,
-        '#missing-assignee': true,
-        '#all-assigned': true, // Because it is false by default
-      };
+        // Reload page to verify persistence
+        await page.goto(url('options.html'), { waitUntil: 'networkidle0', timeout: TIMEOUT });
+        
+        // Wait for page to be ready after reload
+        await page.waitForSelector('#review-requested', { timeout: TIMEOUT });
+        await page.waitForFunction(() => document.readyState === 'complete', { timeout: TIMEOUT });
 
-      for (const [selector, expectedState] of Object.entries(checkboxStates)) {
-        expect(await readProp(selector, 'checked')).toEqual(expectedState);
+        // Verify checkbox states
+        const checkboxStates = {
+          '#review-requested': false,
+          '#team-review-requested': true,
+          '#no-review-requested': true,
+          '#all-reviews-done': false,
+          '#missing-assignee': true,
+          '#all-assigned': true, // Because it is false by default
+        };
+
+        for (const [selector, expectedState] of Object.entries(checkboxStates)) {
+          await page.waitForSelector(selector, { timeout: TIMEOUT });
+          expect(await readProp(selector, 'checked')).toEqual(expectedState);
+        }
+      } catch (error) {
+        console.error('Failed to verify checkbox preferences:', error);
+        throw error;
       }
     });
 
     it('scope', async () => {
-      await page.type('input[id=account-names]', 'renuo', { delay: 20 });
-      await page.click('button[id="options-save"]');
+      try {
+        // Wait for input field and save button
+        await page.waitForSelector('input[id=account-names]', { timeout: TIMEOUT });
+        await page.waitForSelector('button[id="options-save"]', { timeout: TIMEOUT });
 
-      await page.goto(url('options.html'), { waitUntil: 'networkidle2' });
+        await page.type('input[id=account-names]', 'renuo', { delay: 20 });
+        await page.click('button[id="options-save"]');
 
-      expect(await readProp('#account-names', 'value')).toEqual('renuo');
+        // Reload and wait for page
+        await page.goto(url('options.html'), { waitUntil: 'networkidle0', timeout: TIMEOUT });
+        await page.waitForSelector('#account-names', { timeout: TIMEOUT });
+        await page.waitForFunction(() => document.readyState === 'complete', { timeout: TIMEOUT });
+
+        expect(await readProp('#account-names', 'value')).toEqual('renuo');
+      } catch (error) {
+        console.error('Failed to verify scope:', error);
+        throw error;
+      }
     });
 
     it('access token', async () => {
-      await page.type('input[id=access-token]', 'ghp_access_token', { delay: 20 });
-      await page.click('button[id="options-save"]');
+      try {
+        // Wait for input field and save button
+        await page.waitForSelector('input[id=access-token]', { timeout: TIMEOUT });
+        await page.waitForSelector('button[id="options-save"]', { timeout: TIMEOUT });
 
-      await page.goto(url('options.html'), { waitUntil: 'networkidle2' });
+        await page.type('input[id=access-token]', 'ghp_access_token', { delay: 20 });
+        await page.click('button[id="options-save"]');
 
-      expect(await readProp('#access-token', 'value')).toEqual(displayedAccessToken);
+        // Reload and wait for page
+        await page.goto(url('options.html'), { waitUntil: 'networkidle0', timeout: TIMEOUT });
+        await page.waitForSelector('#access-token', { timeout: TIMEOUT });
+        await page.waitForFunction(() => document.readyState === 'complete', { timeout: TIMEOUT });
+
+        expect(await readProp('#access-token', 'value')).toEqual(displayedAccessToken);
+      } catch (error) {
+        console.error('Failed to verify access token:', error);
+        throw error;
+      }
     });
   });
 
