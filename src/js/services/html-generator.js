@@ -41,14 +41,12 @@ const HTMLGenerator = () => {
       const container = document.createElement('div');
       container.classList.add('link-container');
 
-      const wrapper = document.createElement('div');
       const link = document.createElement('a');
       link.innerHTML = PullRequest.title;
       link.href = PullRequest.htmlUrl;
       link.target = '_blank';
       link.classList.add('pr-link');
-      wrapper.appendChild(link);
-      container.appendChild(wrapper);
+      container.appendChild(link);
 
       const subdescription = document.createElement('p');
       subdescription.classList.add('subdescription');
