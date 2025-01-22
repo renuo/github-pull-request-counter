@@ -62,24 +62,43 @@ describe('integration test', () => {
       expect(page.url()).toEqual(url('options.html'));
     });
 
-    it('has the correct content', async () => {
+    it('has the correct content and styling', async () => {
       expect(await readProp('#link-to-renuo', 'href')).toEqual('https://www.renuo.ch/');
+      
+      // Verify GitHub-style layout elements
+      const linkContainers = await page.$$('.link-container');
+      expect(linkContainers.length).toBeGreaterThan(0);
+
+      const badges = await page.$$('.pr-status-badge');
+      expect(badges.length).toBeGreaterThan(0);
+
+      const subdescriptions = await page.$$('.subdescription');
+      expect(subdescriptions.length).toBeGreaterThan(0);
     });
 
-    it('checkboxes', async () => {
+    it('saves checkbox preferences correctly', async () => {
+      // Toggle some checkboxes
       await page.click('#review-requested');
       await page.click('#all-reviews-done');
       await page.click('#all-assigned');
       await page.click('button[id="options-save"]');
 
+      // Reload page to verify persistence
       await page.goto(url('options.html'), { waitUntil: 'networkidle2' });
 
-      expect(await readProp('#review-requested', 'checked')).toEqual(false);
-      expect(await readProp('#team-review-requested', 'checked')).toEqual(true);
-      expect(await readProp('#no-review-requested', 'checked')).toEqual(true);
-      expect(await readProp('#all-reviews-done', 'checked')).toEqual(false);
-      expect(await readProp('#missing-assignee', 'checked')).toEqual(true);
-      expect(await readProp('#all-assigned', 'checked')).toEqual(true); // Because it is false by default
+      // Verify checkbox states
+      const checkboxStates = {
+        '#review-requested': false,
+        '#team-review-requested': true,
+        '#no-review-requested': true,
+        '#all-reviews-done': false,
+        '#missing-assignee': true,
+        '#all-assigned': true // Because it is false by default
+      };
+
+      for (const [selector, expectedState] of Object.entries(checkboxStates)) {
+        expect(await readProp(selector, 'checked')).toEqual(expectedState);
+      }
     });
 
     it('scope', async () => {
@@ -110,20 +129,33 @@ describe('integration test', () => {
       expect(page.url()).toEqual(url('popup.html'));
     });
 
-    it('has the correct content', async () => {
-      expect(await readProp('.title', 'innerHTML', 0)).toEqual('I must review');
-      expect(await readProp('.title', 'innerHTML', 1)).toEqual('No review requested');
-      expect(await readProp('.title', 'innerHTML', 2)).toEqual('All reviews done');
-      expect(await readProp('.title', 'innerHTML', 3)).toEqual('Missing Assignee');
-      expect(await readProp('.title', 'innerHTML', 4)).toEqual('Assigned to me');
+    it('has the correct section titles', async () => {
+      expect(await readProp('.title', 'textContent', 0)).toEqual('I must review');
+      expect(await readProp('.title', 'textContent', 1)).toEqual('No review requested');
+      expect(await readProp('.title', 'textContent', 2)).toEqual('All reviews done');
+      expect(await readProp('.title', 'textContent', 3)).toEqual('Missing Assignee');
+      expect(await readProp('.title', 'textContent', 4)).toEqual('Assigned to me');
     });
 
-    it('has the correct links', async () => {
+    it('displays status badges for pull requests', async () => {
+      const badgeCount = (await page.$$('.pr-status-badge')).length;
+      expect(badgeCount).toBeGreaterThan(0);
+    });
+
+    it('has the correct pull request links and metadata', async () => {
       const link = (index: number) => `https://github.com/renuo/github-pull-request-counter/pull/${index + 1}`;
 
+      // Verify PR links
       expect(await readProp('.pr-link', 'href', 0)).toEqual(link(0));
       expect(await readProp('.pr-link', 'href', 1)).toEqual(link(1));
       expect(await readProp('.pr-link', 'href', 2)).toEqual(link(2));
+
+      // Verify PR metadata
+      const subdesc = await readProp('.subdescription', 'textContent', 0);
+      expect(subdesc).toContain('renuo/github-pull-request-counter');
+      expect(subdesc).toContain('#1');
+      expect(subdesc).toContain('opened');
+      expect(subdesc).toContain('by');
     });
   });
 });
