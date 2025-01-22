@@ -65,6 +65,9 @@ describe('integration test', () => {
     it('has the correct content and styling', async () => {
       expect(await readProp('#link-to-renuo', 'href')).toEqual('https://www.renuo.ch/');
 
+      // Wait for content to load
+      await page.waitForSelector('.pull-requests-loaded');
+
       // Verify GitHub-style layout elements
       const linkContainers = await page.$$('.link-container');
       expect(linkContainers.length).toBeGreaterThan(0);

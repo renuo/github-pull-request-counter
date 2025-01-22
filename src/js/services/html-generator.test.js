@@ -1,7 +1,7 @@
 /** @jest-environment jsdom */
 
 import HTMLGenerator from './html-generator.js';
-import { pullRequestRecordFactory } from '../../../__test__/mocks/factories.js';
+import { pullRequestFactory, pullRequestRecordFactory } from '../../../__test__/mocks/factories.js';
 
 describe('HTMLGenerator', () => {
   const htmlGenerator = HTMLGenerator();
@@ -78,7 +78,8 @@ describe('HTMLGenerator', () => {
             const pr = record.reviewRequested[0];
             const timeText = pr.ageInDays < 1 ? 'today' : 
                            pr.ageInDays < 2 ? 'yesterday' : 
-                           `${Math.floor(pr.ageInDays)} days ago`;
+                           pr.ageInDays < 30 ? `${Math.floor(pr.ageInDays)} days ago` :
+                           `${Math.floor(pr.ageInDays / 30)} months ago`;
             
             expect(subdesc.textContent).toContain(pr.ownerAndName);
             expect(subdesc.textContent).toContain(`#${pr.number}`);
@@ -158,22 +159,21 @@ describe('HTMLGenerator', () => {
 
       describe('time formatting', () => {
         it('formats time correctly for different durations', () => {
-          const formatTimeAgo = (days) => {
+          const testTimeFormat = (days, expected) => {
             const pr = pullRequestFactory(0);
             pr.ageInDays = days;
-            const container = htmlGenerator.generate(
-              pullRequestRecordFactory({ reviewRequestedCount: 1 }),
-              defaultCounter
-            );
+            const record = pullRequestRecordFactory({ reviewRequestedCount: 1 });
+            record.reviewRequested[0] = pr;
+            const container = htmlGenerator.generate(record, defaultCounter);
             const subdesc = container.querySelector('.subdescription');
-            return subdesc.textContent;
+            expect(subdesc.textContent).toContain(`opened ${expected}`);
           };
 
-          expect(formatTimeAgo(0.5)).toContain('today');
-          expect(formatTimeAgo(1.5)).toContain('yesterday');
-          expect(formatTimeAgo(5)).toContain('5 days ago');
-          expect(formatTimeAgo(35)).toContain('1 month ago');
-          expect(formatTimeAgo(65)).toContain('2 months ago');
+          testTimeFormat(0.5, 'today');
+          testTimeFormat(1.5, 'yesterday');
+          testTimeFormat(5, '5 days ago');
+          testTimeFormat(35, '1 month ago');
+          testTimeFormat(65, '2 months ago');
         });
       });
 
@@ -181,10 +181,9 @@ describe('HTMLGenerator', () => {
         it('shows assignee when present', () => {
           const pr = pullRequestFactory(0);
           pr.assignee = 'testuser';
-          const container = htmlGenerator.generate(
-            { reviewRequested: [pr] },
-            defaultCounter
-          );
+          const record = pullRequestRecordFactory({ reviewRequestedCount: 1 });
+          record.reviewRequested[0] = pr;
+          const container = htmlGenerator.generate(record, defaultCounter);
           const assigneeSpan = container.querySelector('.pr-assignee');
           expect(assigneeSpan).toBeTruthy();
           expect(assigneeSpan.textContent).toContain('Assigned to testuser');
@@ -193,10 +192,9 @@ describe('HTMLGenerator', () => {
         it('omits assignee section when not present', () => {
           const pr = pullRequestFactory(0);
           pr.assignee = undefined;
-          const container = htmlGenerator.generate(
-            { reviewRequested: [pr] },
-            defaultCounter
-          );
+          const record = pullRequestRecordFactory({ reviewRequestedCount: 1 });
+          record.reviewRequested[0] = pr;
+          const container = htmlGenerator.generate(record, defaultCounter);
           const assigneeSpan = container.querySelector('.pr-assignee');
           expect(assigneeSpan).toBeNull();
         });
