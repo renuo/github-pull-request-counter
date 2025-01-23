@@ -1,5 +1,3 @@
-import { CounterConfig } from '../static/types.js';
-
 const SettingsStorageAccessor = () => {
   const storeCounterConfig = (counter) => store('counter', JSON.stringify(counter));
 

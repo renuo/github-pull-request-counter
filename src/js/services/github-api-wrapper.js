@@ -1,7 +1,6 @@
-import { PullRequest, Issue } from '../static/types.js';
 import { noAccessTokenError, tooManyRequestsError } from '../static/constants.js';
 import SettingsStorageAccessor from './settings-storage-accessor.js';
-import { globalMock } from '../../../__test__/mocks/github-api-mock-data.js';
+import { globalMock } from '../../../__test__/mocks/github-api-mock-data';
 
 const GithubApiWrapper = async () => {
   const getReviewRequested = async () => {

@@ -6,9 +6,9 @@ const Dotenv = require('dotenv-webpack');
 
 exports.common = {
   entry: {
-    popup: './src/js/popup.ts',
-    background: './src/js/background.ts',
-    options: './src/js/options.ts',
+    popup: './src/js/popup.js',
+    background: './src/js/background.js',
+    options: './src/js/options.js',
   },
   module: {
     rules: [

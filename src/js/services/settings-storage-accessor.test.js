@@ -7,7 +7,7 @@ global.chrome = {
       set: jest.fn(),
     },
   },
-} as any;
+};
 const set = global.chrome.storage.local.set;
 
 describe('SettingsStorageAccessor', () => {
@@ -107,7 +107,7 @@ describe('SettingsStorageAccessor', () => {
     it('loads the correct data', async () => {
       const value = 777;
 
-      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback(
+      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback(
         {
           'maximumAge': value,
         },
@@ -119,7 +119,7 @@ describe('SettingsStorageAccessor', () => {
 
     describe('with nothing in the storage', () => {
       it('returns the default values', async () => {
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({}));
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({}));
 
         const result = await settings.loadMaximumAge();
         expect(result).toEqual(999);
@@ -193,7 +193,7 @@ describe('SettingsStorageAccessor', () => {
     it('removes the pr', async () => {
       const prs = 'renuo/test#1,github/test#2';
 
-      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({
         'ignored': prs,
       }));
 

@@ -3,7 +3,6 @@ import PullRequestStorageAccessor from './services/pull-request-storage-accessor
 import BadgeSetter from './services/badge-setter.js';
 import SettingsStorageAccessor from './services/settings-storage-accessor.js';
 import { noAccessTokenError, tooManyRequestsError, PullRequestRecordKey } from './static/constants';
-import { PullRequestRecord, PullRequest } from './static/types.js';
 import { containsPullRequest } from './static/utils.js';
 
 const pollingInterval = 1;
