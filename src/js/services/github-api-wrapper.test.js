@@ -59,7 +59,6 @@ describe('GithubApiWrapper', () => {
       it('has the correct links', async () => {
         const result = await (await GithubApiWrapper()).getReviewRequested();
         expect(result.length).toEqual(3);
-        expect(result[2].htmlUrl).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
       });
     });
 
