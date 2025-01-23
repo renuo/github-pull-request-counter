@@ -1,7 +1,7 @@
-import GithubApiWrapper from './services/github-api-wrapper';
-import PullRequestStorageAccessor from './services/pull-request-storage-accessor';
+import GithubApiWrapper from './services/github-api-wrapper.js';
+import PullRequestStorageAccessor from './services/pull-request-storage-accessor.js';
 import BadgeSetter from './services/badge-setter.js';
-import SettingsStorageAccessor from './services/settings-storage-accessor';
+import SettingsStorageAccessor from './services/settings-storage-accessor.js';
 import { noAccessTokenError, tooManyRequestsError, PullRequestRecordKey } from './static/constants';
 import { PullRequestRecord, PullRequest } from './static/types';
 import { containsPullRequest } from './static/utils.js';

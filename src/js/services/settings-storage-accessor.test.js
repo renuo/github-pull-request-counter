@@ -40,7 +40,7 @@ describe('SettingsStorageAccessor', () => {
         allAssigned: true,
       };
 
-      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({
         'counter': JSON.stringify(counter),
       }));
 
@@ -50,7 +50,7 @@ describe('SettingsStorageAccessor', () => {
 
     describe('with nothing in the storage', () => {
       it('returns the default values', async () => {
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({}));
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({}));
 
         const result = await settings.loadCounterConfig();
         expect(result).toEqual({
@@ -78,7 +78,7 @@ describe('SettingsStorageAccessor', () => {
     it('loads the correct data', async () => {
       const scope = 'renuo, github';
 
-      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({ 'scope': scope }));
+      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({ 'scope': scope }));
 
       const result = await settings.loadScope();
       expect(result).toEqual(scope);
@@ -86,7 +86,7 @@ describe('SettingsStorageAccessor', () => {
 
     describe('with nothing in the storage', () => {
       it('returns the default values', async () => {
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({}));
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({}));
 
         const result = await settings.loadScope();
         expect(result).toEqual('');
@@ -140,7 +140,7 @@ describe('SettingsStorageAccessor', () => {
     it('loads the correct data', async () => {
       const accessToken = 'renuo, github';
 
-      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({
         'accessToken': accessToken,
       }));
 
@@ -150,7 +150,7 @@ describe('SettingsStorageAccessor', () => {
 
     describe('with nothing in the storage', () => {
       it('returns the default values', async () => {
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({}));
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({}));
 
         const result = await settings.loadAccessToken();
         expect(result).toEqual('');
@@ -162,7 +162,7 @@ describe('SettingsStorageAccessor', () => {
     it('loads the correct data', async () => {
       const prs = 'renuo/test#1,github/test#2';
 
-      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({
         'ignored': prs,
       }));
 
@@ -172,7 +172,7 @@ describe('SettingsStorageAccessor', () => {
 
     describe('with nothing in the storage', () => {
       it('returns the default values', async () => {
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({}));
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({}));
 
         const result = await settings.loadIgnoredPrs();
         expect(result).toEqual('');
@@ -206,7 +206,7 @@ describe('SettingsStorageAccessor', () => {
       it('removes the pr', async () => {
         const prs = 'renuo/test#1';
 
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({
           'ignored': prs,
         }));
 
@@ -220,7 +220,7 @@ describe('SettingsStorageAccessor', () => {
       it('removes the pr', async () => {
         const prs = 'renuo/test#1, github/test#2';
 
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({
           'ignored': prs,
         }));
 

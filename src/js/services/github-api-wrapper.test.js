@@ -1,33 +1,33 @@
-import GithubApiWrapper from './github-api-wrapper';
-import { mockListOfPullRequests, mockRequestedReviewers } from '../../../__test__/mocks/github-api-mock-data';
+import GithubApiWrapper from './github-api-wrapper.js';
+import { mockListOfPullRequests, mockRequestedReviewers } from '../../../__test__/mocks/github-api-mock-data.js';
 import fetch from 'node-fetch';
 import MockDate from 'mockdate';
 
 jest.mock('node-fetch');
-const mockedFetch = fetch as any;
+const mockedFetch = fetch;
 
 global.fetch = mockedFetch;
-global.btoa = (data: string) => Buffer.from(data).toString('base64');
+global.btoa = (data) => Buffer.from(data).toString('base64');
 global.chrome = {
   storage: {
     local: {
       get: jest.fn(),
     },
   },
-} as any;
+};
 
 describe('GithubApiWrapper', () => {
   let scope = '';
 
   beforeEach(() => {
-    global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+    global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({
       'scope': scope,
       'accessToken': 'secret',
     }));
   });
 
   describe('#getReviewRequested', () => {
-    let pullRequestCount: number;
+    let pullRequestCount;
     beforeEach(() => {
       mockedFetch.mockResolvedValue(Promise.resolve({
         json: () => Promise.resolve(mockListOfPullRequests(pullRequestCount)),
@@ -72,7 +72,7 @@ describe('GithubApiWrapper', () => {
 
     describe('the pull requests being from teams', () => {
       beforeEach(() => {
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({
           'teams': 'myTeam, myOtherTeam', 'accessToken': 'secret',
         }));
       });
@@ -85,12 +85,12 @@ describe('GithubApiWrapper', () => {
   });
 
   describe('#getTeamReviewRequested', () => {
-    let teamPullRequestCount: number;
+    let teamPullRequestCount;
     beforeEach(() => {
       mockedFetch.mockResolvedValue(Promise.resolve({
         json: () => Promise.resolve(mockListOfPullRequests(teamPullRequestCount)),
       }));
-      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({
         'teams': 'myTeam', 'accessToken': 'secret',
       }));
     });
@@ -129,12 +129,12 @@ describe('GithubApiWrapper', () => {
   });
 
   describe('#getNoReviewRequested', () => {
-    let pullRequestCount: number;
+    let pullRequestCount;
     let openUserRequestCount = 0;
     let openTeamRequestCount = 0;
 
     beforeEach(() => {
-      mockedFetch.mockImplementation((url: string) => {
+      mockedFetch.mockImplementation((url) => {
         const value = url.includes('/requested_reviewers') ?
           mockRequestedReviewers(openUserRequestCount, openTeamRequestCount) :
           mockListOfPullRequests(pullRequestCount);
@@ -256,12 +256,12 @@ describe('GithubApiWrapper', () => {
   });
 
   describe('#getAllReviewsDone', () => {
-    let pullRequestCount: number;
+    let pullRequestCount;
     let openUserRequestCount = 0;
     let openTeamRequestCount = 0;
 
     beforeEach(() => {
-      mockedFetch.mockImplementation((url: string) => {
+      mockedFetch.mockImplementation((url) => {
         const value = url.includes('/requested_reviewers') ?
           mockRequestedReviewers(openUserRequestCount, openTeamRequestCount) :
           mockListOfPullRequests(pullRequestCount);
@@ -323,8 +323,8 @@ describe('GithubApiWrapper', () => {
   });
 
   describe('#getMissingAssignee', () => {
-    let pullRequestCount: number = 0;
-    let assignee: string | undefined;
+    let pullRequestCount = 0;
+    let assignee;
 
     beforeEach(() => {
       mockedFetch.mockResolvedValue(Promise.resolve({
@@ -391,7 +391,7 @@ describe('GithubApiWrapper', () => {
   });
 
   describe('#getAllAssigned', () => {
-    let pullRequestCount: number;
+    let pullRequestCount;
     beforeEach(() => {
       mockedFetch.mockResolvedValue(Promise.resolve({
         json: () => Promise.resolve(mockListOfPullRequests(pullRequestCount)),
@@ -451,7 +451,7 @@ describe('GithubApiWrapper', () => {
 
       describe('with a maximum age of 10 days', () => {
         beforeEach(() => {
-          global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+          global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({
             'scope': scope, 'accessToken': 'secret', 'maximumAge': '10',
           }));
         });
@@ -463,7 +463,7 @@ describe('GithubApiWrapper', () => {
 
       describe('with a maximum age of 20 days', () => {
         beforeEach(() => {
-          global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+          global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({
             'scope': scope, 'accessToken': 'secret', 'maximumAge': '20',
           }));
         });
@@ -475,7 +475,7 @@ describe('GithubApiWrapper', () => {
 
       describe('with a maximum age of 2 months', () => {
         beforeEach(() => {
-          global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+          global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({
             'scope': scope, 'accessToken': 'secret', 'maximumAge': '60',
           }));
         });
@@ -487,7 +487,7 @@ describe('GithubApiWrapper', () => {
 
       describe('with a maximum age of 1 year', () => {
         beforeEach(() => {
-          global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+          global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({
             'scope': scope, 'accessToken': 'secret', 'maximumAge': '365',
           }));
         });
@@ -513,7 +513,7 @@ describe('GithubApiWrapper', () => {
 
   describe('With no access token', () => {
     beforeEach(() => {
-      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({ 'scope': scope }));
+      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({ 'scope': scope }));
     });
 
     it('throws', async () => {
