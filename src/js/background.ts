@@ -2,7 +2,7 @@ import GithubApiWrapper from './services/github-api-wrapper';
 import PullRequestStorageAccessor from './services/pull-request-storage-accessor';
 import BadgeSetter from './services/badge-setter.js';
 import SettingsStorageAccessor from './services/settings-storage-accessor';
-import { noAccessTokenError, tooManyRequestsError } from './static/constants';
+import { noAccessTokenError, tooManyRequestsError, PullRequestRecordKey } from './static/constants';
 import { PullRequestRecord, PullRequest } from './static/types';
 import { containsPullRequest } from './static/utils.js';
 
@@ -42,12 +42,12 @@ const ServiceWorker = () => {
     }
 
     const record: PullRequestRecord = {
-      reviewRequested: recordEntries[0],
-      teamReviewRequested: recordEntries[1],
-      noReviewRequested: recordEntries[2],
-      allReviewsDone: recordEntries[3],
-      missingAssignee: recordEntries[4],
-      allAssigned: recordEntries[5],
+      [PullRequestRecordKey.reviewRequested]: recordEntries[0],
+      [PullRequestRecordKey.teamReviewRequested]: recordEntries[1],
+      [PullRequestRecordKey.noReviewRequested]: recordEntries[2],
+      [PullRequestRecordKey.allReviewsDone]: recordEntries[3],
+      [PullRequestRecordKey.missingAssignee]: recordEntries[4],
+      [PullRequestRecordKey.allAssigned]: recordEntries[5],
     };
 
     await filterIgnoredPrs(record);

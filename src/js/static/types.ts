@@ -27,15 +27,16 @@ export interface PullRequest {
   author: string;
 }
 
-export type PullRequestRecord = Record<PullRequestRecordKey, PullRequest[]>;
-export enum PullRequestRecordKey {
-  reviewRequested = 'reviewRequested',
-  teamReviewRequested = 'teamReviewRequested',
-  noReviewRequested = 'noReviewRequested',
-  allReviewsDone = 'allReviewsDone',
-  missingAssignee = 'missingAssignee',
-  allAssigned = 'allAssigned',
-}
+import { PullRequestRecordKey } from './constants';
 
-export type CounterConfig = Record<PullRequestRecordKey, boolean>;
+type KeyType = typeof PullRequestRecordKey;
+type KeyValue = KeyType[keyof KeyType];
+
+export type PullRequestRecord = {
+  [K in KeyValue]: PullRequest[];
+};
+
+export type CounterConfig = {
+  [K in KeyValue]: boolean;
+};
 export type IgnoredPr = Pick<PullRequest, 'ownerAndName' | 'number'>;
