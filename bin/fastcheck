@@ -2,14 +2,6 @@
 
 set -e
 
-echo "Executing tslint"
-npm run lint
-if [ ! $? -eq 0 ]; then
-  echo '\033[31mYou have linting errors, attempting to fix them.\033[0m'
-  npm run fix
-  exit 1
-fi
-
 echo "Executing stylelint"
 if ! npm run css-lint; then
   echo '\033[31mYou have CSS linting errors.\033[0m'
