@@ -1,14 +1,11 @@
 import { extensionID, displayedAccessToken } from '../../src/js/static/constants.js';
-
-// Override extension ID for testing
-const testExtensionId = 'eeejbcmnmgogpkgeinlbchoafjjbegmi';
 import puppeteer from 'puppeteer';
 import path from 'path';
 
 let browser;
 let page;
 
-const url = (file) => `chrome-extension://${testExtensionId}/${file}`;
+const url = (file) => `chrome-extension://${extensionID}/${file}`;
 
 // readProp('.password', 'value', 1)
 // will run
