@@ -34,7 +34,7 @@ global.chrome = {
       get: jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
         'counter': JSON.stringify(counter),
         'maximumAge': '555',
-        'accessToken': 'secret',
+        'accessToken': 'test-token',
         'scope': 'renuo',
         'ignored': 'renuo/test#1',
       })),
@@ -95,7 +95,7 @@ describe('Options', () => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
           'counter': JSON.stringify(counter),
           'maximumAge': '555',
-          'accessToken': 'secret',
+          'accessToken': 'test-token',
           'scope': 'renuo',
           'ignored': 'renuo/test#1',
         }));
@@ -128,9 +128,21 @@ describe('Options', () => {
       expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ scope: 'renuo' });
     });
 
-    it('stores the ignored PRs correctly', async () => {
+    it('stores literal ignored PRs correctly', async () => {
       await options.saveButtonClickHandler();
       expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ ignored: 'renuo/test#1' });
+    });
+
+    it('stores regex ignored patterns correctly', async () => {
+      (document.getElementById('ignored-prs') as HTMLInputElement).value = 'regex:feature/.*';
+      await options.saveButtonClickHandler();
+      expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ ignored: 'regex:feature/.*' });
+    });
+
+    it('stores mixed literal and regex patterns correctly', async () => {
+      (document.getElementById('ignored-prs') as HTMLInputElement).value = 'renuo/test#1,regex:feature/.*';
+      await options.saveButtonClickHandler();
+      expect(global.chrome.storage.local.set).toHaveBeenCalledWith({ ignored: 'renuo/test#1,regex:feature/.*' });
     });
 
     it('stores the access token correctly', async () => {

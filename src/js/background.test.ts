@@ -21,7 +21,7 @@ global.chrome = {
     local: {
       get: jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
         'counter': undefined,
-        'accessToken': 'secret',
+        'accessToken': 'test-token',
       })),
       set: jest.fn(),
     },
@@ -60,7 +60,7 @@ describe('ServiceWorker', () => {
       beforeEach(async () => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
           'counter': undefined,
-          'accessToken': 'secret',
+          'accessToken': 'test-token',
           ignored: 'renuo/github-pull-request-counter#2',
         }));
 
@@ -70,6 +70,34 @@ describe('ServiceWorker', () => {
       it('calls setBadgeText with the correct arguments', () => {
         expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '8' });
         expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '4' });
+      });
+    });
+
+    describe('with regex ignored patterns', () => {
+      beforeEach(async () => {
+        mockedFetch.mockImplementation((url: string) => {
+          if (url.includes('/pulls/')) {
+            return Promise.resolve({
+              json: () => ({
+                head: { ref: 'feature/test-123' },
+              }),
+            });
+          }
+          return globalMock(url, { pullRequestCount: 2 });
+        });
+
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+          'counter': undefined,
+          'accessToken': 'test-token',
+          ignored: 'regex:feature/.*',
+        }));
+
+        await serviceWorker.fetchAndStoreData();
+      });
+
+      it('filters PRs with matching branch names', () => {
+        expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '8' });
+        expect(global.chrome.action.setBadgeText).toHaveBeenCalledWith({ text: '0' });
       });
     });
 
