@@ -38,18 +38,41 @@ const PullRequestStorageAccessor = () => {
       return [];
     }
 
-    const ignoredPrs = ignoredPrsString.split(',').map(parsePullRequest);
+    const tokens = ignoredPrsString.split(',').map(t => t.trim());
     const allPrs = Object.values(record).flat();
+    const ignored: Partial<PullRequest>[] = [];
 
-    return ignoredPrs.filter(pr => {
-      const isPresent = containsPullRequest(allPrs, pr);
-
-      if (!isPresent) {
-        SettingsStorageAccessor().removeIgnoredPr(`${pr.ownerAndName}#${pr.number}`);
+    for (const token of tokens) {
+      if (token.startsWith('regex:')) {
+        try {
+          const regexPattern = token.substring(6); // Remove 'regex:' prefix
+          const regex = new RegExp(regexPattern);
+          // Find all PRs whose branch names match the pattern
+          allPrs.forEach(pr => {
+            if (pr.branchName && regex.test(pr.branchName)) {
+              ignored.push(pr);
+            }
+          });
+        } catch (e) {
+          // Skip invalid regex patterns silently to maintain smooth UX
+          continue;
+        }
+      } else {
+        // Handle legacy format: owner/repo#number
+        const parsed = parsePullRequest(token);
+        if (containsPullRequest(allPrs, parsed)) {
+          const found = allPrs.find(p => p.ownerAndName === parsed.ownerAndName && p.number === parsed.number);
+          if (found) {
+            ignored.push(found);
+          }
+        } else {
+          // Remove non-existent PR from ignore list
+          SettingsStorageAccessor().removeIgnoredPr(token);
+        }
       }
+    }
 
-      return isPresent;
-    });
+    return ignored;
   };
 
   const clearPullRequests = (): void => {

@@ -219,5 +219,63 @@ describe('PullRequestStorageAccessor', () => {
         expect(result).toEqual([{ number: 0, ownerAndName: 'renuo/github-pull-request-counter' }]);
       });
     });
+
+    describe('with regex pattern for branch names', () => {
+      beforeEach(() => {
+        pullRequests = pullRequestRecordFactory({ reviewRequestedCount: 2 });
+        pullRequests.reviewRequested[0].branchName = 'feature/test-1';
+        pullRequests.reviewRequested[1].branchName = 'feature/test-2';
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
+          callback({
+            'reviewRequested': [JSON.stringify(pullRequests.reviewRequested)],
+            'ignored': 'regex:feature/.*',
+          });
+        });
+      });
+
+      it('matches PRs with matching branch names', async () => {
+        const result = await storage.syncIgnoredPrs(pullRequests);
+        expect(result).toHaveLength(2);
+        expect(result[0].branchName).toBe('feature/test-1');
+        expect(result[1].branchName).toBe('feature/test-2');
+      });
+    });
+
+    describe('with invalid regex pattern', () => {
+      beforeEach(() => {
+        pullRequests = pullRequestRecordFactory({ reviewRequestedCount: 1 });
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
+          callback({
+            'reviewRequested': [JSON.stringify([pullRequestFactory(0)])],
+            'ignored': 'regex:[invalid',
+          });
+        });
+      });
+
+      it('skips invalid patterns', async () => {
+        const result = await storage.syncIgnoredPrs(pullRequests);
+        expect(result).toHaveLength(0);
+      });
+    });
+
+    describe('with mixed literal and regex patterns', () => {
+      beforeEach(() => {
+        pullRequests = pullRequestRecordFactory({ reviewRequestedCount: 2 });
+        pullRequests.reviewRequested[0].branchName = 'feature/test-1';
+        pullRequests.reviewRequested[1].branchName = 'bugfix/test';
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
+          callback({
+            'reviewRequested': [JSON.stringify(pullRequests.reviewRequested)],
+            'ignored': 'regex:feature/.*,renuo/github-pull-request-counter#0',
+          });
+        });
+      });
+
+      it('handles both pattern types', async () => {
+        const result = await storage.syncIgnoredPrs(pullRequests);
+        expect(result).toHaveLength(1);
+        expect(result[0].branchName).toBe('feature/test-1');
+      });
+    });
   });
 });
