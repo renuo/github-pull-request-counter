@@ -1,17 +1,17 @@
-import { extensionID, displayedAccessToken } from '../../src/js/static/constants';
+import { extensionID, displayedAccessToken } from '../../src/js/static/constants.js';
 import puppeteer from 'puppeteer';
 import path from 'path';
 
-let browser: puppeteer.Browser;
-let page: puppeteer.Page;
+let browser;
+let page;
 
-const url = (file: string) => `chrome-extension://${extensionID}/${file}`;
+const url = (file) => `chrome-extension://${extensionID}/${file}`;
 
 // readProp('.password', 'value', 1)
 // will run
 // document.querySelectorAll('.password')[1].value
 // and return the value of the second node matching the selector '.password'.
-const readProp = (query: string, prop: string, index = 0) => (
+const readProp = (query, prop, index = 0) => (
   page.evaluate((query, prop, index) => (
     document.querySelectorAll(query)[index][prop]
   ), query, prop, index)
@@ -119,7 +119,7 @@ describe('integration test', () => {
     });
 
     it('has the correct links', async () => {
-      const link = (index: number) => `https://github.com/renuo/github-pull-request-counter/pull/${index + 1}`;
+      const link = (index) => `https://github.com/renuo/github-pull-request-counter/pull/${index + 1}`;
 
       expect(await readProp('.pr-link', 'href', 0)).toEqual(link(0));
       expect(await readProp('.pr-link', 'href', 1)).toEqual(link(1));
