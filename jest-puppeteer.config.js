@@ -1,7 +1,8 @@
 module.exports = {
   launch: {
     dumpio: true,
-    headless: process.env.PUPPETEER_HEADLESS?.toLowerCase() !== 'false',
+    headless: 'new',
+    timeout: 30000,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',

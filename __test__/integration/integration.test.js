@@ -26,10 +26,20 @@ const setup = async () => {
   const isHeadless = process.env.PUPPETEER_HEADLESS?.toLowerCase() !== 'false';
   const isCI = process.env.CI === 'true';
 
-  const args = [
+  // Set up Chrome extension testing
+  const extensionArgs = [
     `--disable-extensions-except=${extensionPath}`,
-    '--load-extension=' + extensionPath,
+    `--load-extension=${extensionPath}`,
   ];
+
+  const args = [
+    ...extensionArgs,
+    '--no-sandbox',
+    '--disable-setuid-sandbox',
+  ];
+
+  console.log('Extension path:', extensionPath);
+  console.log('Chrome args:', args);
 
   browser = await puppeteer.launch({
     headless: isHeadless,

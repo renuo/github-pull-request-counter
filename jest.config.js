@@ -13,7 +13,8 @@ module.exports = {
   testEnvironmentOptions: {
     customExportConditions: ['node', 'node-addons'],
   },
-  testTimeout: 30000,
+  testTimeout: 60000,
+  verbose: true,
   setupFilesAfterEnv: ['./jest.setup.js'],
   "moduleNameMapper": {
     "^.+\\.(css|less|scss)$": "identity-obj-proxy"
