@@ -159,7 +159,7 @@ describe('SettingsStorageAccessor', () => {
   });
 
   describe('loadIgnoredPrs', () => {
-    it('loads the correct data', async () => {
+    it('loads legacy format correctly', async () => {
       const prs = 'renuo/test#1,github/test#2';
 
       global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
@@ -168,6 +168,34 @@ describe('SettingsStorageAccessor', () => {
 
       const result = await settings.loadIgnoredPrs();
       expect(result).toEqual(prs);
+    });
+
+    it('loads new format with literal patterns correctly', async () => {
+      const stored = JSON.stringify([
+        { type: 'literal', pattern: 'renuo/test#1' },
+        { type: 'literal', pattern: 'github/test#2' },
+      ]);
+
+      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+        'ignored': stored,
+      }));
+
+      const result = await settings.loadIgnoredPrs();
+      expect(result).toEqual('renuo/test#1,github/test#2');
+    });
+
+    it('loads new format with regex patterns correctly', async () => {
+      const stored = JSON.stringify([
+        { type: 'regex', pattern: 'feature/.*' },
+        { type: 'literal', pattern: 'github/test#2' },
+      ]);
+
+      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+        'ignored': stored,
+      }));
+
+      const result = await settings.loadIgnoredPrs();
+      expect(result).toEqual('regex:feature/.*,github/test#2');
     });
 
     describe('with nothing in the storage', () => {
@@ -181,16 +209,36 @@ describe('SettingsStorageAccessor', () => {
   });
 
   describe('storeIgnoredPrs', () => {
-    it('calls get with the correct arguments', () => {
+    it('stores literal patterns correctly', () => {
       const prs = 'renuo/test#1,github/test#2';
+      const expected = JSON.stringify([
+        { type: 'literal', pattern: 'renuo/test#1' },
+        { type: 'literal', pattern: 'github/test#2' },
+      ]);
 
       settings.storeIgnoredPrs(prs);
-      expect(set).toHaveBeenCalledWith({ ignored: prs });
+      expect(set).toHaveBeenCalledWith({ ignored: expected });
+    });
+
+    it('stores regex patterns correctly', () => {
+      const prs = 'regex:feature/.*,github/test#2';
+      const expected = JSON.stringify([
+        { type: 'regex', pattern: 'feature/.*' },
+        { type: 'literal', pattern: 'github/test#2' },
+      ]);
+
+      settings.storeIgnoredPrs(prs);
+      expect(set).toHaveBeenCalledWith({ ignored: expected });
+    });
+
+    it('handles empty input correctly', () => {
+      settings.storeIgnoredPrs('');
+      expect(set).toHaveBeenCalledWith({ ignored: '[]' });
     });
   });
 
   describe('removeIgnoredPr', () => {
-    it('removes the pr', async () => {
+    it('removes PR from legacy format', async () => {
       const prs = 'renuo/test#1,github/test#2';
 
       global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
@@ -198,35 +246,46 @@ describe('SettingsStorageAccessor', () => {
       }));
 
       await settings.removeIgnoredPr('renuo/test#1');
-
       expect(set).toHaveBeenCalledWith({ ignored: 'github/test#2' });
     });
 
-    describe('with a single ignored PR', () => {
-      it('removes the pr', async () => {
-        const prs = 'renuo/test#1';
+    it('removes PR from new format with literal patterns', async () => {
+      const stored = JSON.stringify([
+        { type: 'literal', pattern: 'renuo/test#1' },
+        { type: 'literal', pattern: 'github/test#2' },
+      ]);
 
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
-          'ignored': prs,
-        }));
+      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+        'ignored': stored,
+      }));
 
-        await settings.removeIgnoredPr('renuo/test#1');
-
-        expect(set).toHaveBeenCalledWith({ ignored: '' });
-      });
+      await settings.removeIgnoredPr('renuo/test#1');
+      expect(set).toHaveBeenCalledWith({ ignored: JSON.stringify([
+        { type: 'literal', pattern: 'github/test#2' },
+      ])});
     });
 
-    describe('when the prs contain spaces', () => {
-      it('removes the pr', async () => {
-        const prs = 'renuo/test#1, github/test#2';
+    it('preserves regex patterns when removing literal patterns', async () => {
+      const stored = JSON.stringify([
+        { type: 'regex', pattern: 'feature/.*' },
+        { type: 'literal', pattern: 'github/test#2' },
+      ]);
 
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
-          'ignored': prs,
-        }));
+      global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+        'ignored': stored,
+      }));
 
-        await settings.removeIgnoredPr('github/test#2');
+      await settings.removeIgnoredPr('github/test#2');
+      expect(set).toHaveBeenCalledWith({ ignored: JSON.stringify([
+        { type: 'regex', pattern: 'feature/.*' },
+      ])});
+    });
 
-        expect(set).toHaveBeenCalledWith({ ignored: 'renuo/test#1' });
+    describe('with nothing in storage', () => {
+      it('does nothing', async () => {
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({}));
+        await settings.removeIgnoredPr('renuo/test#1');
+        expect(set).not.toHaveBeenCalled();
       });
     });
   });

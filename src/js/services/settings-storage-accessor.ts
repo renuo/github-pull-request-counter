@@ -27,14 +27,61 @@ const SettingsStorageAccessor = () => {
 
   const loadTeams = async (): Promise<string> => (await load('teams')) || '';
 
-  const storeIgnoredPrs = (list: string): void => store('ignored', list);
+  interface IgnorePattern {
+    type: 'literal' | 'regex';
+    pattern: string;
+  }
 
-  const loadIgnoredPrs = async (): Promise<string> => (await load('ignored')) || '';
+  const storeIgnoredPrs = (list: string): void => {
+    // Convert comma-separated list to structured format
+    const patterns = list.split(',').map(item => {
+      const trimmed = item.trim();
+      if (trimmed.startsWith('regex:')) {
+        return {
+          type: 'regex' as const,
+          pattern: trimmed.substring(6), // Remove 'regex:' prefix
+        };
+      }
+      return {
+        type: 'literal' as const,
+        pattern: trimmed,
+      };
+    });
+    store('ignored', JSON.stringify(patterns));
+  };
+
+  const loadIgnoredPrs = async (): Promise<string> => {
+    const stored = await load('ignored');
+    if (!stored) return '';
+    try {
+      // Try to parse as JSON (new format)
+      const patterns: IgnorePattern[] = JSON.parse(stored);
+      return patterns.map(p => p.type === 'regex' ? `regex:${p.pattern}` : p.pattern).join(',');
+    } catch {
+      // If parsing fails, assume it's the old format
+      return stored;
+    }
+  };
 
   const removeIgnoredPr = async (pr: string) => {
-    const ignoredPrs = await loadIgnoredPrs();
-    const newIgnoredPrs = ignoredPrs.split(',').filter((p) => p.trim() !== pr).join(',');
-    storeIgnoredPrs(newIgnoredPrs);
+    const stored = await load('ignored');
+    if (!stored) return;
+
+    try {
+      // Try to parse as JSON (new format)
+      const patterns: IgnorePattern[] = JSON.parse(stored);
+      const newPatterns = patterns.filter(p => {
+        if (p.type === 'literal') {
+          return p.pattern !== pr;
+        }
+        return true; // Keep all regex patterns
+      });
+      store('ignored', JSON.stringify(newPatterns));
+    } catch {
+      // If parsing fails, assume it's the old format
+      const newIgnoredPrs = stored.split(',').filter((p) => p.trim() !== pr).join(',');
+      store('ignored', newIgnoredPrs);
+    }
   };
 
   const storeMaximumAge = (value: number): void => {

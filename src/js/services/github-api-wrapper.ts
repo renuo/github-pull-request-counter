@@ -101,7 +101,7 @@ const GithubApiWrapper = async () => {
         repositoryUrl: issue.pull_request.html_url.split('/pull')[0],
         htmlUrl: issue.pull_request.html_url,
         author: issue.user.login,
-        branchName: prDetails.head.ref
+        branchName: prDetails.head.ref,
       });
     }
 
