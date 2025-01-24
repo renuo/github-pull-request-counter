@@ -98,7 +98,7 @@ const GithubApiWrapper = async () => {
       repositoryUrl: issue.pull_request.html_url.split('/pull')[0],
       htmlUrl: issue.pull_request.html_url,
       author: issue.user.login,
-      branchName: issue.head?.ref || '',
+      branchName: issue.head?.ref || ''
     }));
 
     const sorted = sortByDate(pullRequests);
@@ -115,24 +115,21 @@ const GithubApiWrapper = async () => {
     ));
   };
 
-  const sortByDate = (pullRequests: PullRequest[]): PullRequest[] => {
-    return pullRequests.sort((pullRequest1: PullRequest, pullRequest2: PullRequest) => (
+  const sortByDate = (pullRequests: PullRequest[]): PullRequest[] =>
+    pullRequests.sort((pullRequest1: PullRequest, pullRequest2: PullRequest) =>
       new Date(pullRequest2.createdAt).getTime() - new Date(pullRequest1.createdAt).getTime()
-    ));
-  };
+    );
 
-  const readOwnerAndNameFromUrl = (url: string): string => {
-    return url.replace('https://api.github.com/repos/', '').split('/pulls/')[0];
-  };
+  const readOwnerAndNameFromUrl = (url: string): string =>
+    url.replace('https://api.github.com/repos/', '').split('/pulls/')[0];
 
   const filterByMaximumAge = async (pullRequests: PullRequest[]): Promise<PullRequest[]> => {
     const maximumAge = await SettingsStorageAccessor().loadMaximumAge();
     return pullRequests.filter(pullRequest => pullRequest.ageInDays < maximumAge);
   };
 
-  const getDifferenceInDays = (date2: Date): number => {
-    return (Date.now() - date2.getTime()) / 86_400_000; // 1000 * 3600 * 24
-  };
+  const getDifferenceInDays = (date2: Date): number =>
+    (Date.now() - date2.getTime()) / 86_400_000; // 1000 * 3600 * 24
 
   const accessToken = await SettingsStorageAccessor().loadAccessToken();
   // TODO: Find cleaner solution to mock the API during integration tests.
@@ -150,8 +147,8 @@ const GithubApiWrapper = async () => {
     getNoReviewRequested,
     getAllReviewsDone,
     getMissingAssignee,
-    getAllAssigned
-  }
+    getAllAssigned,
+  };
 };
 
 export default GithubApiWrapper;
