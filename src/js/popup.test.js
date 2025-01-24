@@ -16,10 +16,10 @@ const storageObject = Object.values(PullRequestRecordKey).reduce((obj, key) => {
 global.chrome = {
   storage: {
     local: {
-      get: jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback(storageObject)),
+      get: jest.fn().mockImplementation((_keys, callback) => callback(storageObject)),
     },
   },
-} as any;
+};
 
 describe('popup', () => {
   const dom = fs.readFileSync(path.resolve(__dirname, '../popup.html')).toString();
