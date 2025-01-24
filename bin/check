@@ -3,11 +3,16 @@
 set -e
 
 bin/build
-bin/fastcheck
-if [ ! $? -eq 0 ]; then
+bin/fastcheck || {
   echo '\033[31mFix the linting issues before running the tests.\033[0m'
   exit 1
-fi
+}
+
+echo "Building extension"
+ENV=testing bin/build || {
+  echo '\033[31mFailed to build extension.\033[0m'
+  exit 1
+}
 
 echo "Executing jest"
-npm run test
+ENV=testing npm run test

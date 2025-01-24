@@ -1,5 +1,5 @@
 import GithubApiWrapper from './github-api-wrapper.js';
-import { mockListOfPullRequests, mockRequestedReviewers } from '../../../__test__/mocks/github-api-mock-data';
+import { mockListOfPullRequests, mockRequestedReviewers } from '../../../__test__/mocks/github-api-mock-data.js';
 import fetch from 'node-fetch';
 import MockDate from 'mockdate';
 

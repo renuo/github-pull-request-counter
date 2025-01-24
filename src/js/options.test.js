@@ -3,7 +3,7 @@
  */
 
 import Options from './options';
-import { globalMock } from '../../__test__/mocks/github-api-mock-data';
+import { globalMock } from '../../__test__/mocks/github-api-mock-data.js';
 import fetch from 'node-fetch';
 import fs from 'fs';
 import path from 'path';

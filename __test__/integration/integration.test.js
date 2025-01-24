@@ -1,11 +1,14 @@
 import { extensionID, displayedAccessToken } from '../../src/js/static/constants.js';
+
+// Override extension ID for testing
+const testExtensionId = 'eeejbcmnmgogpkgeinlbchoafjjbegmi';
 import puppeteer from 'puppeteer';
 import path from 'path';
 
 let browser;
 let page;
 
-const url = (file) => `chrome-extension://${extensionID}/${file}`;
+const url = (file) => `chrome-extension://${testExtensionId}/${file}`;
 
 // readProp('.password', 'value', 1)
 // will run
@@ -25,12 +28,33 @@ const setup = async () => {
 
   const args = [
     `--disable-extensions-except=${extensionPath}`,
-    ...(isCI ? [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-gpu',
-    ] : []),
+    '--disable-web-security',
+    '--allow-insecure-localhost',
+    '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage',
+    '--disable-gpu',
+    '--disable-background-networking',
+    '--disable-background-timer-throttling',
+    '--disable-backgrounding-occluded-windows',
+    '--disable-breakpad',
+    '--disable-client-side-phishing-detection',
+    '--disable-component-extensions-with-background-pages',
+    '--disable-default-apps',
+    '--disable-dev-shm-usage',
+    '--disable-extensions',
+    '--disable-features=TranslateUI',
+    '--disable-hang-monitor',
+    '--disable-ipc-flooding-protection',
+    '--disable-popup-blocking',
+    '--disable-prompt-on-repost',
+    '--disable-renderer-backgrounding',
+    '--disable-sync',
+    '--force-color-profile=srgb',
+    '--metrics-recording-only',
+    '--no-first-run',
+    '--password-store=basic',
+    '--use-mock-keychain',
   ];
 
   browser = await puppeteer.launch({

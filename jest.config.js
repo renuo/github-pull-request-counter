@@ -2,21 +2,30 @@ module.exports = {
   preset: 'jest-puppeteer',
   transform: {
     '^.+\\.js$': ['babel-jest', {
-      presets: [['@babel/preset-env', { targets: { node: 'current' } }]]
+      presets: [['@babel/preset-env', { targets: { node: 'current' } }]],
+      plugins: ['@babel/plugin-transform-modules-commonjs']
     }]
   },
   globals: {
-    'ENV': 'development',
+    'ENV': 'testing',
   },
+  testEnvironment: 'jest-environment-puppeteer',
+  testEnvironmentOptions: {
+    customExportConditions: ['node', 'node-addons'],
+  },
+  testTimeout: 30000,
+  setupFilesAfterEnv: ['./jest.setup.js'],
   "moduleNameMapper": {
     "^.+\\.(css|less|scss)$": "identity-obj-proxy"
   },
   collectCoverage: true,
   collectCoverageFrom: [
-    "**/*js",
+    "src/js/**/*.js",
     "!**/node_modules/**",
     "!**/dist/**",
     "!**/mocks/**",
+    "!**/coverage/**",
+    "!jest.config.js",
   ],
   coverageThreshold: {
     "global": {

@@ -1,7 +1,13 @@
 #!/bin/bash
 
-# Create dist directory
+set -e
+
+# Clean dist directory
+rm -rf dist
 mkdir -p dist
+
+# Create necessary directories
+mkdir -p dist/js/services dist/js/static dist/css
 
 # Copy static files
 cp -r src/icons dist/
@@ -10,14 +16,20 @@ cp src/popup.html dist/
 cp src/options.html dist/
 
 # Copy JavaScript files
-mkdir -p dist/js/services dist/js/static
-cp src/js/*.js dist/js/
-cp src/js/services/*.js dist/js/services/
-cp src/js/static/*.js dist/js/static/
+cp src/js/*.js dist/js/ || true
+cp src/js/services/*.js dist/js/services/ || true
+cp src/js/static/*.js dist/js/static/ || true
 
 # Copy CSS files
-mkdir -p dist/css
-cp src/css/*.css dist/css/
+cp src/css/*.css dist/css/ || true
 
-# Make the script executable
-chmod +x bin/build
+# Add testing key to manifest.json for integration tests
+if [ "$ENV" = "testing" ]; then
+  if [ -z "$EXTENSION_TEST_KEY" ]; then
+    echo "Error: EXTENSION_TEST_KEY environment variable is required for testing"
+    exit 1
+  fi
+  # Create a temporary manifest with the testing key
+  jq '. + {"key": "'"$EXTENSION_TEST_KEY"'"}' dist/manifest.json > dist/manifest.json.tmp
+  mv dist/manifest.json.tmp dist/manifest.json
+fi
