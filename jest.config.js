@@ -11,18 +11,18 @@ module.exports = {
     chrome: {
       storage: {
         local: {
-          get: () => {},
-          set: () => {},
+          get: null,
+          set: null,
         },
       },
       action: {
-        setBadgeText: () => {},
-        setBadgeBackgroundColor: () => {},
+        setBadgeText: null,
+        setBadgeBackgroundColor: null,
       },
       alarms: {
-        create: () => {},
+        create: null,
         onAlarm: {
-          addListener: () => {},
+          addListener: null,
         },
       },
     },
