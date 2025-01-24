@@ -11,6 +11,9 @@ export interface Issue {
   user: {
     login: string;
   };
+  head?: {
+    ref: string;
+  };
 }
 
 export interface PullRequest {
