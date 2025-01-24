@@ -28,12 +28,11 @@ if [ "$ENV" = "testing" ]; then
   if [ -z "$EXTENSION_TEST_KEY" ]; then
     echo "Warning: EXTENSION_TEST_KEY not set, skipping key addition to manifest.json"
   else
-    # Create a temporary manifest with the testing key and ID
-    echo "Adding testing key and ID to manifest.json..."
-    jq '. + {"key": "'"$EXTENSION_TEST_KEY"'"}' dist/manifest.json > dist/manifest.json.tmp
+    echo "Adding testing key to manifest.json..."
+    # Use sed to add the key before the last closing brace
+    sed -i 's/}$/,"key":"'"$EXTENSION_TEST_KEY"'"}/' dist/manifest.json
+    cat dist/manifest.json
   fi
-  mv dist/manifest.json.tmp dist/manifest.json
-  cat dist/manifest.json
 fi
 
 # Ensure dist directory is properly set up

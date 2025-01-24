@@ -10,7 +10,14 @@ bin/fastcheck || {
 
 echo "Building extension"
 export ENV=testing
-export EXTENSION_TEST_KEY="$(cat webpack.common.js | grep TESTING_KEY | cut -d'"' -f2)"
+export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
+if [ -z "$EXTENSION_TEST_KEY" ]; then
+  echo '\033[33mWarning: EXTENSION_TEST_KEY environment variable is not set.\033[0m'
+  echo '\033[33mThis key is required for Chrome extension testing.\033[0m'
+  echo '\033[33mPlease set this environment variable in your CI configuration.\033[0m'
+fi
+
 bin/build || {
   echo '\033[31mFailed to build extension.\033[0m'
   exit 1
