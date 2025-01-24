@@ -67,13 +67,16 @@
     <div class="heading-1">
         <h2>Ignored PRs</h2>
         <p>
-            Below you can enter a comma seperated list of PRs you would like to ignore. Redundant PRs will be
-            removed from
-            the list automatically.
+            Enter a comma-separated list of PRs to ignore. You can use:
+            <ul>
+                <li>Literal PR references (e.g., <code>owner/repo#1</code>)</li>
+                <li>Branch name patterns (e.g., <code>regex:feature/.*</code> to ignore all feature branches)</li>
+            </ul>
+            Redundant or non-existent PRs will be removed automatically.
         </p>
     </div>
     <input type="text" id="ignored-prs" class="text-input"
-           placeholder="owner/repo#1,owner/repo#2,owner/repo#3, ...">
+           placeholder="owner/repo#1, regex:feature/.*, owner/repo#3, ...">
 
     <div class="heading-1">
         <h2>Access Token</h2>
