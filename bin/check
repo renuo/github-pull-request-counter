@@ -2,6 +2,7 @@
 
 set -e
 
+bin/build
 bin/fastcheck
 if [ ! $? -eq 0 ]; then
   echo '\033[31mFix the linting issues before running the tests.\033[0m'
