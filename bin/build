@@ -29,7 +29,15 @@ if [ "$ENV" = "testing" ]; then
     echo "Error: EXTENSION_TEST_KEY environment variable is required for testing"
     exit 1
   fi
-  # Create a temporary manifest with the testing key
+  # Create a temporary manifest with the testing key and ID
+  echo "Adding testing key and ID to manifest.json..."
   jq '. + {"key": "'"$EXTENSION_TEST_KEY"'"}' dist/manifest.json > dist/manifest.json.tmp
   mv dist/manifest.json.tmp dist/manifest.json
+  cat dist/manifest.json
 fi
+
+# Ensure dist directory is properly set up
+echo "Checking dist directory structure..."
+ls -la dist/
+ls -la dist/js/
+ls -la dist/css/
