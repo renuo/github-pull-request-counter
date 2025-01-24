@@ -9,10 +9,11 @@ bin/fastcheck || {
 }
 
 echo "Building extension"
-ENV=testing bin/build || {
+export ENV=testing
+bin/build || {
   echo '\033[31mFailed to build extension.\033[0m'
   exit 1
 }
 
 echo "Executing jest"
-ENV=testing npm run test
+npm run test
