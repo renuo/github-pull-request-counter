@@ -100,7 +100,6 @@ const GithubApiWrapper = async () => {
       author: issue.user.login,
       branchName: issue.head?.ref || '',
     }));
-    }
 
     const sorted = sortByDate(pullRequests);
     return shouldFilterByMaximumAge ? filterByMaximumAge(sorted) : sorted;
@@ -116,30 +115,43 @@ const GithubApiWrapper = async () => {
     ));
   };
 
-  const sortByDate = (pullRequests: PullRequest[]) =>
-    pullRequests.sort((pullRequest1: PullRequest, pullRequest2: PullRequest) => (
+  const sortByDate = (pullRequests: PullRequest[]): PullRequest[] => {
+    return pullRequests.sort((pullRequest1: PullRequest, pullRequest2: PullRequest) => (
       new Date(pullRequest2.createdAt).getTime() - new Date(pullRequest1.createdAt).getTime()
     ));
+  };
 
-  const readOwnerAndNameFromUrl = (url: string): string => url.replace('https://api.github.com/repos/', '').split('/pulls/')[0];
+  const readOwnerAndNameFromUrl = (url: string): string => {
+    return url.replace('https://api.github.com/repos/', '').split('/pulls/')[0];
+  };
 
   const filterByMaximumAge = async (pullRequests: PullRequest[]): Promise<PullRequest[]> => {
     const maximumAge = await SettingsStorageAccessor().loadMaximumAge();
-
     return pullRequests.filter(pullRequest => pullRequest.ageInDays < maximumAge);
   };
 
-  const getDifferenceInDays = (date2: Date): number => (Date.now() - date2.getTime()) / 86_400_000; // 1000 * 3600 * 24
+  const getDifferenceInDays = (date2: Date): number => {
+    return (Date.now() - date2.getTime()) / 86_400_000; // 1000 * 3600 * 24
+  };
 
   const accessToken = await SettingsStorageAccessor().loadAccessToken();
   // TODO: Find cleaner solution to mock the API during integration tests.
   // @ts-ignore
-  if (ENV !== 'testing' && accessToken === '') throw noAccessTokenError;
+  if (ENV !== 'testing' && accessToken === '') {
+    throw noAccessTokenError;
+  }
 
   // TODO: This should be cached to improve performance
   const userName = (await makeApiRequest('/user')).login;
 
-  return { getReviewRequested, getTeamReviewRequested, getNoReviewRequested, getAllReviewsDone, getMissingAssignee, getAllAssigned };
+  return {
+    getReviewRequested,
+    getTeamReviewRequested,
+    getNoReviewRequested,
+    getAllReviewsDone,
+    getMissingAssignee,
+    getAllAssigned
+  }
 };
 
 export default GithubApiWrapper;
