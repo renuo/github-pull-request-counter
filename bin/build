@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Create dist directory
+mkdir -p dist
+
+# Copy static files
+cp -r src/icons dist/
+cp src/manifest.json dist/
+cp src/popup.html dist/
+cp src/options.html dist/
+
+# Copy JavaScript files
+mkdir -p dist/js/services dist/js/static
+cp src/js/*.js dist/js/
+cp src/js/services/*.js dist/js/services/
+cp src/js/static/*.js dist/js/static/
+
+# Copy CSS files
+mkdir -p dist/css
+cp src/css/*.css dist/css/
+
+# Make the script executable
+chmod +x bin/build
