@@ -98,8 +98,8 @@ const GithubApiWrapper = async () => {
       repositoryUrl: issue.pull_request.html_url.split('/pull')[0],
       htmlUrl: issue.pull_request.html_url,
       author: issue.user.login,
-      branchName: issue.head?.ref || '',
-    }),);
+      branchName: issue.head?.ref || ''
+    }));
 
     const sorted = sortByDate(pullRequests);
     return shouldFilterByMaximumAge ? filterByMaximumAge(sorted) : sorted;
@@ -118,7 +118,7 @@ const GithubApiWrapper = async () => {
   const sortByDate = (pullRequests: PullRequest[]): PullRequest[] =>
     pullRequests.sort((pullRequest1: PullRequest, pullRequest2: PullRequest) => (
       new Date(pullRequest2.createdAt).getTime() - new Date(pullRequest1.createdAt).getTime()
-    ),);
+    ));
 
   const readOwnerAndNameFromUrl = (url: string): string =>
     url.replace('https://api.github.com/repos/', '').split('/pulls/')[0];
