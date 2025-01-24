@@ -26,12 +26,12 @@ cp src/css/*.css dist/css/ || true
 # Add testing key to manifest.json for integration tests
 if [ "$ENV" = "testing" ]; then
   if [ -z "$EXTENSION_TEST_KEY" ]; then
-    echo "Error: EXTENSION_TEST_KEY environment variable is required for testing"
-    exit 1
+    echo "Warning: EXTENSION_TEST_KEY not set, skipping key addition to manifest.json"
+  else
+    # Create a temporary manifest with the testing key and ID
+    echo "Adding testing key and ID to manifest.json..."
+    jq '. + {"key": "'"$EXTENSION_TEST_KEY"'"}' dist/manifest.json > dist/manifest.json.tmp
   fi
-  # Create a temporary manifest with the testing key and ID
-  echo "Adding testing key and ID to manifest.json..."
-  jq '. + {"key": "'"$EXTENSION_TEST_KEY"'"}' dist/manifest.json > dist/manifest.json.tmp
   mv dist/manifest.json.tmp dist/manifest.json
   cat dist/manifest.json
 fi

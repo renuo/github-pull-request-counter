@@ -10,6 +10,7 @@ bin/fastcheck || {
 
 echo "Building extension"
 export ENV=testing
+export EXTENSION_TEST_KEY="$(cat webpack.common.js | grep TESTING_KEY | cut -d'"' -f2)"
 bin/build || {
   echo '\033[31mFailed to build extension.\033[0m'
   exit 1
