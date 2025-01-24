@@ -29,8 +29,18 @@ if [ "$ENV" = "testing" ]; then
     echo "Warning: EXTENSION_TEST_KEY not set, skipping key addition to manifest.json"
   else
     echo "Adding testing key to manifest.json..."
-    # Use sed to add the key before the last closing brace
-    sed -i 's/}$/,"key":"'"$EXTENSION_TEST_KEY"'"}/' dist/manifest.json
+    # Create a temporary file with the modified content
+    awk -v key="$EXTENSION_TEST_KEY" '
+      BEGIN { found=0 }
+      /}[[:space:]]*$/ && !found {
+        printf "%s,\n  \"key\": \"%s\"\n}\n", substr($0, 1, length($0)-1), key;
+        found=1;
+        next
+      }
+      { print }
+    ' dist/manifest.json > dist/manifest.json.tmp && mv dist/manifest.json.tmp dist/manifest.json
+    
+    echo "Updated manifest.json content:"
     cat dist/manifest.json
   fi
 fi
