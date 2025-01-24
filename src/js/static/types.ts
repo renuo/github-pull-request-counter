@@ -25,6 +25,7 @@ export interface PullRequest {
   repositoryUrl: string;
   htmlUrl: string;
   author: string;
+  branchName: string;
 }
 
 import { PullRequestRecordKey } from './constants';

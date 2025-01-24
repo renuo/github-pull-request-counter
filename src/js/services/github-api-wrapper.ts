@@ -86,19 +86,24 @@ const GithubApiWrapper = async () => {
 
   const processDataIntoPullRequests = async (issues: Issue[], shouldFilterByMaximumAge: boolean = true): Promise<PullRequest[]> => {
     issues = await filterByScope(issues);
-    const pullRequests = issues.map(issue => ({
-      id: 12,
-      assignee: undefined,
-      title: issue.title,
-      number: issue.number,
-      ownerAndName: readOwnerAndNameFromUrl(issue.pull_request.url),
-      createdAt: issue.created_at,
-      ageInDays: getDifferenceInDays(new Date(issue.created_at)),
-      url: issue.pull_request.url,
-      repositoryUrl: issue.pull_request.html_url.split('/pull')[0],
-      htmlUrl: issue.pull_request.html_url,
-      author: issue.user.login,
-    }));
+    const pullRequests = [];
+    for (const issue of issues) {
+      const prDetails = await makeRequest(issue.pull_request.url.replace('/issues/', '/pulls/'));
+      pullRequests.push({
+        id: 12,
+        assignee: undefined,
+        title: issue.title,
+        number: issue.number,
+        ownerAndName: readOwnerAndNameFromUrl(issue.pull_request.url),
+        createdAt: issue.created_at,
+        ageInDays: getDifferenceInDays(new Date(issue.created_at)),
+        url: issue.pull_request.url,
+        repositoryUrl: issue.pull_request.html_url.split('/pull')[0],
+        htmlUrl: issue.pull_request.html_url,
+        author: issue.user.login,
+        branchName: prDetails.head.ref
+      });
+    }
 
     const sorted = sortByDate(pullRequests);
     return shouldFilterByMaximumAge ? filterByMaximumAge(sorted) : sorted;
