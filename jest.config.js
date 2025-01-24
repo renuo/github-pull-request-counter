@@ -7,22 +7,22 @@ module.exports = {
     }]
   },
   globals: {
-    'ENV': 'testing',
-    'chrome': {
+    ENV: 'testing',
+    chrome: {
       storage: {
         local: {
-          get: jest.fn(),
-          set: jest.fn(),
+          get: () => {},
+          set: () => {},
         },
       },
       action: {
-        setBadgeText: jest.fn(),
-        setBadgeBackgroundColor: jest.fn(),
+        setBadgeText: () => {},
+        setBadgeBackgroundColor: () => {},
       },
       alarms: {
-        create: jest.fn(),
+        create: () => {},
         onAlarm: {
-          addListener: jest.fn(),
+          addListener: () => {},
         },
       },
     },
