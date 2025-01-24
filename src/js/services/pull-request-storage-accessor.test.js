@@ -1,6 +1,5 @@
-import PullRequestStorageAccessor from './pull-request-storage-accessor';
-import { PullRequestRecord } from '../static/types';
-import { pullRequestFactory, pullRequestRecordFactory } from '../../../__test__/mocks/factories';
+import PullRequestStorageAccessor from './pull-request-storage-accessor.js';
+import { pullRequestFactory, pullRequestRecordFactory } from '../../../__test__/mocks/factories.js';
 
 global.chrome = {
   storage: {
@@ -9,12 +8,12 @@ global.chrome = {
       set: jest.fn(),
     },
   },
-} as any;
+};
 
 describe('PullRequestStorageAccessor', () => {
   const storage = PullRequestStorageAccessor();
   const setMock = global.chrome.storage.local.set;
-  let pullRequests: PullRequestRecord;
+  let pullRequests;
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -65,7 +64,7 @@ describe('PullRequestStorageAccessor', () => {
   });
 
   describe('#loadPullRequests', () => {
-    let result: PullRequestRecord;
+    let result;
     const getMock = global.chrome.storage.local.get;
 
     beforeEach(async () => {
@@ -76,7 +75,7 @@ describe('PullRequestStorageAccessor', () => {
       beforeAll(() => {
         pullRequests = pullRequestRecordFactory({ reviewRequestedCount: 1 });
 
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => {
           callback({});
         });
       });
@@ -105,7 +104,7 @@ describe('PullRequestStorageAccessor', () => {
 
     describe('with one stored record', () => {
       beforeAll(() => {
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => {
           callback({ 'reviewRequested': [JSON.stringify([pullRequestFactory(0)])] });
         });
 
@@ -120,7 +119,7 @@ describe('PullRequestStorageAccessor', () => {
 
     describe('with four stored records', () => {
       beforeAll(() => {
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => {
           callback({
             'reviewRequested': [JSON.stringify([pullRequestFactory(0)])],
             'teamReviewRequested': [JSON.stringify([pullRequestFactory(0)])],
@@ -155,7 +154,7 @@ describe('PullRequestStorageAccessor', () => {
 
     describe('with no ignored PRs', () => {
         beforeEach(() => {
-            global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
+            global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => {
                 callback({
                     'reviewRequested': [JSON.stringify([pullRequestFactory(0)])],
                     'ignored': [],
@@ -171,7 +170,7 @@ describe('PullRequestStorageAccessor', () => {
 
     describe('with one ignored PR', () => {
         beforeEach(() => {
-            global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
+            global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => {
                 callback({
                     'reviewRequested': [JSON.stringify([pullRequestFactory(0)])],
                     'ignored': 'renuo/github-pull-request-counter#0',
@@ -189,7 +188,7 @@ describe('PullRequestStorageAccessor', () => {
       beforeEach(() => {
         pullRequests = pullRequestRecordFactory({ reviewRequestedCount: 2 });
         pullRequests.reviewRequested[1].number = 1;
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => {
           callback({
             'reviewRequested': [JSON.stringify([pullRequestFactory(0)]), JSON.stringify([pullRequestFactory(1)])],
             'ignored': 'renuo/github-pull-request-counter#0,renuo/github-pull-request-counter#1',
@@ -206,7 +205,7 @@ describe('PullRequestStorageAccessor', () => {
     describe('with redundant ignored PRs', () => {
       beforeEach(() => {
         pullRequests = pullRequestRecordFactory({ reviewRequestedCount: 1 });
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys: string, callback: (items: any) => void): void => {
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => {
           callback({
             'reviewRequested': [JSON.stringify([pullRequestFactory(0)])],
             'ignored': 'renuo/github-pull-request-counter#0,renuo/github-pull-request-counter#1',

@@ -1,9 +1,8 @@
-import GithubApiWrapper from './services/github-api-wrapper';
-import PullRequestStorageAccessor from './services/pull-request-storage-accessor';
+import GithubApiWrapper from './services/github-api-wrapper.js';
+import PullRequestStorageAccessor from './services/pull-request-storage-accessor.js';
 import BadgeSetter from './services/badge-setter.js';
-import SettingsStorageAccessor from './services/settings-storage-accessor';
+import SettingsStorageAccessor from './services/settings-storage-accessor.js';
 import { noAccessTokenError, tooManyRequestsError, PullRequestRecordKey } from './static/constants';
-import { PullRequestRecord, PullRequest } from './static/types';
 import { containsPullRequest } from './static/utils.js';
 
 const pollingInterval = 1;
@@ -25,7 +24,7 @@ const ServiceWorker = () => {
       throw error;
     }
 
-    let recordEntries: PullRequest[][];
+    let recordEntries;
     try {
       recordEntries = await Promise.all([
         github.getReviewRequested(),
@@ -41,7 +40,7 @@ const ServiceWorker = () => {
       throw error;
     }
 
-    const record: PullRequestRecord = {
+    const record = {
       [PullRequestRecordKey.reviewRequested]: recordEntries[0],
       [PullRequestRecordKey.teamReviewRequested]: recordEntries[1],
       [PullRequestRecordKey.noReviewRequested]: recordEntries[2],
@@ -58,10 +57,10 @@ const ServiceWorker = () => {
     storage.storePullRequests(record);
   };
 
-  const filterIgnoredPrs = async (record: PullRequestRecord) => {
+  const filterIgnoredPrs = async (record) => {
     const ignoredPrs = await PullRequestStorageAccessor().syncIgnoredPrs(record);
     Object.keys(record).forEach((key) => {
-      record[key as keyof PullRequestRecord] = record[key as keyof PullRequestRecord].filter((pr) => {
+      record[key] = record[key].filter((pr) => {
         return !containsPullRequest(ignoredPrs, pr);
       });
     });

@@ -1,14 +1,14 @@
-import ServiceWorker from './background';
+import ServiceWorker from './background.js';
 import { globalMock } from '../../__test__/mocks/github-api-mock-data';
 import fetch from 'node-fetch';
 
 jest.mock('node-fetch');
-const mockedFetch = fetch as any;
+const mockedFetch = fetch;
 
 global.fetch = mockedFetch;
-global.btoa = (data: string) => Buffer.from(data).toString('base64');
+global.btoa = (data) => Buffer.from(data).toString('base64');
 
-mockedFetch.mockImplementation((url: string) => globalMock(url, { pullRequestCount: 2 }));
+mockedFetch.mockImplementation((url) => globalMock(url, { pullRequestCount: 2 }));
 
 global.chrome = {
   alarms: {
@@ -19,7 +19,7 @@ global.chrome = {
   },
   storage: {
     local: {
-      get: jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+      get: jest.fn().mockImplementation((_keys, callback) => callback({
         'counter': undefined,
         'accessToken': 'secret',
       })),
@@ -30,7 +30,7 @@ global.chrome = {
     setBadgeText: jest.fn(),
     setBadgeBackgroundColor: jest.fn(),
   },
-} as any;
+};
 
 describe('ServiceWorker', () => {
   const serviceWorker = ServiceWorker();
@@ -58,7 +58,7 @@ describe('ServiceWorker', () => {
 
     describe('with ignored prs', () => {
       beforeEach(async () => {
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({
           'counter': undefined,
           'accessToken': 'secret',
           ignored: 'renuo/github-pull-request-counter#2',
@@ -75,14 +75,14 @@ describe('ServiceWorker', () => {
 
     describe('without an access token', () => {
       beforeAll(() => {
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({
           'counter': undefined,
           'accessToken': '',
         }));
       });
 
       afterAll(() => {
-        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback: (items: {}) => {}) => callback({
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({
           'counter': undefined,
           'accessToken': 'secret',
         }));
@@ -99,7 +99,7 @@ describe('ServiceWorker', () => {
 
     describe('with too many requests', () => {
       afterAll(() => {
-        mockedFetch.mockImplementation((url: string) => globalMock(url, { pullRequestCount: 2 }));
+        mockedFetch.mockImplementation((url) => globalMock(url, { pullRequestCount: 2 }));
       });
 
       describe('while fetching the user', () => {
@@ -114,7 +114,7 @@ describe('ServiceWorker', () => {
 
       describe('while fetching data', () => {
         beforeAll(() => {
-          mockedFetch.mockImplementation((url: string) => {
+          mockedFetch.mockImplementation((url) => {
             if (url.includes('/user')) {
               return Promise.resolve({ json: () => ({ login: 'renuo' }) });
             } else {
@@ -132,7 +132,7 @@ describe('ServiceWorker', () => {
 
   describe('with other errors', () => {
     afterAll(() => {
-      mockedFetch.mockImplementation((url: string) => globalMock(url, { pullRequestCount: 2 }));
+      mockedFetch.mockImplementation((url) => globalMock(url, { pullRequestCount: 2 }));
     });
 
     describe('while fetching the user', () => {
@@ -147,7 +147,7 @@ describe('ServiceWorker', () => {
 
     describe('while fetching data', () => {
       beforeAll(() => {
-        mockedFetch.mockImplementation((url: string) => {
+        mockedFetch.mockImplementation((url) => {
           if (url.includes('/user')) {
             return Promise.resolve({ json: () => ({ login: 'renuo' }) });
           } else {

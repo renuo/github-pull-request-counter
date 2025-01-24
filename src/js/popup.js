@@ -1,15 +1,18 @@
 import '../css/colors.css';
 import '../css/shared.css';
 import '../css/popup.css';
-import PullRequestStorageAccessor from './services/pull-request-storage-accessor';
-import HTMLGenerator from './services/html-generator';
-import SettingsStorageAccessor from './services/settings-storage-accessor';
+import PullRequestStorageAccessor from './services/pull-request-storage-accessor.js';
+import HTMLGenerator from './services/html-generator.js';
+import SettingsStorageAccessor from './services/settings-storage-accessor.js';
 
 const Popup = async () => {
   const pullRequests = await PullRequestStorageAccessor().loadPullRequests();
   const counter = await SettingsStorageAccessor().loadCounterConfig();
   const html = HTMLGenerator().generate(pullRequests, counter);
-  document.getElementById('popup')!.appendChild(html);
+  const popupElement = document.getElementById('popup');
+  if (popupElement) {
+    popupElement.appendChild(html);
+  }
 };
 
 // TODO: Running this code in tests will cause ERR_UNHANDLED_REJECTION.
