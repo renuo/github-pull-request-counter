@@ -1,3 +1,6 @@
+@import url('./colors.css');
+@import url('./shared.css');
+
 .popup {
     max-width: 500px;
     min-width: 300px;

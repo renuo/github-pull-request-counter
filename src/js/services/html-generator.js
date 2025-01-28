@@ -1,4 +1,4 @@
-import { recordKeysTranslations, extensionID, PullRequestRecordKey } from '../static/constants';
+import { recordKeysTranslations, extensionID, PullRequestRecordKey } from '../static/constants.js';
 
 const HTMLGenerator = () => {
   const generate = (record, counter) => {

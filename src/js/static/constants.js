@@ -16,7 +16,7 @@ export const recordKeysTranslations = {
   [PullRequestRecordKey.allAssigned]: 'Assigned to me',
 };
 
-export const extensionID = 'eeejbcmnmgogpkgeinlbchoafjjbegmi';
+export const extensionID = 'bibndenbofpgbojggadiaigfogibenak';
 
 export const noAccessTokenError = new Error('No Access Token');
 export const tooManyRequestsError = new Error('Too many requests');

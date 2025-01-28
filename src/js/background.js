@@ -2,7 +2,7 @@ import GithubApiWrapper from './services/github-api-wrapper.js';
 import PullRequestStorageAccessor from './services/pull-request-storage-accessor.js';
 import BadgeSetter from './services/badge-setter.js';
 import SettingsStorageAccessor from './services/settings-storage-accessor.js';
-import { noAccessTokenError, tooManyRequestsError, PullRequestRecordKey } from './static/constants';
+import { noAccessTokenError, tooManyRequestsError, PullRequestRecordKey } from './static/constants.js';
 import { containsPullRequest } from './static/utils.js';
 
 const pollingInterval = 1;
@@ -82,8 +82,5 @@ const ServiceWorker = () => {
   return { fetchAndStoreData, startPolling };
 };
 
-// TODO: Running this code in tests will cause ERR_UNHANDLED_REJECTION.
-/* istanbul ignore next */
-if (process.env.JEST_WORKER_ID === undefined) ServiceWorker().startPolling();
-
+ServiceWorker().startPolling();
 export default ServiceWorker;

@@ -2,11 +2,11 @@
  * @jest-environment jsdom
  */
 
-import { pullRequestFactory } from '../../__test__/mocks/factories';
-import Popup from './popup';
+import { pullRequestFactory } from '../__test__/mocks/factories.js';
+import Popup from '../src/js/popup.js';
 import fs from 'fs';
 import path from 'path';
-import { PullRequestRecordKey } from './static/constants';
+import { PullRequestRecordKey } from '../src/js/static/constants.js';
 
 const pullRequestSample = [pullRequestFactory(0), pullRequestFactory(0)];
 const storageObject = Object.values(PullRequestRecordKey).reduce((obj, key) => {

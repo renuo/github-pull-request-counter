@@ -1,9 +1,6 @@
-import '../css/colors.css';
-import '../css/shared.css';
-import '../css/options.css';
-import SettingsStorageAccessor from './services/settings-storage-accessor';
+import SettingsStorageAccessor from './services/settings-storage-accessor.js';
 import ServiceWorker from './background.js';
-import { displayedAccessToken } from './static/constants';
+import { displayedAccessToken } from './static/constants.js';
 
 const Options = () => {
   const settings = SettingsStorageAccessor();
@@ -108,8 +105,4 @@ const Options = () => {
   return { init, saveButtonClickHandler };
 };
 
-// TODO: Running this code in tests will cause ERR_UNHANDLED_REJECTION.
-/* istanbul ignore next */
-if (process.env.JEST_WORKER_ID === undefined) Options().init();
-
-export default Options;
+Options().init();

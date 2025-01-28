@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   preset: 'jest-puppeteer',
   transform: {
     '^.+\\.js$': ['babel-jest', {

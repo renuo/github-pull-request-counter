@@ -2,12 +2,12 @@
  * @jest-environment jsdom
  */
 
-import Options from './options';
-import { globalMock } from '../../__test__/mocks/github-api-mock-data.js';
+import Options from '../src/js/options.js';
+import { globalMock } from '../__test__/mocks/github-api-mock-data.js';
 import fetch from 'node-fetch';
 import fs from 'fs';
 import path from 'path';
-import { displayedAccessToken } from './static/constants';
+import { displayedAccessToken } from '../src/js/static/constants.js';
 
 jest.mock('node-fetch');
 const mockedFetch = fetch;

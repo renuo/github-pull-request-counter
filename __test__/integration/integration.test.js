@@ -18,7 +18,7 @@ const readProp = (query, prop, index = 0) => (
 );
 
 const setup = async () => {
-    const extensionPath = path.join(__dirname, '../../dist');
+    const extensionPath = path.join(__dirname, '../../src');
 
     const isHeadless = process.env.PUPPETEER_HEADLESS?.toLowerCase() !== 'false';
     const isCI = process.env.CI === 'true';
@@ -34,7 +34,7 @@ const setup = async () => {
     ];
 
     browser = await puppeteer.launch({
-        headless: isHeadless,
+        headless: false,
         ignoreHTTPSErrors: true,
         args,
     });
