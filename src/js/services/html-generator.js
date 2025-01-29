@@ -6,17 +6,36 @@ const HTMLGenerator = () => {
     topLevelDiv.classList.add('pull-requests-loaded');
     topLevelDiv.dataset.timestamp = Date.now();
 
+    const ignoredPRs = [];
+    
     for (const recordKey of Object.keys(record)) {
       if (record[recordKey].length === 0) continue;
       const lessRelevant = !counter[recordKey];
 
-      const titleP = document.createElement('h5');
-      titleP.textContent = recordKeysTranslations[recordKey];
-      titleP.classList.add('title');
-      if (lessRelevant) titleP.classList.add('less-relevant-group');
-      topLevelDiv.appendChild(titleP);
+      const nonIgnoredPRs = record[recordKey].filter(pr => !pr.ignored);
+      const currentIgnoredPRs = record[recordKey].filter(pr => pr.ignored);
+      ignoredPRs.push(...currentIgnoredPRs);
 
-      topLevelDiv.appendChild(generateLinkStructure(record[recordKey], lessRelevant, recordKey));
+      if (nonIgnoredPRs.length > 0) {
+        const titleP = document.createElement('h5');
+        titleP.textContent = recordKeysTranslations[recordKey];
+        titleP.classList.add('title');
+        if (lessRelevant) titleP.classList.add('less-relevant-group');
+        topLevelDiv.appendChild(titleP);
+
+        topLevelDiv.appendChild(generateLinkStructure(nonIgnoredPRs, lessRelevant, recordKey));
+      }
+    }
+
+    if (ignoredPRs.length > 0) {
+      const ignoredTitle = document.createElement('h5');
+      ignoredTitle.textContent = 'Ignored PRs';
+      ignoredTitle.classList.add('title', 'less-relevant-group');
+      const ignoredSection = document.createElement('div');
+      ignoredSection.classList.add('ignored-group');
+      ignoredSection.appendChild(ignoredTitle);
+      ignoredSection.appendChild(generateLinkStructure(ignoredPRs, true, null));
+      topLevelDiv.appendChild(ignoredSection);
     }
 
     if (topLevelDiv.children.length === 0) {

@@ -108,3 +108,10 @@
 }
 
 /* Dark mode overrides moved to colors.css */
+
+.ignored-group {
+    border-top: 1px solid var(--border-color);
+    margin-top: 1rem;
+    padding-top: 1rem;
+    opacity: 0.5;
+}
