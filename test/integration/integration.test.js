@@ -25,6 +25,7 @@ const setup = async () => {
 
     const args = [
         `--disable-extensions-except=${extensionPath}`,
+        `--load-extension=${extensionPath}`,
         ...(isCI ? [
             '--no-sandbox',
             '--disable-setuid-sandbox',

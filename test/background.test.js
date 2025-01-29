@@ -26,11 +26,21 @@ global.chrome = {
       set: jest.fn(),
     },
   },
+  runtime: {
+    sendMessage: jest.fn(),
+    onMessage: {
+        addListener: jest.fn(),
+    }
+  },
   action: {
     setBadgeText: jest.fn(),
     setBadgeBackgroundColor: jest.fn(),
   },
 };
+
+global.chrome.runtime.sendMessage.mockImplementation(() =>
+    Promise.resolve({success: true})
+);
 
 describe('ServiceWorker', () => {
   const serviceWorker = ServiceWorker();

@@ -19,6 +19,11 @@ global.chrome = {
       get: jest.fn().mockImplementation((_keys, callback) => callback(storageObject)),
     },
   },
+  runtime: {
+    onMessage: {
+        addListener: jest.fn(),
+    }
+  },
 };
 
 describe('popup', () => {
