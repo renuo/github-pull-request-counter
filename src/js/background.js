@@ -2,8 +2,8 @@ import GithubApiWrapper from './services/github-api-wrapper.js';
 import PullRequestStorageAccessor from './services/pull-request-storage-accessor.js';
 import BadgeSetter from './services/badge-setter.js';
 import SettingsStorageAccessor from './services/settings-storage-accessor.js';
-import { noAccessTokenError, tooManyRequestsError, PullRequestRecordKey } from './static/constants.js';
-import { containsPullRequest } from './static/utils.js';
+import { noAccessTokenError, tooManyRequestsError, PullRequestRecordKey } from './services/constants.js';
+import {containsPullRequest, isTest} from './services/utils.js';
 
 const pollingInterval = 1;
 
@@ -82,5 +82,8 @@ const ServiceWorker = () => {
   return { fetchAndStoreData, startPolling };
 };
 
-ServiceWorker().startPolling();
 export default ServiceWorker;
+
+if (!isTest()) {
+ServiceWorker().startPolling();
+}

@@ -1,6 +1,7 @@
 import PullRequestStorageAccessor from './services/pull-request-storage-accessor.js';
 import HTMLGenerator from './services/html-generator.js';
 import SettingsStorageAccessor from './services/settings-storage-accessor.js';
+import {isTest} from "./services/utils.js";
 
 const Popup = async () => {
   const pullRequests = await PullRequestStorageAccessor().loadPullRequests();
@@ -14,4 +15,6 @@ const Popup = async () => {
 
 export default Popup;
 
-Popup();
+if (!isTest()) {
+  Popup();
+}

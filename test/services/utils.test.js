@@ -1,4 +1,4 @@
-import { containsPullRequest, parsePullRequest } from './utils.js';
+import { containsPullRequest, parsePullRequest } from '../../src/js/services/utils.js';
 
 describe('utils', () => {
     describe('containsPullRequest', () => {

@@ -1,5 +1,5 @@
-import PullRequestStorageAccessor from './pull-request-storage-accessor.js';
-import { pullRequestFactory, pullRequestRecordFactory } from '../../../__test__/mocks/factories.js';
+import PullRequestStorageAccessor from '../../src/js/services/pull-request-storage-accessor.js';
+import { pullRequestFactory, pullRequestRecordFactory } from '../mocks/factories.js';
 
 global.chrome = {
   storage: {

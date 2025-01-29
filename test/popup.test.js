@@ -2,11 +2,11 @@
  * @jest-environment jsdom
  */
 
-import { pullRequestFactory } from '../__test__/mocks/factories.js';
+import { pullRequestFactory } from './mocks/factories.js';
 import Popup from '../src/js/popup.js';
 import fs from 'fs';
 import path from 'path';
-import { PullRequestRecordKey } from '../src/js/static/constants.js';
+import { PullRequestRecordKey } from '../src/js/services/constants.js';
 
 const pullRequestSample = [pullRequestFactory(0), pullRequestFactory(0)];
 const storageObject = Object.values(PullRequestRecordKey).reduce((obj, key) => {
@@ -22,7 +22,7 @@ global.chrome = {
 };
 
 describe('popup', () => {
-  const dom = fs.readFileSync(path.resolve(__dirname, '../popup.html')).toString();
+  const dom = fs.readFileSync(path.resolve(__dirname, '../src/popup.html')).toString();
 
   beforeAll(() => {
     document.body.innerHTML = dom;

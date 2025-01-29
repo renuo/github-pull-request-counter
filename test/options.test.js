@@ -3,11 +3,11 @@
  */
 
 import Options from '../src/js/options.js';
-import { globalMock } from '../__test__/mocks/github-api-mock-data.js';
+import { globalMock } from './mocks/github-api-mock-data.js';
 import fetch from 'node-fetch';
 import fs from 'fs';
 import path from 'path';
-import { displayedAccessToken } from '../src/js/static/constants.js';
+import { displayedAccessToken } from '../src/js/services/constants.js';
 
 jest.mock('node-fetch');
 const mockedFetch = fetch;
@@ -48,7 +48,7 @@ global.chrome = {
 };
 
 describe('Options', () => {
-  const dom = fs.readFileSync(path.resolve(__dirname, '../options.html')).toString();
+  const dom = fs.readFileSync(path.resolve(__dirname, '../src/options.html')).toString();
 
   beforeAll(() => {
     document.body.innerHTML = dom;

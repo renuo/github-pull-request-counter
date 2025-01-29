@@ -1,5 +1,5 @@
-import BadgeSetter from './badge-setter.js';
-import { pullRequestRecordFactory } from '../../../__test__/mocks/factories.js';
+import BadgeSetter from '../../src/js/services/badge-setter.js';
+import { pullRequestRecordFactory } from '../mocks/factories.js';
 
 global.chrome = {
   action: {

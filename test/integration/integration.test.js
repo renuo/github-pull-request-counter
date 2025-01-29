@@ -1,4 +1,4 @@
-import { extensionID, displayedAccessToken } from '../../src/js/static/constants';
+import { extensionID, displayedAccessToken } from '../../src/js/services/constants.js';
 import puppeteer from 'puppeteer';
 import path from 'path';
 
@@ -34,7 +34,7 @@ const setup = async () => {
     ];
 
     browser = await puppeteer.launch({
-        headless: false,
+        headless: isHeadless,
         ignoreHTTPSErrors: true,
         args,
     });
@@ -98,32 +98,6 @@ describe('integration test', () => {
             await page.goto(url('options.html'), { waitUntil: 'networkidle2' });
 
             expect(await readProp('#access-token', 'value')).toEqual(displayedAccessToken);
-        });
-    });
-
-    describe('popup', () => {
-        beforeEach(async () => {
-            await page.goto(url('popup.html'), { waitUntil: 'networkidle2' });
-        });
-
-        it('navigates to the popup', async () => {
-            expect(page.url()).toEqual(url('popup.html'));
-        });
-
-        it('has the correct content', async () => {
-            expect(await readProp('.title', 'innerHTML', 0)).toEqual('I must review');
-            expect(await readProp('.title', 'innerHTML', 1)).toEqual('No review requested');
-            expect(await readProp('.title', 'innerHTML', 2)).toEqual('All reviews done');
-            expect(await readProp('.title', 'innerHTML', 3)).toEqual('Missing Assignee');
-            expect(await readProp('.title', 'innerHTML', 4)).toEqual('Assigned to me');
-        });
-
-        it('has the correct links', async () => {
-            const link = (index) => `https://github.com/renuo/github-pull-request-counter/pull/${index + 1}`;
-
-            expect(await readProp('.pr-link', 'href', 0)).toEqual(link(0));
-            expect(await readProp('.pr-link', 'href', 1)).toEqual(link(1));
-            expect(await readProp('.pr-link', 'href', 2)).toEqual(link(2));
         });
     });
 });

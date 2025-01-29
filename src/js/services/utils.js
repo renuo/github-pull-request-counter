@@ -9,3 +9,7 @@ export const parsePullRequest = (element) => {
         number: parseInt(prNumber, 10),
     };
 };
+
+export const isTest = () => {
+    return (typeof process !== 'undefined') && (process.env.JEST_WORKER_ID !== undefined);
+}

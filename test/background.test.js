@@ -1,5 +1,5 @@
 import ServiceWorker from '../src/js/background.js';
-import { globalMock } from '../__test__/mocks/github-api-mock-data.js';
+import { globalMock } from './mocks/github-api-mock-data.js';
 import fetch from 'node-fetch';
 
 jest.mock('node-fetch');

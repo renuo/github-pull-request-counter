@@ -1,7 +1,7 @@
 /** @jest-environment jsdom */
 
-import HTMLGenerator from './html-generator';
-import { pullRequestRecordFactory } from '../../../__test__/mocks/factories';
+import HTMLGenerator from '../../src/js/services/html-generator.js';
+import { pullRequestRecordFactory } from '../mocks/factories.js';
 
 describe('HTMLGenerator', () => {
   const htmlGenerator = HTMLGenerator();
