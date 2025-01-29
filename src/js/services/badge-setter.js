@@ -10,7 +10,7 @@ const BadgeSetter = () => {
     let total = 0;
 
     for (const key of Object.keys(record)) {
-      if (counter[key]) total += record[key].length;
+      if (counter[key]) total += record[key].filter(pr => !pr.ignored).length;
     }
 
     return total;

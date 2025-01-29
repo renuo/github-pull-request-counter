@@ -13,6 +13,7 @@ const Options = () => {
         loadTeamsToDOM();
         loadAccessTokenToDOM();
         loadIgnoredPrsToDOM();
+        loadIgnoredTitlesToDOM();
         document.getElementById('options-save').addEventListener('click', saveButtonClickHandler);
     };
 
@@ -47,6 +48,10 @@ const Options = () => {
         document.getElementById('ignored-prs').value = await settings.loadIgnoredPrs();
     };
 
+    const loadIgnoredTitlesToDOM = async () => {
+        document.getElementById('ignored-titles').value = await settings.loadIgnoredTitles();
+    };
+
     const saveButtonClickHandler = async () => {
         storeCounterFromDOM();
         storeMaximumAgeFromDOM();
@@ -54,6 +59,7 @@ const Options = () => {
         storeTeamsFromDOM();
         storeAccessTokenFromDom();
         storeIgnoredPrsFromDOM();
+        storeIgnoredTitlesFromDOM();
         alert('Your settings have been saved and your pull requests will be updated shortly!');
         await ServiceWorker().fetchAndStoreData();
     };
@@ -102,6 +108,11 @@ const Options = () => {
         const ignoredPrs = document.getElementById('ignored-prs').value;
         settings.storeIgnoredPrs(ignoredPrs);
     };
+
+    const storeIgnoredTitlesFromDOM = () => {
+        const ignoredBranches = document.getElementById('ignored-titles').value;
+        settings.storeIgnoredTitles(ignoredBranches);
+    }
 
     return {init, saveButtonClickHandler};
 };

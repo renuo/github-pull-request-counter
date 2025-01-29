@@ -3,7 +3,7 @@ import PullRequestStorageAccessor from './services/pull-request-storage-accessor
 import BadgeSetter from './services/badge-setter.js';
 import SettingsStorageAccessor from './services/settings-storage-accessor.js';
 import {noAccessTokenError, tooManyRequestsError, PullRequestRecordKey} from './services/constants.js';
-import {containsPullRequest, isTest} from './services/utils.js';
+import {containsPullRequest, isTest, matchesRegexp} from './services/utils.js';
 
 const pollingInterval = 1;
 
@@ -66,11 +66,18 @@ const ServiceWorker = () => {
 
     const filterIgnoredPrs = async (record) => {
         const ignoredPrs = await PullRequestStorageAccessor().syncIgnoredPrs(record);
-        Object.keys(record).forEach((key) => {
-            record[key] = record[key].filter((pr) => {
-                return !containsPullRequest(ignoredPrs, pr);
+        const ignoredTitles = await SettingsStorageAccessor().loadIgnoredTitles();
+        console.log("Ignored PRs: ", ignoredPrs);
+        console.log("Ignored Branches: ", ignoredTitles);
+        for (const key of Object.keys(record)) {
+            record[key] = record[key].map(pr => {
+                if (containsPullRequest(ignoredPrs, pr) || matchesRegexp(ignoredTitles, pr)) {
+                    return {...pr, ignored: true};
+                } else {
+                    return {...pr, ignored: false};
+                }
             });
-        });
+        }
     };
 
     const startPolling = async () => {

@@ -93,6 +93,7 @@ const GithubApiWrapper = async () => {
       repositoryUrl: issue.pull_request.html_url.split('/pull')[0],
       htmlUrl: issue.pull_request.html_url,
       author: issue.user.login,
+      ignored: false,
     }));
 
     const sorted = sortByDate(pullRequests);

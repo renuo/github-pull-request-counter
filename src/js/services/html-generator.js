@@ -71,6 +71,9 @@ const HTMLGenerator = () => {
     if (lessRelevant) groupLevelDiv.classList.add('less-relevant-group');
 
     for (const PullRequest of pullRequests) {
+      if (PullRequest.ignored) {
+        console.log('Ignoring PR', PullRequest);
+      }
       const pullRequestDiv = document.createElement('div');
       pullRequestDiv.classList.add('pr-card');
       if (lessRelevant) pullRequestDiv.classList.add('less-relevant-group');

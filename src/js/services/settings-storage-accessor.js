@@ -27,7 +27,10 @@ const SettingsStorageAccessor = () => {
 
   const storeIgnoredPrs = (list) => store('ignored', list);
 
+  const storeIgnoredTitles = (regex) => store('ignoredTitles', regex);
+
   const loadIgnoredPrs = async () => (await load('ignored')) || '';
+  const loadIgnoredTitles = async () => (await load('ignoredTitles')) || '';
 
   const removeIgnoredPr = async (pr) => {
     const ignoredPrs = await loadIgnoredPrs();
@@ -60,6 +63,7 @@ const SettingsStorageAccessor = () => {
   return {
     storeCounterConfig, loadCounterConfig, storeScope, loadScope, storeTeams, loadTeams, storeMaximumAge, loadMaximumAge,
     storeAccessToken, loadAccessToken, loadIgnoredPrs, storeIgnoredPrs, removeIgnoredPr,
+    storeIgnoredTitles, loadIgnoredTitles,
   };
 };
 

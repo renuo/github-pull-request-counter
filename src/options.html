@@ -69,13 +69,22 @@
     <div class="heading-1">
         <h2>Ignored PRs</h2>
         <p>
-            Below you can enter a comma seperated list of PRs you would like to ignore. Redundant PRs will be
-            removed from
-            the list automatically.
+            Below you can enter a comma seperated list of PRs you would like to ignore.
+            Redundant PRs will be removed from the counter automatically, but will still be displayed in the popup.
         </p>
     </div>
     <input type="text" id="ignored-prs" class="text-input"
            placeholder="owner/repo#1,owner/repo#2,owner/repo#3, ...">
+
+    <div class="heading-1">
+        <h2>Ignored titles</h2>
+        <p>
+            You can ignore PRs that include specific text in titles.
+            Use a regular expression to match the title.
+            They will not be counted in the counter, but will still be displayed in the popup.
+        </p>
+    </div>
+    <input type="text" id="ignored-titles" class="text-input" placeholder="🤖">
 
     <div class="heading-1">
         <h2>Access Token</h2>
