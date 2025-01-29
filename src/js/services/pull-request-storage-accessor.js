@@ -1,5 +1,5 @@
 import SettingsStorageAccessor from './settings-storage-accessor.js';
-import { containsPullRequest, parsePullRequest } from '../static/utils.js';
+import { containsPullRequest, parsePullRequest } from './utils.js';
 
 const PullRequestStorageAccessor = () => {
   const storePullRequests = (pullRequests) => {

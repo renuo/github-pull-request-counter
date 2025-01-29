@@ -1,5 +1,5 @@
-import ServiceWorker from './background.js';
-import { globalMock } from '../../__test__/mocks/github-api-mock-data';
+import ServiceWorker from '../src/js/background.js';
+import { globalMock } from './mocks/github-api-mock-data.js';
 import fetch from 'node-fetch';
 
 jest.mock('node-fetch');
@@ -26,11 +26,21 @@ global.chrome = {
       set: jest.fn(),
     },
   },
+  runtime: {
+    sendMessage: jest.fn(),
+    onMessage: {
+        addListener: jest.fn(),
+    }
+  },
   action: {
     setBadgeText: jest.fn(),
     setBadgeBackgroundColor: jest.fn(),
   },
 };
+
+global.chrome.runtime.sendMessage.mockImplementation(() =>
+    Promise.resolve({success: true})
+);
 
 describe('ServiceWorker', () => {
   const serviceWorker = ServiceWorker();

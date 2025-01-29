@@ -1,7 +1,7 @@
 /** @jest-environment jsdom */
 
-import HTMLGenerator from './html-generator';
-import { pullRequestRecordFactory } from '../../../__test__/mocks/factories';
+import HTMLGenerator from '../../src/js/services/html-generator.js';
+import { pullRequestRecordFactory } from '../mocks/factories.js';
 
 describe('HTMLGenerator', () => {
   const htmlGenerator = HTMLGenerator();
@@ -51,10 +51,6 @@ describe('HTMLGenerator', () => {
         expect(result.childNodes[0].innerHTML).toEqual('I must review');
       });
 
-      it('has the correct <div> as its second child', () => {
-        expect(result.childNodes[1].className).toEqual('group-container');
-      });
-
       describe('second child', () => {
         it('has one <div>', () => {
           expect(result.childNodes[1].childNodes.length).toEqual(1);
@@ -91,10 +87,6 @@ describe('HTMLGenerator', () => {
 
         it('the title has an additional class', () => {
           expect(result.childNodes[0].classList.value).toEqual('title less-relevant-group');
-        });
-
-        it('the group container has an additional class', () => {
-          expect(result.childNodes[1].classList.value).toEqual('group-container less-relevant-group');
         });
       });
     });

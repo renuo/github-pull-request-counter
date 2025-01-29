@@ -8,34 +8,30 @@ auto_cancel:
   running:
     when: "true"
 blocks:
-  - name: cache
-    dependencies: []
-    task:
-      secrets:
-        - name: github-pull-request-counter
-      jobs:
-        - name: cache
-          commands:
-            - checkout
-            - cache restore
-            - nvm install
-            - npm install
-            - cache store
   - name: Test
-    dependencies: ['cache']
     task:
       secrets:
         - name: github-pull-request-counter
+      env_vars:
+        - name: PUPPETEER_EXECUTABLE_PATH
+          value: usr/bin/chromium-browser
+        - name: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+          value: true
+        - name: CI
+          value: true
+        - name: PUPPETEER_HEADLESS
+          value: true
       prologue:
         commands:
-          - checkout
+          - checkout --use-cache
           - cache restore
-          - nvm use
+          - nvm install
+          - npm install
+          - cache store
       jobs:
         - name: tests
           commands:
             - bin/check
-
 promotions:
   - name: deploy
     pipeline_file: deploy.yml

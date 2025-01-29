@@ -1,14 +1,14 @@
-export const mockListOfPullRequests = (count: number, params?: { assignee: string | undefined, created_at: number | undefined}) => {
-  const createIssues = (count: number) => {
+export const mockListOfPullRequests = (count, params = {}) => {
+  const createIssues = (count) => {
     const items = [];
 
     for (let i = 0; i < count; i++) {
       items.push({
         id: Math.floor(Math.random() * 100),
         title: 'PR Title',
-        assignee: params?.assignee,
+        assignee: params.assignee,
         number: i+1,
-        created_at: params?.created_at || Date.now(),
+        created_at: params.created_at || Date.now(),
         repository_url: 'https://api.github.com/repos/renuo/github-pull-request-counter',
         pull_request: {
           url: `https://api.github.com/repos/renuo/github-pull-request-counter/pulls/${i+1}`,
@@ -29,10 +29,10 @@ export const mockListOfPullRequests = (count: number, params?: { assignee: strin
   };
 };
 
-export const mockRequestedReviewers = (usersCount: number, teamsCount: number) => {
-  const createRandomID = (): number => Math.floor(Math.random() * 100);
+export const mockRequestedReviewers = (usersCount, teamsCount) => {
+  const createRandomID = () => Math.floor(Math.random() * 100);
 
-  const createReviewers = (count: number) => {
+  const createReviewers = (count) => {
     const reviewer = [];
     for (let i = 0; i < count; i++) {
       reviewer.push({ id: createRandomID() });
@@ -46,20 +46,14 @@ export const mockRequestedReviewers = (usersCount: number, teamsCount: number) =
   };
 };
 
-interface GlobalMockParams {
-  pullRequestCount?: number;
-  openUserRequestCount?: number;
-  openTeamRequestCount?: number;
-}
-
-export const globalMock = (url: string, params?: GlobalMockParams) => {
+export const globalMock = (url, params = {}) => {
   if (url.includes('/requested_reviewers')) {
     return Promise.resolve({
-      json: () => Promise.resolve(mockRequestedReviewers(params?.openUserRequestCount || 0, params?.openTeamRequestCount || 0)),
+      json: () => Promise.resolve(mockRequestedReviewers(params.openUserRequestCount || 0, params.openTeamRequestCount || 0)),
     });
   } else {
     return Promise.resolve({
-      json: () => mockListOfPullRequests(params?.pullRequestCount || 0),
+      json: () => mockListOfPullRequests(params.pullRequestCount || 0),
     });
   }
 };

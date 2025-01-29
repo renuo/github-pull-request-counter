@@ -1,6 +1,5 @@
-import { noAccessTokenError, tooManyRequestsError } from '../static/constants.js';
+import { noAccessTokenError, tooManyRequestsError } from './constants.js';
 import SettingsStorageAccessor from './settings-storage-accessor.js';
-import { globalMock } from '../../../__test__/mocks/github-api-mock-data';
 
 const GithubApiWrapper = async () => {
   const getReviewRequested = async () => {
@@ -68,11 +67,8 @@ const GithubApiWrapper = async () => {
 
   const makeApiRequest = async (path, params) => makeRequest(`https://api.github.com${path}`, params);
 
+
   const makeRequest = async (path, params) => {
-    // TODO: Find cleaner solution to mock the API during integration tests.
-    /* istanbul ignore next */
-    // @ts-ignore
-    if (ENV === 'testing') return (await globalMock(`${path}?${params}`, { pullRequestCount: 3 })).json();
     const response = await fetch(`${path}?${params}`, {
       method: 'GET',
       headers: {
@@ -129,8 +125,11 @@ const GithubApiWrapper = async () => {
   const getDifferenceInDays = (date2) => (Date.now() - date2.getTime()) / 86_400_000; // 1000 * 3600 * 24
 
   const accessToken = await SettingsStorageAccessor().loadAccessToken();
-  // TODO: Find cleaner solution to mock the API during integration tests.
-  if (ENV !== 'testing' && accessToken === '') throw noAccessTokenError;
+
+  if (accessToken === '') {
+    console.error("no access token no party");
+    throw noAccessTokenError;
+  }
 
   // TODO: This should be cached to improve performance
   const userName = (await makeApiRequest('/user')).login;
