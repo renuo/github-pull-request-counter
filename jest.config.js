@@ -21,6 +21,9 @@ export default {
     "!**/coverage/**",
     "!jest.config.js",
   ],
+  testPathIgnorePatterns: [
+    "/test/integration/"
+  ],
   coverageThreshold: {
     "global": {
       "branches": 100,
