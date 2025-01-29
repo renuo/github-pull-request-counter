@@ -4,6 +4,7 @@ const HTMLGenerator = () => {
   const generate = (record, counter) => {
     const topLevelDiv = document.createElement('div');
     topLevelDiv.classList.add('pull-requests-loaded');
+    topLevelDiv.dataset.timestamp = Date.now();
 
     for (const recordKey of Object.keys(record)) {
       if (record[recordKey].length === 0) continue;
@@ -67,7 +68,6 @@ const HTMLGenerator = () => {
 
   const generateLinkStructure = (pullRequests, lessRelevant, category) => {
     const groupLevelDiv = document.createElement('div');
-    groupLevelDiv.classList.add('group-container');
     if (lessRelevant) groupLevelDiv.classList.add('less-relevant-group');
 
     for (const PullRequest of pullRequests) {
@@ -109,7 +109,6 @@ const HTMLGenerator = () => {
 
   const generateNoContent = () => {
     const noContentDiv = document.createElement('div');
-    noContentDiv.classList.add('group-container');
     const p1 = document.createElement('p');
     const p2 = document.createElement('p');
     p1.textContent = 'Seems like you are a good coworker :)';

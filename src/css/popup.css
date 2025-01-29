@@ -1,9 +1,11 @@
 @import url('./colors.css');
 @import url('./shared.css');
 
-.popup {
+.popup-container {
     max-width: 500px;
     min-width: 300px;
+    padding: 5px 15px;
+    margin-bottom: 20px;
 }
 
 .pr-card {
