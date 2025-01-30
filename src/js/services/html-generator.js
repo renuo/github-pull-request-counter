@@ -154,12 +154,34 @@ const HTMLGenerator = () => {
   };
 
   const generatePullRequestLink = (PullRequest) => {
+    const container = document.createElement('div');
+    container.classList.add('pr-link-container');
+    
     const link = document.createElement('a');
     link.classList.add('pr-link');
     link.appendChild(document.createTextNode(PullRequest.title));
     link.href = PullRequest.htmlUrl;
     link.target = '_blank';
-    return link;
+    container.appendChild(link);
+
+    const statusSpan = document.createElement('span');
+    statusSpan.classList.add('pr-check-status');
+    switch (PullRequest.checkConclusion) {
+      case 'success':
+        statusSpan.textContent = '✅';
+        break;
+      case 'failure':
+        statusSpan.textContent = '❌';
+        break;
+      case 'pending':
+        statusSpan.textContent = '⏳';
+        break;
+      default:
+        statusSpan.textContent = '';
+    }
+    container.appendChild(statusSpan);
+    
+    return container;
   };
 
   const formatTimeAgo = (ageInDays) => {

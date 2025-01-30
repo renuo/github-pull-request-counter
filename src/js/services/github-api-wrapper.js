@@ -79,21 +79,61 @@ const GithubApiWrapper = async () => {
     else return response.json();
   };
 
+  const getCheckConclusionForPullRequest = async (pullRequest) => {
+    const [owner, repo] = pullRequest.ownerAndName.split('/');
+    const prResponse = await makeRequest(pullRequest.url);
+    const commitSha = prResponse.head.sha;
+    
+    const checkRuns = await makeApiRequest(`/repos/${owner}/${repo}/commits/${commitSha}/check-runs`);
+    
+    if (!checkRuns.check_runs?.length) return 'none';
+    
+    const statuses = new Set(checkRuns.check_runs.map(run => run.conclusion || run.status));
+    
+    if (statuses.has('failure') || statuses.has('cancelled') || statuses.has('timed_out')) return 'failure';
+    if (statuses.has('in_progress') || statuses.has('queued') || statuses.has(null)) return 'pending';
+    if (statuses.has('success') && !statuses.has('failure')) return 'success';
+    
+    return 'none';
+  };
+
   const processDataIntoPullRequests = async (issues, shouldFilterByMaximumAge = true) => {
     issues = await filterByScope(issues);
-    const pullRequests = issues.map(issue => ({
-      id: 12,
+    /** @typedef {{
+      id: number,
       assignee: undefined,
-      title: issue.title,
-      number: issue.number,
-      ownerAndName: readOwnerAndNameFromUrl(issue.pull_request.url),
-      createdAt: issue.created_at,
-      ageInDays: getDifferenceInDays(new Date(issue.created_at)),
-      url: issue.pull_request.url,
-      repositoryUrl: issue.pull_request.html_url.split('/pull')[0],
-      htmlUrl: issue.pull_request.html_url,
-      author: issue.user.login,
-      ignored: false,
+      title: string,
+      number: number,
+      ownerAndName: string,
+      createdAt: string,
+      ageInDays: number,
+      url: string,
+      repositoryUrl: string,
+      htmlUrl: string,
+      author: string,
+      ignored: boolean,
+      checkConclusion?: 'success' | 'failure' | 'pending' | 'none'
+    }} PullRequest */
+    
+    /** @type {PullRequest[]} */
+    const pullRequests = await Promise.all(issues.map(async issue => {
+      const pr = {
+        id: 12,
+        assignee: undefined,
+        title: issue.title,
+        number: issue.number,
+        ownerAndName: readOwnerAndNameFromUrl(issue.pull_request.url),
+        createdAt: issue.created_at,
+        ageInDays: getDifferenceInDays(new Date(issue.created_at)),
+        url: issue.pull_request.url,
+        repositoryUrl: issue.pull_request.html_url.split('/pull')[0],
+        htmlUrl: issue.pull_request.html_url,
+        author: issue.user.login,
+        ignored: false,
+        checkConclusion: 'none',
+      };
+      pr.checkConclusion = await getCheckConclusionForPullRequest(pr);
+      return pr;
     }));
 
     const sorted = sortByDate(pullRequests);

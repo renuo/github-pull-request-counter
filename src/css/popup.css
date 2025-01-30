@@ -94,10 +94,22 @@
     font-weight: normal;
 }
 
+.pr-link-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+}
+
 .pr-link {
     font-weight: 600;
     font-size: 14px;
     min-width: 100px;
+}
+
+.pr-check-status {
+    font-size: 14px;
+    line-height: 1;
 }
 
 .pr-assignee {
