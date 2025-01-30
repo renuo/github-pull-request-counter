@@ -99,42 +99,25 @@ const GithubApiWrapper = async () => {
 
   const processDataIntoPullRequests = async (issues, shouldFilterByMaximumAge = true) => {
     issues = await filterByScope(issues);
-    /** @typedef {{
-      id: number,
+
+    const pullRequests = await Promise.all(issues.map(async issue => ({
+      id: 12,
       assignee: undefined,
-      title: string,
-      number: number,
-      ownerAndName: string,
-      createdAt: string,
-      ageInDays: number,
-      url: string,
-      repositoryUrl: string,
-      htmlUrl: string,
-      author: string,
-      ignored: boolean,
-      checkConclusion?: 'success' | 'failure' | 'pending' | 'none'
-    }} PullRequest */
-    
-    /** @type {PullRequest[]} */
-    const pullRequests = await Promise.all(issues.map(async issue => {
-      const pr = {
-        id: 12,
-        assignee: undefined,
-        title: issue.title,
-        number: issue.number,
-        ownerAndName: readOwnerAndNameFromUrl(issue.pull_request.url),
-        createdAt: issue.created_at,
-        ageInDays: getDifferenceInDays(new Date(issue.created_at)),
+      title: issue.title,
+      number: issue.number,
+      ownerAndName: readOwnerAndNameFromUrl(issue.pull_request.url),
+      createdAt: issue.created_at,
+      ageInDays: getDifferenceInDays(new Date(issue.created_at)),
+      url: issue.pull_request.url,
+      repositoryUrl: issue.pull_request.html_url.split('/pull')[0],
+      htmlUrl: issue.pull_request.html_url,
+      author: issue.user.login,
+      ignored: false,
+      checkConclusion: await getCheckConclusionForPullRequest({
         url: issue.pull_request.url,
-        repositoryUrl: issue.pull_request.html_url.split('/pull')[0],
-        htmlUrl: issue.pull_request.html_url,
-        author: issue.user.login,
-        ignored: false,
-        checkConclusion: 'none',
-      };
-      pr.checkConclusion = await getCheckConclusionForPullRequest(pr);
-      return pr;
-    }));
+        ownerAndName: readOwnerAndNameFromUrl(issue.pull_request.url)
+      })
+    })));
 
     const sorted = sortByDate(pullRequests);
     return shouldFilterByMaximumAge ? filterByMaximumAge(sorted) : sorted;
