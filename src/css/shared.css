@@ -2,6 +2,7 @@ body {
   background-color: var(--background-color);
   color: var(--font-color);
   margin: 10px;
+  width: unset;
 }
 
 a {
