@@ -2,7 +2,7 @@
 @import url('./shared.css');
 
 .popup-container {
-    max-width: 500px;
+    max-width: 600px;
     min-width: 300px;
     padding: 5px 15px;
     margin-bottom: 20px;
@@ -97,6 +97,7 @@
 .pr-link {
     font-weight: 600;
     font-size: 14px;
+    min-width: 100px;
 }
 
 .pr-assignee {
@@ -120,4 +121,9 @@
     margin: 0.5rem 0 0.25rem;
     font-size: 0.9em;
     color: var(--text-color);
+}
+
+h5 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
 }

@@ -44,10 +44,6 @@ const HTMLGenerator = () => {
       }, {});
 
       for (const [category, prs] of Object.entries(ignoredByCategory)) {
-        const catTitle = document.createElement('h6');
-        catTitle.textContent = recordKeysTranslations[category];
-        catTitle.classList.add('category-title');
-        ignoredSection.appendChild(catTitle);
         ignoredSection.appendChild(generateLinkStructure(prs, true, category));
       }
 
@@ -183,20 +179,20 @@ const HTMLGenerator = () => {
   };
 
   const generateSubDescription = (PullRequest) => {
-    const subDescriptionP = document.createElement('p');
-    subDescriptionP.classList.add('subdescription');
+    const subDescriptionDiv = document.createElement('div');
+    subDescriptionDiv.classList.add('subdescription');
 
     const timeText = formatTimeAgo(PullRequest.ageInDays);
     const baseText = `#${PullRequest.number} opened ${timeText} by ${PullRequest.author}`;
 
-    subDescriptionP.appendChild(document.createTextNode(baseText));
+    subDescriptionDiv.appendChild(document.createTextNode(baseText));
 
     const assigneeInfo = generateAssigneeInfo(PullRequest.assignee);
     if (assigneeInfo) {
-      subDescriptionP.appendChild(assigneeInfo);
+      subDescriptionDiv.appendChild(assigneeInfo);
     }
 
-    return subDescriptionP;
+    return subDescriptionDiv;
   };
 
   return { generate };
