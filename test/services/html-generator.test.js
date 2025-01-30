@@ -69,6 +69,12 @@ describe('HTMLGenerator', () => {
             const p = result.querySelector('.repo-link');
             expect(p.innerHTML).toContain('renuo/github-pull-request-counter');
           });
+
+          it('displays PR info without PR number', () => {
+            const subdescription = result.querySelector('.subdescription');
+            expect(subdescription.textContent).not.toContain('#');
+            expect(subdescription.textContent).toMatch(/opened .* ago by/);
+          });
         });
       });
 

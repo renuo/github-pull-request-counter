@@ -183,7 +183,7 @@ const HTMLGenerator = () => {
     subDescriptionDiv.classList.add('subdescription');
 
     const timeText = formatTimeAgo(PullRequest.ageInDays);
-    const baseText = `#${PullRequest.number} opened ${timeText} by ${PullRequest.author}`;
+    const baseText = `opened ${timeText} by ${PullRequest.author}`;
 
     subDescriptionDiv.appendChild(document.createTextNode(baseText));
 
