@@ -6,17 +6,48 @@ const HTMLGenerator = () => {
     topLevelDiv.classList.add('pull-requests-loaded');
     topLevelDiv.dataset.timestamp = Date.now();
 
+    const ignoredPRs = [];
+    
     for (const recordKey of Object.keys(record)) {
       if (record[recordKey].length === 0) continue;
       const lessRelevant = !counter[recordKey];
 
-      const titleP = document.createElement('h5');
-      titleP.textContent = recordKeysTranslations[recordKey];
-      titleP.classList.add('title');
-      if (lessRelevant) titleP.classList.add('less-relevant-group');
-      topLevelDiv.appendChild(titleP);
+      const nonIgnoredPRs = record[recordKey].filter(pr => !pr.ignored);
+      const currentIgnoredPRs = record[recordKey]
+        .filter(pr => pr.ignored)
+        .map(pr => ({ category: recordKey, pr }));
+      ignoredPRs.push(...currentIgnoredPRs);
 
-      topLevelDiv.appendChild(generateLinkStructure(record[recordKey], lessRelevant, recordKey));
+      if (nonIgnoredPRs.length > 0) {
+        const titleP = document.createElement('h5');
+        titleP.textContent = recordKeysTranslations[recordKey];
+        titleP.classList.add('title');
+        if (lessRelevant) titleP.classList.add('less-relevant-group');
+        topLevelDiv.appendChild(titleP);
+
+        topLevelDiv.appendChild(generateLinkStructure(nonIgnoredPRs, lessRelevant, recordKey));
+      }
+    }
+
+    if (ignoredPRs.length > 0) {
+      const ignoredTitle = document.createElement('h5');
+      ignoredTitle.textContent = 'Ignored PRs';
+      ignoredTitle.classList.add('title', 'less-relevant-group');
+      const ignoredSection = document.createElement('div');
+      ignoredSection.classList.add('ignored-group');
+      ignoredSection.appendChild(ignoredTitle);
+
+      const ignoredByCategory = ignoredPRs.reduce((acc, item) => {
+        if (!acc[item.category]) acc[item.category] = [];
+        acc[item.category].push(item.pr);
+        return acc;
+      }, {});
+
+      for (const [category, prs] of Object.entries(ignoredByCategory)) {
+        ignoredSection.appendChild(generateLinkStructure(prs, true, category));
+      }
+
+      topLevelDiv.appendChild(ignoredSection);
     }
 
     if (topLevelDiv.children.length === 0) {
@@ -148,20 +179,20 @@ const HTMLGenerator = () => {
   };
 
   const generateSubDescription = (PullRequest) => {
-    const subDescriptionP = document.createElement('p');
-    subDescriptionP.classList.add('subdescription');
+    const subDescriptionDiv = document.createElement('div');
+    subDescriptionDiv.classList.add('subdescription');
 
     const timeText = formatTimeAgo(PullRequest.ageInDays);
     const baseText = `#${PullRequest.number} opened ${timeText} by ${PullRequest.author}`;
 
-    subDescriptionP.appendChild(document.createTextNode(baseText));
+    subDescriptionDiv.appendChild(document.createTextNode(baseText));
 
     const assigneeInfo = generateAssigneeInfo(PullRequest.assignee);
     if (assigneeInfo) {
-      subDescriptionP.appendChild(assigneeInfo);
+      subDescriptionDiv.appendChild(assigneeInfo);
     }
 
-    return subDescriptionP;
+    return subDescriptionDiv;
   };
 
   return { generate };
