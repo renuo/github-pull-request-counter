@@ -13,7 +13,9 @@ const HTMLGenerator = () => {
       const lessRelevant = !counter[recordKey];
 
       const nonIgnoredPRs = record[recordKey].filter(pr => !pr.ignored);
-      const currentIgnoredPRs = record[recordKey].filter(pr => pr.ignored);
+      const currentIgnoredPRs = record[recordKey]
+        .filter(pr => pr.ignored)
+        .map(pr => ({ category: recordKey, pr }));
       ignoredPRs.push(...currentIgnoredPRs);
 
       if (nonIgnoredPRs.length > 0) {
@@ -34,7 +36,21 @@ const HTMLGenerator = () => {
       const ignoredSection = document.createElement('div');
       ignoredSection.classList.add('ignored-group');
       ignoredSection.appendChild(ignoredTitle);
-      ignoredSection.appendChild(generateLinkStructure(ignoredPRs, true, null));
+
+      const ignoredByCategory = ignoredPRs.reduce((acc, item) => {
+        if (!acc[item.category]) acc[item.category] = [];
+        acc[item.category].push(item.pr);
+        return acc;
+      }, {});
+
+      for (const [category, prs] of Object.entries(ignoredByCategory)) {
+        const catTitle = document.createElement('h6');
+        catTitle.textContent = recordKeysTranslations[category];
+        catTitle.classList.add('category-title');
+        ignoredSection.appendChild(catTitle);
+        ignoredSection.appendChild(generateLinkStructure(prs, true, category));
+      }
+
       topLevelDiv.appendChild(ignoredSection);
     }
 
