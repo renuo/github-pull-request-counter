@@ -1,4 +1,9 @@
 {
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "github-pull-request-counter@renuo.ch"
+    }
+  },
   "manifest_version": 3,
   "author": "Renuo AG",
   "name": "Github Pull Request Counter",
