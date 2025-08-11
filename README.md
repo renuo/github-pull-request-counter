@@ -8,7 +8,7 @@ to be installed with one click.
 ## Firefox port
 
 There is work in progress for a Firefox port of the extension in the
-[master-firefox](https://github.com/renuo/github-pull-request-counter/tree/master-firefox)
+[main-firefox](https://github.com/renuo/github-pull-request-counter/tree/main-firefox)
 branch.
 
 ## Manual setup
