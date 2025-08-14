@@ -19,10 +19,43 @@ blocks:
       jobs:
         - name: Upload to Chrome Web Store
           commands:
-            - npm run build-production
-            - zip -r dist.zip dist
-            - ACCESS_TOKEN=$(curl "https://accounts.google.com/o/oauth2/token" -d "client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&refresh_token=${REFRESH_TOKEN}&grant_type=refresh_token&redirect_uri=urn:ietf:wg:oauth:2.0:oob" | jq -r .access_token)
-            - 'RESPONSE=$(curl -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "x-goog-api-version: 3" -X PUT -T dist.zip -v "https://www.googleapis.com/upload/chromewebstore/v1.1/items/${APP_ID}")'
-            - RESULT=$(echo "$RESPONSE" | jq -r .uploadState)
-            - echo "$RESPONSE"
-            - if [ "$RESULT" != "SUCCESS" ]; then exit 1; fi
+            # Bundle the extension
+            - cd src && zip -r ../extension.zip . && cd -
+
+            # Exchange refresh token for access token
+            - |
+              ACCESS_TOKEN=$(curl -sS https://oauth2.googleapis.com/token \
+               -d client_id="${GOOGLE_CLIENT_ID}" \
+               -d client_secret="${GOOGLE_CLIENT_SECRET}" \
+               -d refresh_token="${GOOGLE_REFRESH_TOKEN}" \
+               -d grant_type=refresh_token | jq -r .access_token)
+
+            # Fail early if token didn't arrive
+            - 'if [ -z "$ACCESS_TOKEN" ] || [ "$ACCESS_TOKEN" = "null" ]; then echo "Failed to obtain access token"; exit 1; fi'
+
+            # Upload the ZIP to the existing item
+            - |
+              UPLOAD_RESPONSE=$(curl -sS \
+                -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+                -H "x-goog-api-version: 2" \
+                -H "Content-Type: application/zip" \
+                -X PUT \
+                -T extension.zip \
+                "https://www.googleapis.com/upload/chromewebstore/v1.1/items/${GOOGLE_EXTENSION_ID}")
+              echo "$UPLOAD_RESPONSE"
+              if [ "$(echo "$UPLOAD_RESPONSE" | jq -r .uploadState)" != "SUCCESS" ]; then
+                exit 1
+              fi
+
+            # Publish to public
+            - |
+              PUBLISH_RESPONSE=$(curl -sS \
+                -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+                -H "x-goog-api-version: 2" \
+                -H "Content-Length: 0" \
+                -X POST \
+                "https://www.googleapis.com/chromewebstore/v1.1/items/${GOOGLE_EXTENSION_ID}/publish")
+              echo "$PUBLISH_RESPONSE"
+              if [ "$(echo "$PUBLISH_RESPONSE" | jq -r '.status[0]')" != "OK" ]; then
+                exit 1
+              fi

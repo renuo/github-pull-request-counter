@@ -8,36 +8,29 @@ auto_cancel:
   running:
     when: "true"
 blocks:
-  - name: cache
-    dependencies: []
-    task:
-      secrets:
-        - name: github-pull-request-counter
-      jobs:
-        - name: cache
-          commands:
-            - checkout
-            - cache restore
-            - nvm install
-            - npm install
-            - cache store
   - name: Test
-    dependencies: ['cache']
     task:
       secrets:
         - name: github-pull-request-counter
+      env_vars:
+        - name: PUPPETEER_SKIP_DOWNLOAD
+          value: "true"
+        - name: CI
+          value: "true"
       prologue:
         commands:
-          - checkout
+          - checkout --use-cache
           - cache restore
-          - nvm use
+          - cache restore pptr-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json)
+          - nvm install
+          - npm install
+          - npx puppeteer browsers install chrome
+          - cache store
+          - cache store pptr-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json) ~/.cache/puppeteer
       jobs:
         - name: tests
           commands:
             - bin/check
-
 promotions:
   - name: deploy
     pipeline_file: deploy.yml
-    auto_promote:
-      when: "branch = 'main'"

@@ -1,0 +1,129 @@
+@import url('./colors.css');
+@import url('./shared.css');
+
+.popup-container {
+    max-width: 600px;
+    min-width: 300px;
+    padding: 5px 15px;
+    margin-bottom: 20px;
+}
+
+.pr-card {
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    margin-bottom: 10px;
+    padding: 12px;
+    background-color: var(--background-color);
+    transition: background-color 0.1s ease-in-out;
+}
+
+.pr-card:hover {
+    background-color: var(--hover-bg);
+}
+
+.pr-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.pr-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.pr-status-badge {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+    white-space: nowrap;
+}
+
+.status-review {
+    background: var(--status-review-bg);
+    color: var(--status-review-text);
+}
+
+.status-team-review {
+    background: var(--status-team-bg);
+    color: var(--status-team-text);
+}
+
+.status-no-review {
+    background: var(--status-no-review-bg);
+    color: var(--status-no-review-text);
+}
+
+.status-done {
+    background: var(--status-done-bg);
+    color: var(--status-done-text);
+}
+
+.status-missing {
+    background: var(--status-no-review-bg);
+    color: var(--status-no-review-text);
+}
+
+.status-assigned {
+    background: var(--status-done-bg);
+    color: var(--status-done-text);
+}
+
+.popup .subdescription {
+    white-space: nowrap;
+    color: var(--text-muted);
+    margin: 0;
+    font-size: 12px;
+}
+
+.popup p {
+    margin-bottom: 1px;
+    margin-top: 0;
+}
+
+.repo-link {
+    font-size: 12px;
+    color: var(--text-muted) !important;
+    font-weight: normal;
+}
+
+.pr-link {
+    font-weight: 600;
+    font-size: 14px;
+    min-width: 100px;
+}
+
+.pr-assignee {
+    color: var(--text-muted);
+}
+
+.popup .less-relevant-group {
+    opacity: .75;
+}
+
+/* Dark mode overrides moved to colors.css */
+
+.ignored-group {
+    border-top: 1px solid var(--border-color);
+    margin-top: 1rem;
+    padding-top: 1rem;
+    opacity: 0.5;
+}
+
+.category-title {
+    margin: 0.5rem 0 0.25rem;
+    font-size: 0.9em;
+    color: var(--text-color);
+}
+
+h5 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}

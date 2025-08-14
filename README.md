@@ -30,12 +30,15 @@ export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 export PUPPETEER_EXECUTABLE_PATH=`which chromium`
 ```
 
-## Build
+## Build & Test
 
+To build the extension just run:
 ```sh
-npm run build            # develop
-npm run build-production # production
+zip -r dist/dist.zip src
 ```
+this will create a new zip file with everything needed.
+
+To run it locally, you can load the unpacked extension by pointing to the `src` folder.
 
 ## Add to chrome
 
