@@ -3,10 +3,11 @@
     "en-US": "Track and count your GitHub pull requests to reduce mental load and improve productivity."
   },
   "categories": [
-    "developer-tools",
-    "productivity"
+    "web-development"
   ],
   "version": {
-    "licence": "MIT"
+    "license": [
+      "MIT"
+    ]
   }
 }
