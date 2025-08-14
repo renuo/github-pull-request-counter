@@ -1,11 +1,11 @@
 version: v1.0
-name: deploy
+name: deploy-chrome
 agent:
   machine:
     type: e1-standard-2
     os_image: ubuntu2004
 blocks:
-  - name: Deploy
+  - name: Deploy Chrome Extension
     execution_time_limit:
       minutes: 15
     task:
@@ -59,25 +59,3 @@ blocks:
               if [ "$(echo "$PUBLISH_RESPONSE" | jq -r '.status[0]')" != "OK" ]; then
                 exit 1
               fi
-
-        - name: Upload to Firefox Add-ons
-          commands:
-            - npm install --global web-ext
-
-            # Create a Firefox-specific version by replacing "service_worker" with "scripts" in manifest.json
-            - |
-              cp -r src firefox-src
-              cat firefox-src/manifest.json | jq '.background = {"scripts": ["js/background.js"], "type": "module"}' > firefox-src/manifest.json.tmp
-              mv firefox-src/manifest.json.tmp firefox-src/manifest.json
-
-            # Bundle the extension for Firefox
-            - cd firefox-src && web-ext build --overwrite-dest --artifacts-dir ../firefox-build && cd -
-
-            # Submit to Firefox Add-ons store
-            - |
-              web-ext sign \
-                --api-key="${FIREFOX_API_KEY}" \
-                --api-secret="${FIREFOX_API_SECRET}" \
-                --channel=listed \
-                --source-dir=firefox-src \
-                --artifacts-dir=firefox-signed

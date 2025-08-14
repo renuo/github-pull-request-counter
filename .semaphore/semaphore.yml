@@ -32,5 +32,7 @@ blocks:
           commands:
             - bin/check
 promotions:
-  - name: deploy
-    pipeline_file: deploy.yml
+  - name: deploy-chrome
+    pipeline_file: deploy-chrome.yml
+  - name: deploy-firefox
+    pipeline_file: deploy-firefox.yml
