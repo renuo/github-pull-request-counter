@@ -19,21 +19,14 @@ blocks:
       jobs:
         - name: Upload to Chrome Web Store
           commands:
-            # Bundle the extension
             - cd src && zip -r ../extension.zip . && cd -
-
-            # Exchange refresh token for access token
             - |
               ACCESS_TOKEN=$(curl -sS https://oauth2.googleapis.com/token \
                -d client_id="${GOOGLE_CLIENT_ID}" \
                -d client_secret="${GOOGLE_CLIENT_SECRET}" \
                -d refresh_token="${GOOGLE_REFRESH_TOKEN}" \
                -d grant_type=refresh_token | jq -r .access_token)
-
-            # Fail early if token didn't arrive
             - 'if [ -z "$ACCESS_TOKEN" ] || [ "$ACCESS_TOKEN" = "null" ]; then echo "Failed to obtain access token"; exit 1; fi'
-
-            # Upload the ZIP to the existing item
             - |
               UPLOAD_RESPONSE=$(curl -sS \
                 -H "Authorization: Bearer ${ACCESS_TOKEN}" \
@@ -46,8 +39,6 @@ blocks:
               if [ "$(echo "$UPLOAD_RESPONSE" | jq -r .uploadState)" != "SUCCESS" ]; then
                 exit 1
               fi
-
-            # Publish to public
             - |
               PUBLISH_RESPONSE=$(curl -sS \
                 -H "Authorization: Bearer ${ACCESS_TOKEN}" \
