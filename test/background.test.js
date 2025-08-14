@@ -55,7 +55,7 @@ describe('ServiceWorker', () => {
     });
 
     it('calls set five times', () => {
-      expect(global.chrome.storage.local.set).toBeCalledTimes(6);
+      expect(global.chrome.storage.local.set).toHaveBeenCalledTimes(6);
     });
 
     it('calls setBadgeText with the correct arguments', () => {
@@ -150,8 +150,8 @@ describe('ServiceWorker', () => {
         mockedFetch.mockImplementation(() => Promise.resolve({}));
       });
 
-      it('doesn\'t call set', () => {
-        expect(serviceWorker.fetchAndStoreData()).rejects.toThrowError('response.json is not a function');
+      it('doesn\'t call set', async () => {
+        await expect(serviceWorker.fetchAndStoreData()).rejects.toThrow('response.json is not a function');
       });
     });
 
@@ -166,8 +166,8 @@ describe('ServiceWorker', () => {
         });
       });
 
-      it('doesn\'t call set', () => {
-        expect(serviceWorker.fetchAndStoreData()).rejects.toThrowError('response.json is not a function');
+      it('doesn\'t call set', async () => {
+        await expect(serviceWorker.fetchAndStoreData()).rejects.toThrow('response.json is not a function');
       });
     });
   });
@@ -178,11 +178,11 @@ describe('ServiceWorker', () => {
     });
 
     it('calls set five times', () => {
-      expect(global.chrome.storage.local.set).toBeCalledTimes(6);
+      expect(global.chrome.storage.local.set).toHaveBeenCalledTimes(6);
     });
 
     it('calls addListener', () => {
-      expect(global.chrome.alarms.onAlarm.addListener).toBeCalledTimes(1);
+      expect(global.chrome.alarms.onAlarm.addListener).toHaveBeenCalledTimes(1);
     });
   });
 });

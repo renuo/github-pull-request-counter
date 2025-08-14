@@ -31,7 +31,7 @@ describe('PullRequestStorageAccessor', () => {
       });
 
       it('doesn\'t store anything', () => {
-        expect(setMock).toBeCalledTimes(6);
+        expect(setMock).toHaveBeenCalledTimes(6);
       });
     });
 
@@ -58,7 +58,7 @@ describe('PullRequestStorageAccessor', () => {
       });
 
       it('calls set five times', () => {
-        expect(setMock).toBeCalledTimes(6);
+        expect(setMock).toHaveBeenCalledTimes(6);
       });
     });
   });
@@ -98,7 +98,7 @@ describe('PullRequestStorageAccessor', () => {
       });
 
       it('doesn\'t load anything', () => {
-        expect(getMock).toBeCalledTimes(0);
+        expect(getMock).toHaveBeenCalledTimes(0);
       });
     });
 
@@ -112,7 +112,7 @@ describe('PullRequestStorageAccessor', () => {
       });
 
       it('loads the correct data', () => {
-        expect(global.chrome.storage.local.get).toBeCalledTimes(6);
+        expect(global.chrome.storage.local.get).toHaveBeenCalledTimes(6);
         expect(result).toEqual(pullRequests);
       });
     });
@@ -141,7 +141,7 @@ describe('PullRequestStorageAccessor', () => {
       });
 
       it('loads the correct data', () => {
-        expect(global.chrome.storage.local.get).toBeCalledTimes(6);
+        expect(global.chrome.storage.local.get).toHaveBeenCalledTimes(6);
         expect(result).toEqual(pullRequests);
       });
     });

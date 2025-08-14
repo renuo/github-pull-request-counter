@@ -6,6 +6,9 @@ export default {
       plugins: ['@babel/plugin-transform-modules-commonjs']
     }]
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(node-fetch|data-uri-to-buffer|fetch-blob|formdata-polyfill)/)'
+  ],
   globals: {
     ENV: 'testing',
   },
