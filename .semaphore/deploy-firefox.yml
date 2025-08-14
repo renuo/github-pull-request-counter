@@ -38,4 +38,4 @@ blocks:
                 --channel=listed \
                 --source-dir=firefox-src \
                 --artifacts-dir=firefox-signed \
-                --amo-metadata=firefox-src/amo_metadata.json
+                --amo-metadata=amo_metadata.json
