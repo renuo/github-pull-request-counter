@@ -6,8 +6,6 @@
     "web-development"
   ],
   "version": {
-    "license": [
-      "MIT"
-    ]
+    "license": "MIT"
   }
 }
