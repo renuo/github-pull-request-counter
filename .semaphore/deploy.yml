@@ -19,6 +19,7 @@ blocks:
       jobs:
         - name: Upload to Chrome Web Store
           commands:
+            # Bundle the extension
             - cd src && zip -r ../extension.zip . && cd -
 
             # Exchange refresh token for access token
@@ -42,9 +43,8 @@ blocks:
                 -T extension.zip \
                 "https://www.googleapis.com/upload/chromewebstore/v1.1/items/${GOOGLE_EXTENSION_ID}")
               echo "$UPLOAD_RESPONSE"
-              UPLOAD_STATE=$(echo "$UPLOAD_RESPONSE" | jq -r .uploadState)
-              if [ "$UPLOAD_STATE" != "SUCCESS" ]; then
-                echo "Upload failed (uploadState=$UPLOAD_STATE)"; exit 1;
+              if [ "$(echo "$UPLOAD_RESPONSE" | jq -r .uploadState)" != "SUCCESS" ]; then
+                exit 1
               fi
 
             # Publish to public
@@ -56,6 +56,6 @@ blocks:
                 -X POST \
                 "https://www.googleapis.com/chromewebstore/v1.1/items/${GOOGLE_EXTENSION_ID}/publish")
               echo "$PUBLISH_RESPONSE"
-              PUBLISH_STATUS=$(echo "$PUBLISH_RESPONSE" | jq -r '.status[0] // empty')
-              if [ "$PUBLISH_STATUS" != "OK" ]; then
-                echo "Publish failed (status=$PUBLISH_STATUS)"; exit 1;
+              if [ "$(echo "$PUBLISH_RESPONSE" | jq -r '.status[0]')" != "OK" ]; then
+                exit 1
+              fi
