@@ -15,6 +15,10 @@
     "alarms",
     "storage"
   ],
+  "host_permissions": [
+    "https://api.github.com/*",
+    "https://github.com/*"
+  ],
   "background": {
     "service_worker": "js/background.js",
     "type": "module"
