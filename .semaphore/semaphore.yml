@@ -18,6 +18,7 @@ blocks:
           - cache restore
           - nvm install
           - npm install
+          - npx puppeteer browsers install chrome
           - cache store
       jobs:
         - name: tests
