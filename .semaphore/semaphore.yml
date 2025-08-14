@@ -12,14 +12,21 @@ blocks:
     task:
       secrets:
         - name: github-pull-request-counter
+      env_vars:
+        - name: PUPPETEER_SKIP_DOWNLOAD
+          value: "true"
+        - name: CI
+          value: "true"
       prologue:
         commands:
           - checkout --use-cache
           - cache restore
+          - cache restore pptr-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json)
           - nvm install
           - npm install
           - npx puppeteer browsers install chrome
           - cache store
+          - cache store pptr-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json) ~/.cache/puppeteer
       jobs:
         - name: tests
           commands:
