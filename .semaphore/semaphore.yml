@@ -34,5 +34,3 @@ blocks:
 promotions:
   - name: deploy
     pipeline_file: deploy.yml
-    auto_promote:
-      when: "branch = 'main'"
