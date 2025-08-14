@@ -1,0 +1,12 @@
+{
+  "summary": {
+    "en-US": "Track and count your GitHub pull requests to reduce mental load and improve productivity."
+  },
+  "categories": [
+    "developer-tools",
+    "productivity"
+  ],
+  "version": {
+    "licence": "MIT"
+  }
+}

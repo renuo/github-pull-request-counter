@@ -37,4 +37,5 @@ blocks:
                 --api-secret="${FIREFOX_API_SECRET}" \
                 --channel=listed \
                 --source-dir=firefox-src \
-                --artifacts-dir=firefox-signed
+                --artifacts-dir=firefox-signed \
+                --amo-metadata=firefox-src/amo_metadata.json
