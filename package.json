@@ -1,6 +1,6 @@
 {
   "name": "github-pull-request-counter",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A chrome extension to remove mental load when working with pull requests.",
   "repository": "git@github.com:renuo/github-pull-request-counter.git",
   "author": "Renuo AG (https://www.renuo.ch)",
