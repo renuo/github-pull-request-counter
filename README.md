@@ -1,15 +1,10 @@
 # Github Pull Request Counter
 
-A chrome extension to remove mental load when working with pull requests.
+A browser extension to remove mental load when working with pull requests.
 It has been published in
 the [Chrome Web Store](https://chrome.google.com/webstore/detail/github-pull-request-count/eeejbcmnmgogpkgeinlbchoafjjbegmi)
-to be installed with one click.
-
-## Firefox port
-
-There is work in progress for a Firefox port of the extension in the
-[main-firefox](https://github.com/renuo/github-pull-request-counter/tree/main-firefox)
-branch.
+and the [Firefox Add-ons Store](https://addons.mozilla.org/en-US/firefox/addon/github-pull-request-counter/) to be
+installed with one click.
 
 ## Manual setup
 
@@ -33,9 +28,11 @@ export PUPPETEER_EXECUTABLE_PATH=`which chromium`
 ## Build & Test
 
 To build the extension just run:
+
 ```sh
 zip -r dist/dist.zip src
 ```
+
 this will create a new zip file with everything needed.
 
 To run it locally, you can load the unpacked extension by pointing to the `src` folder.
@@ -64,10 +61,23 @@ bin/fastcheck
 
 ## Deployment
 
-Commits on main will automatically try to upload to the chrome web store, though they will be rejected if the version
-is not greater than the previous one. To make a version bump go to `src/manifest.json` and increase `version`. Uploaded
-builds are not automatically published. To accomplish this go to
-the [Chrome Web Store Develop Dashboard](https://chrome.google.com/u/0/webstore/devconsole/465f37d5-ddb2-42c9-afcc-37265e67af35/eeejbcmnmgogpkgeinlbchoafjjbegmi/edit?hl=en).
+The deployment process for this extension is handled through Semaphore CI.
+
+When you initiate a deployment:
+
+- A new build is uploaded to both the Chrome Web Store and the Firefox Add-ons Store.
+- The `version` in `src/manifest.json` must be incremented before deployment — otherwise, the upload will be rejected.
+- Once uploaded, the extensions are automatically submitted for publication. They will go live after each platform’s
+  review process is complete (this can take some time).
+
+Steps to release:
+
+1. Bump the version field in src/manifest.json.
+2. Trigger the manual deploy jobs in Semaphore CI.
+3. Check the developer dashboards
+   for [Chrome](https://chrome.google.com/u/0/webstore/devconsole/465f37d5-ddb2-42c9-afcc-37265e67af35/eeejbcmnmgogpkgeinlbchoafjjbegmi/edit?hl=en)
+   and [Firefox](https://addons.mozilla.org/en-US/developers/addons) to ensure the upload was successful.
+4. Wait for the review process to complete.
 
 ## Create a permanent development ID
 
