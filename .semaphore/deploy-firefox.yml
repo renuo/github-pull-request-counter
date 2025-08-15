@@ -1,0 +1,35 @@
+version: v1.0
+name: deploy-firefox
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu2004
+blocks:
+  - name: Deploy Firefox Extension
+    execution_time_limit:
+      minutes: 60
+    task:
+      secrets:
+        - name: github-pull-request-counter
+      prologue:
+        commands:
+          - checkout
+          - cache restore
+          - nvm install
+      jobs:
+        - name: Upload to Firefox Add-ons
+          commands:
+            - npm install --global web-ext
+            - |
+              cp -r src firefox-src
+              cat firefox-src/manifest.json | jq '.background = {"scripts": ["js/background.js"], "type": "module"}' > firefox-src/manifest.json.tmp
+              mv firefox-src/manifest.json.tmp firefox-src/manifest.json
+            - cd firefox-src && web-ext build --overwrite-dest --artifacts-dir ../firefox-build && cd -
+            - |
+              web-ext sign \
+                --api-key="${FIREFOX_API_KEY}" \
+                --api-secret="${FIREFOX_API_SECRET}" \
+                --channel=listed \
+                --source-dir=firefox-src \
+                --artifacts-dir=firefox-signed \
+                --amo-metadata=amo_metadata.json
