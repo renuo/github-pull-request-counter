@@ -22,7 +22,7 @@ blocks:
             - npm install --global web-ext
             - |
               cp -r src firefox-src
-              cat firefox-src/manifest.json | jq '.background = {"scripts": ["js/background.js"], "type": "module"}' > firefox-src/manifest.json.tmp
+              jq -s '.[0] + .[1]' firefox-src/manifest.json firefox-src/manifest.firefox.json > firefox-src/manifest.json.tmp
               mv firefox-src/manifest.json.tmp firefox-src/manifest.json
             - cd firefox-src && web-ext build --overwrite-dest --artifacts-dir ../firefox-build && cd -
             - |

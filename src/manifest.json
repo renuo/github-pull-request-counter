@@ -3,7 +3,7 @@
   "author": "Renuo AG",
   "name": "Github Pull Request Counter",
   "description": "A chrome extension to remove mental load when working with pull requests.",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "action": {
     "default_popup": "popup.html"
   },
@@ -28,10 +28,5 @@
     "32": "icons/icon32.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
-  },
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "github-pull-request-counter-firefox@renuo.ch"
-    }
   }
 }
