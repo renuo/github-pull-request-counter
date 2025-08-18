@@ -76,7 +76,8 @@ Steps to release:
 2. Trigger the manual deploy jobs in Semaphore CI.
 3. Check the developer dashboards
    for [Chrome](https://chrome.google.com/u/0/webstore/devconsole/465f37d5-ddb2-42c9-afcc-37265e67af35/eeejbcmnmgogpkgeinlbchoafjjbegmi/edit?hl=en)
-   and [Firefox](https://addons.mozilla.org/en-US/developers/addons) to ensure the upload was successful.
+   and [Firefox](https://addons.mozilla.org/en-US/developers/addon/github-pull-request-counter) to ensure the upload was
+   successful.
 4. Wait for the review process to complete.
 
 ## Create a permanent development ID
@@ -104,5 +105,3 @@ This is already done for this project.
 ## Copyright
 
 Copyright [Renuo AG](https://www.renuo.ch/), published under the MIT license.
-
-
