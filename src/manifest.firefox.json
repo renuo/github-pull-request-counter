@@ -1,0 +1,13 @@
+{
+  "background": {
+    "scripts": [
+      "js/background.js"
+    ],
+    "type": "module"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "github-pull-request-counter-firefox@renuo.ch"
+    }
+  }
+}
