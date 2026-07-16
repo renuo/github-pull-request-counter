@@ -3,7 +3,7 @@ name: deploy-firefox
 agent:
   machine:
     type: e1-standard-2
-    os_image: ubuntu2004
+    os_image: ubuntu2404
 blocks:
   - name: Deploy Firefox Extension
     execution_time_limit:
