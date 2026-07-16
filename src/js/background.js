@@ -24,16 +24,9 @@ const ServiceWorker = () => {
             throw error;
         }
 
-        let recordEntries;
+        let entries;
         try {
-            recordEntries = await Promise.all([
-                github.getReviewRequested(),
-                github.getTeamReviewRequested(),
-                github.getNoReviewRequested(),
-                github.getAllReviewsDone(),
-                github.getMissingAssignee(),
-                github.getAllAssigned(),
-            ]);
+            entries = await github.getAll();
         } catch (error) {
             if (error === tooManyRequestsError) return;
 
@@ -41,12 +34,12 @@ const ServiceWorker = () => {
         }
 
         const record = {
-            [PullRequestRecordKey.reviewRequested]: recordEntries[0],
-            [PullRequestRecordKey.teamReviewRequested]: recordEntries[1],
-            [PullRequestRecordKey.noReviewRequested]: recordEntries[2],
-            [PullRequestRecordKey.allReviewsDone]: recordEntries[3],
-            [PullRequestRecordKey.missingAssignee]: recordEntries[4],
-            [PullRequestRecordKey.allAssigned]: recordEntries[5],
+            [PullRequestRecordKey.reviewRequested]: entries.reviewRequested,
+            [PullRequestRecordKey.teamReviewRequested]: entries.teamReviewRequested,
+            [PullRequestRecordKey.noReviewRequested]: entries.noReviewRequested,
+            [PullRequestRecordKey.allReviewsDone]: entries.allReviewsDone,
+            [PullRequestRecordKey.missingAssignee]: entries.missingAssignee,
+            [PullRequestRecordKey.allAssigned]: entries.allAssigned,
         };
 
         await filterIgnoredPrs(record);

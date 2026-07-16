@@ -112,9 +112,9 @@ describe('ServiceWorker', () => {
         mockedFetch.mockImplementation((url) => globalMock(url, { pullRequestCount: 2 }));
       });
 
-      describe('while fetching the user', () => {
+      describe('while resolving the viewer', () => {
         beforeAll(() => {
-          mockedFetch.mockImplementation(() => Promise.resolve({ status: 403 }));
+          mockedFetch.mockImplementation(() => Promise.resolve({ status: 403, json: () => Promise.resolve({}) }));
         });
 
         it('doesn\'t call set', () => {
@@ -124,12 +124,14 @@ describe('ServiceWorker', () => {
 
       describe('while fetching data', () => {
         beforeAll(() => {
-          mockedFetch.mockImplementation((url) => {
-            if (url.includes('/user')) {
-              return Promise.resolve({ json: () => ({ login: 'renuo' }) });
-            } else {
-              return Promise.resolve({ status: 403 });
+          let call = 0;
+          mockedFetch.mockImplementation(() => {
+            call += 1;
+            // First request resolves the viewer login; the batched query is rate-limited.
+            if (call === 1) {
+              return Promise.resolve({ status: 200, json: () => Promise.resolve({ data: { viewer: { login: 'renuo' } } }) });
             }
+            return Promise.resolve({ status: 403, json: () => Promise.resolve({}) });
           });
         });
 
@@ -145,7 +147,7 @@ describe('ServiceWorker', () => {
       mockedFetch.mockImplementation((url) => globalMock(url, { pullRequestCount: 2 }));
     });
 
-    describe('while fetching the user', () => {
+    describe('while resolving the viewer', () => {
       beforeAll(() => {
         mockedFetch.mockImplementation(() => Promise.resolve({}));
       });
@@ -157,12 +159,13 @@ describe('ServiceWorker', () => {
 
     describe('while fetching data', () => {
       beforeAll(() => {
-        mockedFetch.mockImplementation((url) => {
-          if (url.includes('/user')) {
-            return Promise.resolve({ json: () => ({ login: 'renuo' }) });
-          } else {
-            return Promise.resolve({});
+        let call = 0;
+        mockedFetch.mockImplementation(() => {
+          call += 1;
+          if (call === 1) {
+            return Promise.resolve({ status: 200, json: () => Promise.resolve({ data: { viewer: { login: 'renuo' } } }) });
           }
+          return Promise.resolve({});
         });
       });
 
