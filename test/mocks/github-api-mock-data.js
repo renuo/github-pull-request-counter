@@ -29,6 +29,46 @@ export const mockListOfPullRequests = (count, params = {}) => {
   };
 };
 
+// Builds the GraphQL PullRequest nodes returned by a `search(type: ISSUE)`
+// field. `params.reviewRequests` / `params.assignees` set the totalCount used
+// by the wrapper to reproduce the old `/requested_reviewers` filtering.
+export const mockPullRequestNodes = (count, params = {}) => {
+  const nodes = [];
+  for (let i = 0; i < count; i++) {
+    nodes.push({
+      number: i + 1,
+      title: 'PR Title',
+      url: `https://github.com/renuo/github-pull-request-counter/pull/${i + 1}`,
+      createdAt: params.createdAt || new Date(Date.now()).toISOString(),
+      isDraft: params.isDraft || false,
+      author: { login: 'coorasse' },
+      assignees: { totalCount: params.assignees === undefined ? 0 : params.assignees },
+      reviewRequests: { totalCount: params.reviewRequests === undefined ? 0 : params.reviewRequests },
+      repository: {
+        nameWithOwner: 'renuo/github-pull-request-counter',
+        url: 'https://github.com/renuo/github-pull-request-counter',
+      },
+    });
+  }
+  return nodes;
+};
+
+// Builds a full GraphQL response. Every aliased search field returns the same
+// set of nodes unless overridden via `aliases`.
+export const mockGraphqlResponse = (nodes, aliases = {}) => {
+  const searchAliases = ['reviewRequested', 'noReviewRequested', 'allReviewsDone', 'missingAssignee', 'allAssigned'];
+  const data = { viewer: { login: 'sislr' } };
+
+  for (const alias of searchAliases) {
+    data[alias] = { nodes: aliases[alias] || nodes };
+  }
+  for (const [alias, value] of Object.entries(aliases)) {
+    if (!searchAliases.includes(alias)) data[alias] = { nodes: value };
+  }
+
+  return { data };
+};
+
 export const mockRequestedReviewers = (usersCount, teamsCount) => {
   const createRandomID = () => Math.floor(Math.random() * 100);
 
@@ -46,14 +86,11 @@ export const mockRequestedReviewers = (usersCount, teamsCount) => {
   };
 };
 
-export const globalMock = (url, params = {}) => {
-  if (url.includes('/requested_reviewers')) {
-    return Promise.resolve({
-      json: () => Promise.resolve(mockRequestedReviewers(params.openUserRequestCount || 0, params.openTeamRequestCount || 0)),
-    });
-  } else {
-    return Promise.resolve({
-      json: () => mockListOfPullRequests(params.pullRequestCount || 0),
-    });
-  }
-};
+// GraphQL-shaped mock used by the background/integration tests. Every fetch
+// (the `viewer` lookup and the batched query) resolves to the same response.
+export const globalMock = (_url, params = {}) => (
+  Promise.resolve({
+    status: 200,
+    json: () => Promise.resolve(mockGraphqlResponse(mockPullRequestNodes(params.pullRequestCount || 0))),
+  })
+);

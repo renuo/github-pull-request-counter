@@ -1,5 +1,5 @@
 import GithubApiWrapper from '../../src/js/services/github-api-wrapper.js';
-import { mockListOfPullRequests, mockRequestedReviewers } from '../mocks/github-api-mock-data.js';
+import { mockPullRequestNodes, mockGraphqlResponse } from '../mocks/github-api-mock-data.js';
 import fetch from 'node-fetch';
 import MockDate from 'mockdate';
 
@@ -7,13 +7,21 @@ jest.mock('node-fetch');
 const mockedFetch = fetch;
 
 global.fetch = mockedFetch;
-global.btoa = (data) => Buffer.from(data).toString('base64');
 global.chrome = {
   storage: {
     local: {
       get: jest.fn(),
     },
   },
+};
+
+// Every call to `fetch` (the constructor's `viewer` query and the main query)
+// resolves to the same GraphQL response.
+const respondWith = (response) => {
+  mockedFetch.mockResolvedValue(Promise.resolve({
+    status: 200,
+    json: () => Promise.resolve(response),
+  }));
 };
 
 describe('GithubApiWrapper', () => {
@@ -28,11 +36,7 @@ describe('GithubApiWrapper', () => {
 
   describe('#getReviewRequested', () => {
     let pullRequestCount;
-    beforeEach(() => {
-      mockedFetch.mockResolvedValue(Promise.resolve({
-        json: () => Promise.resolve(mockListOfPullRequests(pullRequestCount)),
-      }));
-    });
+    beforeEach(() => respondWith(mockGraphqlResponse(mockPullRequestNodes(pullRequestCount))));
 
     describe('with no pull requests', () => {
       beforeAll(() => pullRequestCount = 0);
@@ -74,6 +78,10 @@ describe('GithubApiWrapper', () => {
         global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({
           'teams': 'myTeam, myOtherTeam', 'accessToken': 'secret',
         }));
+        // The same three PRs are returned for both the personal review-requested
+        // search and the team searches, so all of them are filtered out.
+        const nodes = mockPullRequestNodes(3);
+        respondWith(mockGraphqlResponse(nodes, { team0: nodes, team1: nodes }));
       });
 
       it('has no pull requests', async () => {
@@ -86,12 +94,11 @@ describe('GithubApiWrapper', () => {
   describe('#getTeamReviewRequested', () => {
     let teamPullRequestCount;
     beforeEach(() => {
-      mockedFetch.mockResolvedValue(Promise.resolve({
-        json: () => Promise.resolve(mockListOfPullRequests(teamPullRequestCount)),
-      }));
       global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({
         'teams': 'myTeam', 'accessToken': 'secret',
       }));
+      const nodes = mockPullRequestNodes(teamPullRequestCount);
+      respondWith(mockGraphqlResponse(nodes, { team0: nodes }));
     });
 
     describe('with no pull requests', () => {
@@ -113,11 +120,12 @@ describe('GithubApiWrapper', () => {
       });
     });
 
-    describe('with an error', () => {
+    describe('with no configured teams', () => {
       beforeEach(() => {
-        mockedFetch.mockResolvedValue(Promise.resolve({
-          json: () => Promise.resolve({ errors: ['Something went wrong'] }),
+        global.chrome.storage.local.get = jest.fn().mockImplementation((_keys, callback) => callback({
+          'accessToken': 'secret',
         }));
+        respondWith(mockGraphqlResponse(mockPullRequestNodes(3)));
       });
 
       it('doesn\'t contain any links', async () => {
@@ -129,20 +137,9 @@ describe('GithubApiWrapper', () => {
 
   describe('#getNoReviewRequested', () => {
     let pullRequestCount;
-    let openUserRequestCount = 0;
-    let openTeamRequestCount = 0;
+    let reviewRequests = 0;
 
-    beforeEach(() => {
-      mockedFetch.mockImplementation((url) => {
-        const value = url.includes('/requested_reviewers') ?
-          mockRequestedReviewers(openUserRequestCount, openTeamRequestCount) :
-          mockListOfPullRequests(pullRequestCount);
-
-        return Promise.resolve({
-          json: () => Promise.resolve(value),
-        });
-      });
-    });
+    beforeEach(() => respondWith(mockGraphqlResponse(mockPullRequestNodes(pullRequestCount, { reviewRequests }))));
 
     describe('with no pull requests', () => {
       beforeAll(() => pullRequestCount = 0);
@@ -172,20 +169,9 @@ describe('GithubApiWrapper', () => {
         expect(result[2].htmlUrl).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
       });
 
-      describe('with a requested review from a user', () => {
-
-        beforeAll(() => openUserRequestCount = 1);
-        afterAll(() => openUserRequestCount = 0);
-
-        it('doesn\'t contain any links', async () => {
-          const result = await (await GithubApiWrapper()).getNoReviewRequested();
-          expect(result.length).toEqual(0);
-        });
-      });
-
-      describe('with a requested review from a team', () => {
-        beforeAll(() => openTeamRequestCount = 1);
-        afterAll(() => openTeamRequestCount = 0);
+      describe('with an open review request', () => {
+        beforeAll(() => reviewRequests = 1);
+        afterAll(() => reviewRequests = 0);
 
         it('doesn\'t contain any links', async () => {
           const result = await (await GithubApiWrapper()).getNoReviewRequested();
@@ -204,10 +190,7 @@ describe('GithubApiWrapper', () => {
 
       describe('with a not matching scope', () => {
         beforeAll(() => scope = 'notMatchingScope');
-
-        afterAll(() => {
-          scope = '';
-        });
+        afterAll(() => { scope = ''; });
 
         it('doesn\'t contain any links', async () => {
           expect((await (await GithubApiWrapper()).getNoReviewRequested()).length).toEqual(0);
@@ -228,21 +211,12 @@ describe('GithubApiWrapper', () => {
           beforeAll(() => { scope = 'renuo,notMatchingScope'; });
           afterAll(() => { scope = ''; });
 
-          it('doesn\'t contain any links', async () => {
-            expect((await (await GithubApiWrapper()).getNoReviewRequested()).length).toEqual(3);
-          });
-        });
-
-        describe(',renuo', () => {
-          beforeAll(() => { scope = ',renuo'; });
-          afterAll(() => { scope = ''; });
-
           it('contains three links', async () => {
             expect((await (await GithubApiWrapper()).getNoReviewRequested()).length).toEqual(3);
           });
         });
 
-        describe('renuo,', () => {
+        describe(',renuo', () => {
           beforeAll(() => { scope = ',renuo'; });
           afterAll(() => { scope = ''; });
 
@@ -256,20 +230,9 @@ describe('GithubApiWrapper', () => {
 
   describe('#getAllReviewsDone', () => {
     let pullRequestCount;
-    let openUserRequestCount = 0;
-    let openTeamRequestCount = 0;
+    let reviewRequests = 0;
 
-    beforeEach(() => {
-      mockedFetch.mockImplementation((url) => {
-        const value = url.includes('/requested_reviewers') ?
-          mockRequestedReviewers(openUserRequestCount, openTeamRequestCount) :
-          mockListOfPullRequests(pullRequestCount);
-
-        return Promise.resolve({
-          json: () => Promise.resolve(value),
-        });
-      });
-    });
+    beforeEach(() => respondWith(mockGraphqlResponse(mockPullRequestNodes(pullRequestCount, { reviewRequests }))));
 
     describe('with no pull requests', () => {
       beforeAll(() => pullRequestCount = 0);
@@ -277,16 +240,6 @@ describe('GithubApiWrapper', () => {
       it('doesn\'t contain any links', async () => {
         const result = await (await GithubApiWrapper()).getAllReviewsDone();
         expect(result.length).toEqual(0);
-      });
-    });
-
-    describe('with a single pull request', () => {
-      beforeAll(() => pullRequestCount = 1);
-
-      it('has the correct link', async () => {
-        const result = await (await GithubApiWrapper()).getAllReviewsDone();
-        expect(result.length).toEqual(1);
-        expect(result[0].htmlUrl).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
       });
     });
 
@@ -299,19 +252,9 @@ describe('GithubApiWrapper', () => {
         expect(result[2].htmlUrl).toEqual('https://github.com/renuo/github-pull-request-counter/pull/3');
       });
 
-      describe('with a requested review from a user', () => {
-        beforeAll(() => openUserRequestCount = 1);
-        afterAll(() => openUserRequestCount = 0);
-
-        it('doesn\'t contain any links', async () => {
-          const result = await (await GithubApiWrapper()).getAllReviewsDone();
-          expect(result.length).toEqual(0);
-        });
-      });
-
-      describe('with a requested review from a team', () => {
-        beforeAll(() => openTeamRequestCount = 1);
-        afterAll(() => openTeamRequestCount = 0);
+      describe('with an open review request', () => {
+        beforeAll(() => reviewRequests = 1);
+        afterAll(() => reviewRequests = 0);
 
         it('doesn\'t contain any links', async () => {
           const result = await (await GithubApiWrapper()).getAllReviewsDone();
@@ -323,28 +266,16 @@ describe('GithubApiWrapper', () => {
 
   describe('#getMissingAssignee', () => {
     let pullRequestCount = 0;
-    let assignee;
+    let assignees = 0;
 
-    beforeEach(() => {
-      mockedFetch.mockResolvedValue(Promise.resolve({
-        json: () => Promise.resolve(mockListOfPullRequests(pullRequestCount, { assignee, created_at: undefined })),
-      }));
-    });
+    beforeEach(() => respondWith(mockGraphqlResponse(mockPullRequestNodes(pullRequestCount, { assignees }))));
 
     describe('with no pull requests', () => {
+      beforeAll(() => pullRequestCount = 0);
+
       it('doesn\'t contain any links', async () => {
         const result = await (await GithubApiWrapper()).getMissingAssignee();
         expect(result.length).toEqual(0);
-      });
-
-      describe('with an assignee', () => {
-        beforeAll(() => assignee = 'Karl');
-        afterAll(() => assignee = undefined);
-
-        it('doesn\'t contain any links', async () => {
-          const result = await (await GithubApiWrapper()).getMissingAssignee();
-          expect(result.length).toEqual(0);
-        });
       });
     });
 
@@ -358,8 +289,8 @@ describe('GithubApiWrapper', () => {
       });
 
       describe('with an assignee', () => {
-        beforeAll(() => assignee = 'Karl');
-        afterAll(() => assignee = undefined);
+        beforeAll(() => assignees = 1);
+        afterAll(() => assignees = 0);
 
         it('doesn\'t contain any links', async () => {
           const result = await (await GithubApiWrapper()).getMissingAssignee();
@@ -378,8 +309,8 @@ describe('GithubApiWrapper', () => {
       });
 
       describe('with an assignee', () => {
-        beforeAll(() => assignee = 'Karl');
-        afterAll(() => assignee = undefined);
+        beforeAll(() => assignees = 1);
+        afterAll(() => assignees = 0);
 
         it('doesn\'t contain any links', async () => {
           const result = await (await GithubApiWrapper()).getMissingAssignee();
@@ -391,11 +322,7 @@ describe('GithubApiWrapper', () => {
 
   describe('#getAllAssigned', () => {
     let pullRequestCount;
-    beforeEach(() => {
-      mockedFetch.mockResolvedValue(Promise.resolve({
-        json: () => Promise.resolve(mockListOfPullRequests(pullRequestCount)),
-      }));
-    });
+    beforeEach(() => respondWith(mockGraphqlResponse(mockPullRequestNodes(pullRequestCount))));
 
     describe('with no pull requests', () => {
       beforeAll(() => pullRequestCount = 0);
@@ -403,16 +330,6 @@ describe('GithubApiWrapper', () => {
       it('doesn\'t contain any links', async () => {
         const result = await (await GithubApiWrapper()).getAllAssigned();
         expect(result.length).toEqual(0);
-      });
-    });
-
-    describe('with a single pull request', () => {
-      beforeAll(() => pullRequestCount = 1);
-
-      it('has the correct link', async () => {
-        const result = await (await GithubApiWrapper()).getAllAssigned();
-        expect(result.length).toEqual(1);
-        expect(result[0].htmlUrl).toEqual('https://github.com/renuo/github-pull-request-counter/pull/1');
       });
     });
 
@@ -427,15 +344,12 @@ describe('GithubApiWrapper', () => {
     });
 
     describe('filterByMaximumAge', () => {
-      const pullRequest1 = mockListOfPullRequests(1, { assignee: undefined, created_at: Date.parse('2021-05-20T14:17:00Z') });
-      const pullRequest2 = mockListOfPullRequests(1, { assignee: undefined, created_at: Date.parse('2021-06-25T14:17:00Z') });
-      const pullRequest3 = mockListOfPullRequests(1, { assignee: undefined, created_at: Date.parse('2021-04-15T14:17:00Z') });
+      const pr1 = mockPullRequestNodes(1, { createdAt: '2021-05-20T14:17:00Z' });
+      const pr2 = mockPullRequestNodes(1, { createdAt: '2021-06-25T14:17:00Z' });
+      const pr3 = mockPullRequestNodes(1, { createdAt: '2021-04-15T14:17:00Z' });
+      const nodes = [...pr1, ...pr2, ...pr3];
 
-      beforeEach(() => {
-        mockedFetch.mockResolvedValue(Promise.resolve({
-          json: () => Promise.resolve({ total_count: 3, items: [...pullRequest1.items, ...pullRequest2.items, ...pullRequest3.items] }),
-        }));
-      });
+      beforeEach(() => respondWith(mockGraphqlResponse(nodes)));
 
       beforeEach(() => MockDate.set('2021-07-08'));
       afterEach(() => MockDate.reset());
@@ -443,9 +357,9 @@ describe('GithubApiWrapper', () => {
       it('has the correct order (newest first)', async () => {
         const result = await (await GithubApiWrapper()).getAllAssigned();
 
-        expect(result[0].createdAt).toEqual(Date.parse('2021-06-25T14:17:00Z'));
-        expect(result[1].createdAt).toEqual(Date.parse('2021-05-20T14:17:00Z'));
-        expect(result[2].createdAt).toEqual(Date.parse('2021-04-15T14:17:00Z'));
+        expect(new Date(result[0].createdAt).getTime()).toEqual(Date.parse('2021-06-25T14:17:00Z'));
+        expect(new Date(result[1].createdAt).getTime()).toEqual(Date.parse('2021-05-20T14:17:00Z'));
+        expect(new Date(result[2].createdAt).getTime()).toEqual(Date.parse('2021-04-15T14:17:00Z'));
       });
 
       describe('with a maximum age of 10 days', () => {
@@ -498,10 +412,38 @@ describe('GithubApiWrapper', () => {
     });
   });
 
+  describe('#getAll', () => {
+    beforeEach(() => respondWith(mockGraphqlResponse(mockPullRequestNodes(3))));
+
+    it('resolves every category from a single request', async () => {
+      mockedFetch.mockClear();
+      const record = await (await GithubApiWrapper()).getAll();
+
+      expect(record.reviewRequested.length).toEqual(3);
+      expect(record.allAssigned.length).toEqual(3);
+      // One request for the `viewer` login lookup, one for the batched query.
+      expect(mockedFetch).toHaveBeenCalledTimes(2);
+    });
+  });
+
   describe('Too many requests', () => {
     beforeEach(() => {
       mockedFetch.mockResolvedValue(Promise.resolve({
         status: 403,
+        json: () => Promise.resolve({}),
+      }));
+    });
+
+    it('throws', async () => {
+      await expect(GithubApiWrapper()).rejects.toThrow('Too many requests');
+    });
+  });
+
+  describe('With a GraphQL rate-limit error', () => {
+    beforeEach(() => {
+      mockedFetch.mockResolvedValue(Promise.resolve({
+        status: 200,
+        json: () => Promise.resolve({ errors: [{ type: 'RATE_LIMITED', message: 'API rate limit exceeded' }] }),
       }));
     });
 
